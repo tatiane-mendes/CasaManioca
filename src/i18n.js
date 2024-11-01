@@ -49,7 +49,8 @@ const resources = {
       'Error': 'Error',
       'Need Help?': '¿Necesitas ayuda?',
       'Check our docs': 'Consulte nuestros documentos',
-      'Documentation': 'Documentación'
+      'Documentation': 'Documentación',
+      'Inventory': 'Inventário'
     }
   }
 };
