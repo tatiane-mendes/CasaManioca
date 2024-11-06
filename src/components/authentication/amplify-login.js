@@ -11,7 +11,7 @@ export const AmplifyLogin = (props) => {
   const { login } = useAuth();
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
+      email: 'demo@devias.io',//In this parte we are setting the default email and password. (How change?)
       password: 'Password123!',
       submit: null
     },
@@ -95,19 +95,6 @@ export const AmplifyLogin = (props) => {
         >
           Log In
         </Button>
-      </Box>
-      <Box sx={{ mt: 3 }}>
-        <Alert severity="info">
-          <div>
-            You can use
-            {' '}
-            <b>demo@devias.io</b>
-            {' '}
-            and password
-            {' '}
-            <b>Password123!</b>
-          </div>
-        </Alert>
       </Box>
     </form>
   );

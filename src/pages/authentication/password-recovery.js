@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { Box, Card, Container, Typography } from '@mui/material';
-import { AuthBanner } from '../../components/authentication/auth-banner';
+import { Box, Card, Container, Typography, TextField, Button } from '@mui/material';
+import { useFormik } from 'formik';
 import { AmplifyPasswordRecovery } from '../../components/authentication/amplify-password-recovery';
 import { Logo } from '../../components/logo';
 import { withGuestGuard } from '../../hocs/with-guest-guard';
 import { useAuth } from '../../hooks/use-auth';
 import { gtm } from '../../lib/gtm';
+import * as Yup from 'yup';
 
 const platformIcons = {
   Amplify: '/static/icons/amplify.svg',
@@ -16,18 +17,57 @@ const platformIcons = {
   JWT: '/static/icons/jwt.svg'
 };
 
-const PasswordRecovery = () => {
+
+const PasswordRecovery = (props) => {
   const { platform } = useAuth();
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
+  const formik = useFormik({
+    initialValues: {
+      email: props.email || '',
+      submit: null
+    },
+    validationSchema: Yup.object({
+      email: Yup
+        .string()
+        .email('Must be a valid email')
+        .max(255)
+        .required('Email is required')
+    }),
+    onSubmit: async (values, helpers) => {
+      console.log(values);
+      try {
+        
+        if (isMounted()) {
+          const returnUrl = router.query.returnUrl || '/dashboard';
+          router.push(returnUrl);
+        }
+      } catch (err) {
+        console.error(err);
+
+        if (isMounted()) {
+          if (err.code === 'UserNotConfirmedException') {
+            sessionStorage.setItem('username', values.email);
+            router.push('/authentication/verify-code');
+            return;
+          }
+
+          helpers.setStatus({ success: false });
+          helpers.setErrors({ submit: err.message });
+          helpers.setSubmitting(false);
+        }
+      }
+    }
+  });
+
   return (
     <>
       <Head>
         <title>
-          Password Recovery | Material Kit Pro
+          Password Recovery 
         </title>
       </Head>
       <Box
@@ -39,7 +79,6 @@ const PasswordRecovery = () => {
           minHeight: '100vh'
         }}
       >
-        <AuthBanner />
         <Container
           maxWidth="sm"
           sx={{
@@ -49,40 +88,6 @@ const PasswordRecovery = () => {
             }
           }}
         >
-          <Box
-            sx={{
-              alignItems: 'center',
-              backgroundColor: (theme) => theme.palette.mode === 'dark'
-                ? 'neutral.900'
-                : 'neutral.100',
-              borderColor: 'divider',
-              borderRadius: 1,
-              borderStyle: 'solid',
-              borderWidth: 1,
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              mb: 4,
-              p: 2,
-              '& > img': {
-                height: 32,
-                width: 'auto',
-                flexGrow: 0,
-                flexShrink: 0
-              }
-            }}
-          >
-            <Typography
-              color="textSecondary"
-              variant="caption"
-            >
-              The app authenticates via {platform}
-            </Typography>
-            <img
-              alt="Auth platform"
-              src={platformIcons[platform]}
-            />
-          </Box>
           <Card
             elevation={16}
             sx={{ p: 4 }}
@@ -118,6 +123,42 @@ const PasswordRecovery = () => {
               >
                 Tell us your email so we can send you a reset link
               </Typography>
+              <form
+                noValidate
+                onSubmit={formik.handleSubmit}
+                {...props}>
+                <TextField
+                  autoFocus
+                  error={Boolean(formik.touched.email && formik.errors.email)}
+                  fullWidth
+                  helperText={formik.touched.email && formik.errors.email}
+                  label="Email Address"
+                  margin="normal"
+                  name="email"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  type="email"
+                  value={formik.values.email}
+                />
+                {formik.errors.submit && (
+                  <Box sx={{ mt: 3 }}>
+                    <FormHelperText error>
+                      {formik.errors.submit}
+                    </FormHelperText>
+                  </Box>
+                )}
+                <Box sx={{ mt: 2 }}>
+                  <Button
+                    disabled={formik.isSubmitting}
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                  >
+                    Log In
+                  </Button>
+                </Box>
+              </form>
             </Box>
             <Box
               sx={{
