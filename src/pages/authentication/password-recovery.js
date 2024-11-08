@@ -155,7 +155,7 @@ const PasswordRecovery = (props) => {
                     type="submit"
                     variant="contained"
                   >
-                    Log In
+                    Send
                   </Button>
                 </Box>
               </form>

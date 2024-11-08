@@ -123,7 +123,7 @@ const Overview = () => {
                 item
                 xs={12}
               >
-                <OverviewBanner onDismiss={handleDismissBanner} />
+                {/* <OverviewBanner onDismiss={handleDismissBanner} /> */}
               </Grid>
             )}
             <Grid
@@ -166,14 +166,14 @@ const Overview = () => {
               md={4}
               xs={12}
             >
-              <OverviewInbox />
+              {/* <OverviewInbox /> */}
             </Grid>
             <Grid
               item
               md={6}
               xs={12}
             >
-              <Card>
+              {/* <Card>
                 <CardContent>
                   <Box
                     sx={{
@@ -216,8 +216,8 @@ const Overview = () => {
                     Search Jobs
                   </Button>
                 </CardActions>
-              </Card>
-            </Grid>
+              </Card> */}
+            {/* </Grid>
             <Grid
               item
               md={6}
@@ -360,7 +360,7 @@ const Overview = () => {
                     My Contacts
                   </Button>
                 </CardActions>
-              </Card>
+              </Card> */}
             </Grid>
           </Grid>
         </Container>
