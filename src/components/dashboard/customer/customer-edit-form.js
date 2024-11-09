@@ -57,7 +57,7 @@ export const CustomerEditForm = (props) => {
         await wait(500);
         helpers.setStatus({ success: true });
         helpers.setSubmitting(false);
-        toast.success('Customer updated!');
+        toast.success('Item updated!');
       } catch (err) {
         console.error(err);
         toast.error('Something went wrong!');
@@ -73,7 +73,7 @@ export const CustomerEditForm = (props) => {
       onSubmit={formik.handleSubmit}
       {...other}>
       <Card>
-        <CardHeader title="Edit customer" />
+        <CardHeader title="Edit item" />
         <Divider />
         <CardContent>
           <Grid
@@ -89,11 +89,10 @@ export const CustomerEditForm = (props) => {
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label="Full name"
+                label="Name"
                 name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                required
                 value={formik.values.name}
               />
             </Grid>
@@ -103,15 +102,10 @@ export const CustomerEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.email && formik.errors.email)}
-                fullWidth
-                helperText={formik.touched.email && formik.errors.email}
-                label="Email address"
+                label="Description"
                 name="email"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                required
-                value={formik.values.email}
               />
             </Grid>
             <Grid
@@ -123,7 +117,7 @@ export const CustomerEditForm = (props) => {
                 error={Boolean(formik.touched.country && formik.errors.country)}
                 fullWidth
                 helperText={formik.touched.country && formik.errors.country}
-                label="Country"
+                label="Category"
                 name="country"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -139,43 +133,11 @@ export const CustomerEditForm = (props) => {
                 error={Boolean(formik.touched.state && formik.errors.state)}
                 fullWidth
                 helperText={formik.touched.state && formik.errors.state}
-                label="State/Region"
+                label="Category"
                 name="state"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.state}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.address1 && formik.errors.address1)}
-                fullWidth
-                helperText={formik.touched.address1 && formik.errors.address1}
-                label="Address 1"
-                name="address1"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.address1}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.address2 && formik.errors.address2)}
-                fullWidth
-                helperText={formik.touched.address2 && formik.errors.address2}
-                label="Address 2"
-                name="address2"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.address2}
               />
             </Grid>
             <Grid
@@ -203,30 +165,6 @@ export const CustomerEditForm = (props) => {
               mt: 3
             }}
           >
-            <div>
-              <Typography
-                gutterBottom
-                variant="subtitle1"
-              >
-                Make Contact Info Public
-              </Typography>
-              <Typography
-                color="textSecondary"
-                variant="body2"
-                sx={{ mt: 1 }}
-              >
-                Means that anyone viewing your profile will be able to see your contacts
-                details
-              </Typography>
-            </div>
-            <Switch
-              checked={formik.values.isVerified}
-              color="primary"
-              edge="start"
-              name="isVerified"
-              onChange={formik.handleChange}
-              value={formik.values.isVerified}
-            />
           </Box>
           <Divider sx={{ my: 3 }} />
           <Box
@@ -236,30 +174,6 @@ export const CustomerEditForm = (props) => {
               justifyContent: 'space-between'
             }}
           >
-            <div>
-              <Typography
-                gutterBottom
-                variant="subtitle1"
-              >
-                Available to hire
-              </Typography>
-              <Typography
-                color="textSecondary"
-                variant="body2"
-                sx={{ mt: 1 }}
-              >
-                Toggling this will let your teammates know that you are available for
-                acquiring new projects
-              </Typography>
-            </div>
-            <Switch
-              checked={formik.values.hasDiscount}
-              color="primary"
-              edge="start"
-              name="hasDiscount"
-              onChange={formik.handleChange}
-              value={formik.values.hasDiscount}
-            />
           </Box>
         </CardContent>
         <CardActions
@@ -296,7 +210,7 @@ export const CustomerEditForm = (props) => {
             color="error"
             disabled={formik.isSubmitting}
           >
-            Delete user
+            Delete item
           </Button>
         </CardActions>
       </Card>

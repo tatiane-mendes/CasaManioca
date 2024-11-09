@@ -17,38 +17,26 @@ export const CustomerBasicDetails = (props) => {
         <PropertyListItem
           align={align}
           divider
-          label="Email"
+          label="Description"
           value={email}
         />
         <PropertyListItem
           align={align}
           divider
-          label="Phone"
+          label="Unit weight"
           value={phone}
         />
         <PropertyListItem
           align={align}
           divider
-          label="Country"
+          label="Category"
           value={country}
         />
         <PropertyListItem
           align={align}
           divider
-          label="State/Region"
+          label="Category"
           value={state}
-        />
-        <PropertyListItem
-          align={align}
-          divider
-          label="Address 1"
-          value={state}
-        />
-        <PropertyListItem
-          align={align}
-          divider
-          label="Address 2"
-          value={address2}
         />
       </PropertyList>
       <CardActions
@@ -59,15 +47,6 @@ export const CustomerBasicDetails = (props) => {
           m: -1
         }}
       >
-        <Button
-          sx={{ m: 1 }}
-          variant="outlined"
-        >
-          Reset &amp; Send Password
-        </Button>
-        <Button sx={{ m: 1 }}>
-          Login as Customer
-        </Button>
       </CardActions>
     </Card>
   );

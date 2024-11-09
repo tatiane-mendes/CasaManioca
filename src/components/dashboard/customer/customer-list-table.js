@@ -105,16 +105,16 @@ export const CustomerListTable = (props) => {
                 Name
               </TableCell>
               <TableCell>
-                Location
+                Category
               </TableCell>
               <TableCell>
-                Orders
+                Stock
               </TableCell>
               <TableCell>
-                Spent
+                Restock Requirement
               </TableCell>
               <TableCell align="right">
-                Actions
+                Expiry
               </TableCell>
             </TableRow>
           </TableHead>
