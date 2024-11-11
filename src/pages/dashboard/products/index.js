@@ -11,6 +11,8 @@ import { useMounted } from '../../../hooks/use-mounted';
 import { Download as DownloadIcon } from '../../../icons/download';
 import { Upload as UploadIcon } from '../../../icons/upload';
 import { Plus as PlusIcon } from '../../../icons/plus';
+import { MinusOutlined as MinusIcon } from '../../../icons/minus-outlined';
+import { Cog as xCog } from '../../../icons/cog';
 import { gtm } from '../../../lib/gtm';
 
 const applyFilters = (products, filters) => products.filter((product) => {
@@ -128,7 +130,7 @@ const ProductList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Products
+                  Products Sold
                 </Typography>
               </Grid>
               <Grid item>
@@ -143,10 +145,31 @@ const ProductList = () => {
                   >
                     Add
                   </Button>
+                  
                 </NextLink>
+                &nbsp;&nbsp;&nbsp;
+                
+                  <Button
+                    component="a"
+                    startIcon={<xCog fontSize="small" />}
+                    variant="contained"
+                  >
+                    Edit
+                  </Button>
+                  &nbsp;&nbsp;&nbsp;
+                  <Button
+                    color="error"
+                    component="a"
+                    startIcon={<MinusIcon fontSize="small" />}
+                    variant="contained"
+                  >
+                    Delete
+                  </Button>
+                  
+                  
               </Grid>
             </Grid>
-            <Box
+            {/* <Box
               sx={{
                 m: -1,
                 mt: 3
@@ -164,7 +187,7 @@ const ProductList = () => {
               >
                 Export
               </Button>
-            </Box>
+            </Box> */}
           </Box>
           <Card>
             <ProjectListFilters onChange={handleFiltersChange} />
