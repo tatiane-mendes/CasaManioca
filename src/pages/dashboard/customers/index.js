@@ -26,21 +26,9 @@ import { gtm } from '../../../lib/gtm';
 
 const tabs = [
   {
-    label: 'All',
-    value: 'all'
+    label: '',
+    value: ''
   },
-  {
-    label: 'Accepts Marketing',
-    value: 'hasAcceptedMarketing'
-  },
-  {
-    label: 'Prospect',
-    value: 'isProspect'
-  },
-  {
-    label: 'Returning',
-    value: 'isReturning'
-  }
 ];
 
 const sortOptions = [
@@ -53,11 +41,11 @@ const sortOptions = [
     value: 'updatedAt|asc'
   },
   {
-    label: 'Total orders (highest)',
+    label: 'Available stock (highest)',
     value: 'orders|desc'
   },
   {
-    label: 'Total orders (lowest)',
+    label: 'Available stock (lowest)',
     value: 'orders|asc'
   }
 ];
@@ -212,7 +200,7 @@ const CustomerList = () => {
     <>
       <Head>
         <title>
-          Dashboard: Customer List | Material Kit Pro
+          Dashboard: Inventory List | Material Kit Pro
         </title>
       </Head>
       <Box
@@ -231,7 +219,7 @@ const CustomerList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Customers
+                  Inventory
                 </Typography>
               </Grid>
               <Grid item>
@@ -243,25 +231,6 @@ const CustomerList = () => {
                 </Button>
               </Grid>
             </Grid>
-            <Box
-              sx={{
-                m: -1,
-                mt: 3
-              }}
-            >
-              <Button
-                startIcon={<UploadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
-                Import
-              </Button>
-              <Button
-                startIcon={<DownloadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
-                Export
-              </Button>
-            </Box>
           </Box>
           <Card>
             <Tabs
@@ -310,7 +279,7 @@ const CustomerList = () => {
                       </InputAdornment>
                     )
                   }}
-                  placeholder="Search customers"
+                  placeholder="Search products"
                 />
               </Box>
               <TextField
