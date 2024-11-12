@@ -21,32 +21,24 @@ import { QuillEditor } from '../../quill-editor';
 
 const categoryOptions = [
   {
-    label: 'Healthcare',
-    value: 'healthcare'
+    label: 'Snacks',
+    value: 'snacks'
   },
   {
-    label: 'Makeup',
-    value: 'makeup'
+    label: 'Pies',
+    value: 'pies'
   },
   {
-    label: 'Dress',
-    value: 'dress'
+    label: 'Gluten-Free',
+    value: 'gluten-free'
   },
   {
-    label: 'Skincare',
-    value: 'skincare'
-  },
-  {
-    label: 'Jewelry',
-    value: 'jewelry'
-  },
-  {
-    label: 'Blouse',
-    value: 'blouse'
+    label: 'Soups',
+    value: 'soups'
   }
 ];
 
-export const ProductCreateForm = (props) => {
+export const ProductionCreateForm = (props) => {
   const router = useRouter();
   const [files, setFiles] = useState([]);
   const formik = useFormik({
@@ -290,7 +282,7 @@ export const ProductCreateForm = (props) => {
                 ))}
               </TextField>
               <TextField
-                disabled
+                
                 error={Boolean(formik.touched.barcode && formik.errors.barcode)}
                 fullWidth
                 label="Barcode"
@@ -301,7 +293,7 @@ export const ProductCreateForm = (props) => {
                 value={formik.values.barcode}
               />
               <TextField
-                disabled
+                
                 error={Boolean(formik.touched.sku && formik.errors.sku)}
                 fullWidth
                 label="SKU"

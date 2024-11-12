@@ -1,17 +1,24 @@
 import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { Box, Button, Card, Container, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Grid, Typography, TextField, FormHelperText } from '@mui/material';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { productApi } from '../../../__fake-api__/product-api';
-import { ProjectListFilters } from '../../../components/dashboard/product/product-list-filters';
-import { ProductListTable } from '../../../components/dashboard/product/product-list-table';
+import { ProductionListFilters } from '../../../components/dashboard/production/production-list-filters';
+import { ProductionListTable } from '../../../components/dashboard/production/production-list-table';
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../hooks/use-mounted';
 import { Download as DownloadIcon } from '../../../icons/download';
 import { Upload as UploadIcon } from '../../../icons/upload';
 import { Plus as PlusIcon } from '../../../icons/plus';
+import { MinusOutlined as MinusIcon } from '../../../icons/minus-outlined';
+import { Cog as CogIcon } from '../../../icons/cog';
+
 import { gtm } from '../../../lib/gtm';
+
+
 
 const applyFilters = (products, filters) => products.filter((product) => {
   if (filters.name) {
@@ -70,6 +77,7 @@ const ProductList = () => {
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
+ 
 
   const getProducts = useCallback(async () => {
     try {
@@ -128,12 +136,14 @@ const ProductList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Products
+                  Production
                 </Typography>
               </Grid>
               <Grid item>
+              
+               
                 <NextLink
-                  href="/dashboard/products/new"
+                  href="/dashboard/production/new"
                   passHref
                 >
                   <Button
@@ -143,10 +153,32 @@ const ProductList = () => {
                   >
                     Add
                   </Button>
+                  
                 </NextLink>
+                &nbsp;&nbsp;&nbsp;
+                
+                  <Button
+                    component="a"
+                    startIcon={<CogIcon fontSize="small" />}
+                    variant="contained"
+                  >
+                    Edit
+                  </Button>
+                  &nbsp;&nbsp;&nbsp;
+                  <Button
+                    color="error"
+                    component="a"
+                    startIcon={<MinusIcon fontSize="small" />}
+                    variant="contained"
+                  >
+                    Delete
+                  </Button>
+                  
+                  
               </Grid>
+
             </Grid>
-            <Box
+            {/* <Box
               sx={{
                 m: -1,
                 mt: 3
@@ -164,11 +196,32 @@ const ProductList = () => {
               >
                 Export
               </Button>
-            </Box>
+            </Box> */}
+            <br/><TextField
+                  label="No. of Products in Stock"
+                  variant="outlined"
+                    // Replace 'yourBackendData' with the actual data you want to display
+                  InputProps={{
+                  readOnly: true,  // Makes the field read-only
+                  }}
+                  sx={{ width: '33.33%' }}
+                />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <TextField
+                  label="No. of Product Total"
+                  variant="outlined"
+                    // Replace 'yourBackendData' with the actual data you want to display
+                  InputProps={{
+                  readOnly: true,  // Makes the field read-only
+                  }}
+                  sx={{ width: '33.33%' }}
+                />
+
+
           </Box>
           <Card>
-            <ProjectListFilters onChange={handleFiltersChange} />
-            <ProductListTable
+            <ProductionListFilters onChange={handleFiltersChange} />
+            <ProductionListTable
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import NextLink from 'next/link';
 import Head from 'next/head';
 import { Box, Breadcrumbs, Container, Link, Typography } from '@mui/material';
-import { ProductCreateForm } from '../../../components/dashboard/product/product-create-form';
+import { ProductionCreateForm } from '../../../components/dashboard/production/production-create-form';
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
 import { gtm } from '../../../lib/gtm';
@@ -16,7 +16,7 @@ const ProductCreate = () => {
     <>
       <Head>
         <title>
-          Dashboard: Product Create | Material Kit Pro
+          Dashboard: Create Product for Production
         </title>
       </Head>
       <Box
@@ -53,16 +53,29 @@ const ProductCreate = () => {
                 >
                   Management
                 </Link>
+                
+              </NextLink>
+              <NextLink
+                href="/dashboard/production"
+                passHref
+              >
+                <Link
+                  color="primary"
+                  variant="subtitle2"
+                >
+                  Production
+                </Link>
+                
               </NextLink>
               <Typography
                 color="textSecondary"
                 variant="subtitle2"
               >
-                Products
+                Create
               </Typography>
             </Breadcrumbs>
           </Box>
-          <ProductCreateForm />
+          <ProductionCreateForm />
         </Container>
       </Box>
     </>

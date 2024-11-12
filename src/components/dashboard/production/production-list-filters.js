@@ -6,28 +6,20 @@ import { MultiSelect } from '../../multi-select';
 
 const categoryOptions = [
   {
-    label: 'Healthcare',
-    value: 'healthcare'
+    label: 'Snacks',
+    value: 'snacks'
   },
   {
-    label: 'Makeup',
-    value: 'makeup'
+    label: 'Pies',
+    value: 'pies'
   },
   {
-    label: 'Dress',
-    value: 'dress'
+    label: 'Gluten-Free',
+    value: 'gluten-free'
   },
   {
-    label: 'Skincare',
-    value: 'skincare'
-  },
-  {
-    label: 'Jewelry',
-    value: 'jewelry'
-  },
-  {
-    label: 'Blouse',
-    value: 'blouse'
+    label: 'Soups',
+    value: 'soups'
   }
 ];
 
@@ -76,7 +68,7 @@ const useUpdateEffect = (effect, dependencies = []) => {
     dependencies);
 };
 
-export const ProjectListFilters = (props) => {
+export const ProductionListFilters = (props) => {
   const { onChange, ...other } = props;
   const [queryValue, setQueryValue] = useState('');
   const [filterItems, setFilterItems] = useState([]);
@@ -390,12 +382,12 @@ export const ProjectListFilters = (props) => {
           options={categoryOptions}
           value={categoryValues}
         />
-        <MultiSelect
+        {/* <MultiSelect
           label="Status"
           onChange={(value) => handleStatusChange(value)}
           options={statusOptions}
           value={statusValues}
-        />
+        /> */}
         <MultiSelect
           label="Stock"
           onChange={(value) => handleStockChange(value)}
@@ -407,6 +399,6 @@ export const ProjectListFilters = (props) => {
   );
 };
 
-ProjectListFilters.propTypes = {
+ProductionListFilters.propTypes = {
   onChange: PropTypes.func
 };
