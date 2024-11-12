@@ -47,17 +47,17 @@ const getSections = (t) => [
         ]
       },
       {
-        title: t('Products Sold'),
+        title: t('Products List'),
         path: '/dashboard/products',
         icon: <ShoppingBagIcon fontSize="small" />,
         children: [
           {
             title: t('List'),
-            path: '/dashboard/products'
+            path: '/dashboard/productlist'
           },
           {
             title: t('Create'),
-            path: '/dashboard/products/new'
+            path: '/dashboard/productlist/new'
           }
         ]
       },
@@ -73,6 +73,21 @@ const getSections = (t) => [
           {
             title: t('Create'),
             path: '/dashboard/production/new'
+          }
+        ]
+      },
+      {
+        title: t('Products Sold'),
+        path: '/dashboard/productsold',
+        icon: <ShoppingBagIcon fontSize="small" />,
+        children: [
+          {
+            title: t('List'),
+            path: '/dashboard/productsold'
+          },
+          {
+            title: t('Create'),
+            path: '/dashboard/productsold/new'
           }
         ]
       },

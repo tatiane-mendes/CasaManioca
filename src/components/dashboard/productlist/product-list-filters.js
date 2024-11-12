@@ -20,6 +20,14 @@ const categoryOptions = [
   {
     label: 'Soups',
     value: 'soups'
+  },
+  {
+    label: 'Jewelry',
+    value: 'jewelry'
+  },
+  {
+    label: 'Blouse',
+    value: 'blouse'
   }
 ];
 
@@ -68,7 +76,7 @@ const useUpdateEffect = (effect, dependencies = []) => {
     dependencies);
 };
 
-export const ProjectListFilters = (props) => {
+export const ProductListFilters = (props) => {
   const { onChange, ...other } = props;
   const [queryValue, setQueryValue] = useState('');
   const [filterItems, setFilterItems] = useState([]);
@@ -399,6 +407,6 @@ export const ProjectListFilters = (props) => {
   );
 };
 
-ProjectListFilters.propTypes = {
+ProductListFilters.propTypes = {
   onChange: PropTypes.func
 };
