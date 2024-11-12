@@ -87,14 +87,14 @@ const Overview = () => {
                   m: -1
                 }}
               >
-                <Button
+                {/* <Button
                   startIcon={<ReportsIcon fontSize="small" />}
                   sx={{ m: 1 }}
                   variant="outlined"
                 >
                   Reports
-                </Button>
-                <TextField
+                </Button> */}
+                {/* <TextField
                   defaultValue="week"
                   label="Period"
                   select
@@ -110,7 +110,7 @@ const Overview = () => {
                   <MenuItem value="year">
                     Last year
                   </MenuItem>
-                </TextField>
+                </TextField> */}
               </Grid>
             </Grid>
           </Box>
