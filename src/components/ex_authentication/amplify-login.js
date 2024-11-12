@@ -5,7 +5,7 @@ import { Alert, Box, Button, FormHelperText, TextField } from '@mui/material';
 import { useAuth } from '../../hooks/use-auth';
 import { useMounted } from '../../hooks/use-mounted';
 
-export const JWTLogin = (props) => {
+export const AmplifyLogin = (props) => {
   const isMounted = useMounted();
   const router = useRouter();
   const { login } = useAuth();
@@ -20,11 +20,7 @@ export const JWTLogin = (props) => {
         .string()
         .email('Must be a valid email')
         .max(255)
-        .required('Email is required'),
-      password: Yup
-        .string()
-        .max(255)
-        .required('Password is required')
+        .required('Email is required')
     }),
     onSubmit: async (values, helpers) => {
       try {
@@ -38,6 +34,12 @@ export const JWTLogin = (props) => {
         console.error(err);
 
         if (isMounted()) {
+          if (err.code === 'UserNotConfirmedException') {
+            sessionStorage.setItem('username', values.email);
+            router.push('/authentication/verify-code');
+            return;
+          }
+
           helpers.setStatus({ success: false });
           helpers.setErrors({ submit: err.message });
           helpers.setSubmitting(false);
@@ -94,7 +96,19 @@ export const JWTLogin = (props) => {
           Log In
         </Button>
       </Box>
-      
+      <Box sx={{ mt: 3 }}>
+        <Alert severity="info">
+          <div>
+            You can use
+            {' '}
+            <b>demo@devias.io</b>
+            {' '}
+            and password
+            {' '}
+            <b>Password123!</b>
+          </div>
+        </Alert>
+      </Box>
     </form>
   );
 };

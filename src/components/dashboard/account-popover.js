@@ -126,16 +126,7 @@ export const AccountPopover = (props) => {
           passHref
         >
           <MenuItem component="a">
-            <ListItemIcon>
-              <SwitchHorizontalOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText
-              primary={(
-                <Typography variant="body1">
-                  Change organization
-                </Typography>
-              )}
-            />
+            
           </MenuItem>
         </NextLink>
         <Divider />
