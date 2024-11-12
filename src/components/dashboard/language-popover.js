@@ -5,16 +5,12 @@ import { Box, ListItemIcon, ListItemText, MenuItem, Popover, Typography } from '
 
 const languageOptions = {
   en: {
-    icon: '/static/icons/uk_flag.svg',
+    icon: '/static/icons/ca_flag.svg',
     label: 'English'
   },
-  de: {
-    icon: '/static/icons/de_flag.svg',
-    label: 'German'
-  },
-  es: {
-    icon: '/static/icons/es_flag.svg',
-    label: 'Spanish'
+  pt: {
+    icon: '/static/icons/br_flag.svg',
+    label: 'Português'
   }
 };
 

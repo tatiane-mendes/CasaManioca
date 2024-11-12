@@ -24,9 +24,8 @@ import { Search as SearchIcon } from '../../icons/search';
 import { Users as UsersIcon } from '../../icons/users';
 
 const languages = {
-  en: '/static/icons/uk_flag.svg',
-  de: '/static/icons/de_flag.svg',
-  es: '/static/icons/es_flag.svg'
+  en: '/static/icons/ca_flag.svg',
+  pt: '/static/icons/br_flag.svg'
 };
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
@@ -280,9 +279,9 @@ export const DashboardNavbar = (props) => {
           </IconButton>
           <Box sx={{ flexGrow: 1 }} />
           <LanguageButton />
-          <ContentSearchButton />
-          <ContactsButton />
-          <NotificationsButton />
+          {/* <ContentSearchButton /> */}
+          {/* <ContactsButton /> */}
+          {/* <NotificationsButton /> */}
           <AccountButton />
         </Toolbar>
       </DashboardNavbarRoot>

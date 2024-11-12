@@ -1,12 +1,9 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import { Box, Card, Container, Divider, Link, Typography } from '@mui/material';
-import { AmplifyLogin } from '../../components/authentication/amplify-login';
-import { Auth0Login } from '../../components/authentication/auth0-login';
-import { FirebaseLogin } from '../../components/authentication/firebase-login';
-import { JWTLogin } from '../../components/authentication/jwt-login';
+import { Box, Card, Container, Typography } from '@mui/material';
+import { AuthBanner } from '../../components/authentication/auth-banner';
+import { AmplifyPasswordRecovery } from '../../components/authentication/amplify-password-recovery';
 import { Logo } from '../../components/logo';
 import { withGuestGuard } from '../../hocs/with-guest-guard';
 import { useAuth } from '../../hooks/use-auth';
@@ -19,10 +16,8 @@ const platformIcons = {
   JWT: '/static/icons/jwt.svg'
 };
 
-const Login = () => {
-  const router = useRouter();
+const PasswordRecovery = () => {
   const { platform } = useAuth();
-  const { disableGuard } = router.query;
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -32,7 +27,7 @@ const Login = () => {
     <>
       <Head>
         <title>
-          Login
+          Password Recovery | Material Kit Pro
         </title>
       </Head>
       <Box
@@ -43,7 +38,8 @@ const Login = () => {
           flexDirection: 'column',
           minHeight: '100vh'
         }}
-      >       
+      >
+        <AuthBanner />
         <Container
           maxWidth="sm"
           sx={{
@@ -53,7 +49,40 @@ const Login = () => {
             }
           }}
         >
-          
+          <Box
+            sx={{
+              alignItems: 'center',
+              backgroundColor: (theme) => theme.palette.mode === 'dark'
+                ? 'neutral.900'
+                : 'neutral.100',
+              borderColor: 'divider',
+              borderRadius: 1,
+              borderStyle: 'solid',
+              borderWidth: 1,
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+              mb: 4,
+              p: 2,
+              '& > img': {
+                height: 32,
+                width: 'auto',
+                flexGrow: 0,
+                flexShrink: 0
+              }
+            }}
+          >
+            <Typography
+              color="textSecondary"
+              variant="caption"
+            >
+              The app authenticates via {platform}
+            </Typography>
+            <img
+              alt="Auth platform"
+              src={platformIcons[platform]}
+            />
+          </Box>
           <Card
             elevation={16}
             sx={{ p: 4 }}
@@ -80,14 +109,14 @@ const Login = () => {
                 </a>
               </NextLink>
               <Typography variant="h4">
-                Log in
+                Password Recovery
               </Typography>
               <Typography
                 color="textSecondary"
                 sx={{ mt: 2 }}
                 variant="body2"
               >
-                Sign in on the internal platform
+                Tell us your email so we can send you a reset link
               </Typography>
             </Box>
             <Box
@@ -96,29 +125,8 @@ const Login = () => {
                 mt: 3
               }}
             >
-              {platform === 'Amplify' && <AmplifyLogin />}
-              {platform === 'Auth0' && <Auth0Login />}
-              {platform === 'Firebase' && <FirebaseLogin />}
-              {platform === 'JWT' && <JWTLogin />}
+              {platform === 'Amplify' && <AmplifyPasswordRecovery />}
             </Box>
-            <Divider sx={{ my: 3 }} />
-            
-            { (
-              <NextLink
-                href={disableGuard
-                  ? `/authentication/password-recovery?disableGuard=${disableGuard}`
-                  : '/authentication/password-recovery'}
-                passHref
-              >
-                <Link
-                  color="textSecondary"
-                  sx={{ mt: 1 }}
-                  variant="body2"
-                >
-                  Forgot password
-                </Link>
-              </NextLink>
-            )}
           </Card>
         </Container>
       </Box>
@@ -126,4 +134,4 @@ const Login = () => {
   );
 };
 
-export default withGuestGuard(Login);
+export default withGuestGuard(PasswordRecovery);
