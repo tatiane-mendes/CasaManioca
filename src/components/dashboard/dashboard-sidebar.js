@@ -47,7 +47,7 @@ const getSections = (t) => [
         ]
       },
       {
-        title: t('Products'),
+        title: t('Products Sold'),
         path: '/dashboard/products',
         icon: <ShoppingBagIcon fontSize="small" />,
         children: [
