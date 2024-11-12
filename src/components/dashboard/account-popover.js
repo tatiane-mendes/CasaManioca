@@ -26,7 +26,7 @@ export const AccountPopover = (props) => {
   // `const { user } = useAuth();`
   const user = {
     avatar: '/static/mock-images/avatars/avatar-anika_visser.png',
-    name: 'Anika Visser'
+    name: 'Casa Manioca'
   };
 
   const handleLogout = async () => {
