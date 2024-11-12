@@ -26,13 +26,26 @@ export const AuthBanner = () => (
           justifyContent: 'center'
         }}
       >
-        <Chip //first container in the banner - including here some logo?
+        <Chip
           color="primary"
           label="NEW"
           sx={{ mr: 2 }}
           size="small"
         />
-        
+        <Typography variant="subtitle2">
+          Visit our
+          {' '}
+          <NextLink
+            href="/docs/welcome"
+            passHref
+          >
+            <Link variant="subtitle2">
+              docs
+            </Link>
+          </NextLink>
+          {' '}
+          and find out how to switch between
+        </Typography>
         <Box
           sx={{
             alignItems: 'center',
