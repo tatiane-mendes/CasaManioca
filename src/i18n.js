@@ -50,7 +50,9 @@ const resources = {
       'Need Help?': 'Precisa de ajuda?',
       'Check our docs': 'Consulte nuestros documentos',
       'Documentation': 'Documentação',
-      'Inventory': 'Inventário'
+      'Inventory': 'Inventário',
+      'Production': 'Produção',
+      'Number of Products in Stock': 'Número de produtos em estoque'
     }
   }
 };

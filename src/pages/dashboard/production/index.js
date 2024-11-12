@@ -16,6 +16,7 @@ import { Plus as PlusIcon } from '../../../icons/plus';
 import { MinusOutlined as MinusIcon } from '../../../icons/minus-outlined';
 import { Cog as CogIcon } from '../../../icons/cog';
 import { gtm } from '../../../lib/gtm';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -72,6 +73,7 @@ const ProductList = () => {
     status: [],
     inStock: undefined
   });
+  const { t } = useTranslation();
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -116,7 +118,7 @@ const ProductList = () => {
     <>
       <Head>
         <title>
-          Dashboard: Product List | Material Kit Pro
+          Dashboard: Product List
         </title>
       </Head>
       <Box
@@ -135,7 +137,7 @@ const ProductList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Production
+                  {t('Production')}
                 </Typography>
               </Grid>
               <Grid item>
@@ -197,7 +199,7 @@ const ProductList = () => {
               </Button>
             </Box> */}
             <br/><TextField
-                  label="No. of Products in Stock"
+                  label={t("Number of Products in Stock")}
                   variant="outlined"
                     // Replace 'yourBackendData' with the actual data you want to display
                   InputProps={{
@@ -207,7 +209,7 @@ const ProductList = () => {
                 />
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <TextField
-                  label="No. of Product Total"
+                  label="Total Number of Products"
                   variant="outlined"
                     // Replace 'yourBackendData' with the actual data you want to display
                   InputProps={{
