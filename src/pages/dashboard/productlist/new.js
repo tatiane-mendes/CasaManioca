@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import NextLink from 'next/link';
 import Head from 'next/head';
 import { Box, Breadcrumbs, Container, Link, Typography } from '@mui/material';
-import { ProductCreateForm } from '../../../components/dashboard/product/product-create-form';
+import { ProductCreateForm } from '../../../components/dashboard/productlist/product-create-form';
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
 import { gtm } from '../../../lib/gtm';
@@ -58,7 +58,7 @@ const ProductCreate = () => {
                 color="textSecondary"
                 variant="subtitle2"
               >
-                Products
+                Products List
               </Typography>
             </Breadcrumbs>
           </Box>
