@@ -52,7 +52,10 @@ const resources = {
       'Documentation': 'Documentação',
       'Inventory': 'Inventário',
       'Production': 'Produção',
-      'Number of Products in Stock': 'Número de produtos em estoque'
+      'Number of Products in Stock': 'Número de produtos em estoque',
+      'Total Inventory': 'Inventário total',
+      'Products List': 'Lista de produtos',
+      'Products Sold': 'Produtos vendidos'
     }
   }
 };

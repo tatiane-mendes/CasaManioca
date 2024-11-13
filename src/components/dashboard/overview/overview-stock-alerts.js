@@ -15,34 +15,34 @@ import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 
 const quantities = [
   {
-    amount: 120,
-    color: '#2F3EB1',
-    name: 'Chicken Crockett'
+    amount: 12,
+    color: '#A020F0',
+    name: 'Chicken Pie'
   },
   {
-    amount: 80,
-    color: '#0C7CD5',
-    name: 'Chesse bread'
+    amount: 25,
+    color: '#FFA500',
+    name: 'Chesse crockett'
   },
   {
-    amount: 82,
-    color: '#7BC67E',
+    amount: 15,
+    color: '#FF0000',
     name: 'Chese Whaffle'
   }
 ];
 
 
-export const OverviewTotalBalance = (props) => (
+export const OverviewStockAlerts = (props) => (
   <Card {...props}>
     <CardContent>
       <Typography
         color="textSecondary"
         variant="overline"
       >
-        Total Inventory
+        Low Stock Alert
       </Typography>
       <Typography variant="h4">
-        {numeral(282).format('0,0') + ' ' + 'units'}
+        {numeral(52).format('0,0') + ' ' + 'units'}
       </Typography>
 
       <Divider sx={{ my: 2 }} />
@@ -50,16 +50,16 @@ export const OverviewTotalBalance = (props) => (
         color="textSecondary"
         variant="overline"
       >
-        Available quantity
+        Available stock
       </Typography>
       <List
         disablePadding
         sx={{ pt: 2 }}
       >
-        {quantities.map((quantity) => (
+        {quantities.map((stock) => (
           <ListItem
             disableGutters
-            key={quantity.name}
+            key={stock.name}
             sx={{
               pb: 2,
               pt: 0
@@ -84,7 +84,7 @@ export const OverviewTotalBalance = (props) => (
                     <Box
                       sx={{
                         border: 3,
-                        borderColor: quantity.color,
+                        borderColor: stock.color,
                         borderRadius: '50%',
                         height: 16,
                         mr: 1,
@@ -92,14 +92,14 @@ export const OverviewTotalBalance = (props) => (
                       }}
                     />
                     <Typography variant="subtitle2">
-                      {quantity.name}
+                      {stock.name}
                     </Typography>
                   </Box>
                   <Typography
                     color="textSecondary"
                     variant="subtitle2"
                   >
-                    {numeral(quantity.amount).format('0,0')}
+                    {numeral(stock.amount).format('0,0')}
                   </Typography>
                 </Box>
               )}

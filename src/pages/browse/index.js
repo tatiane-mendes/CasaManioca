@@ -125,7 +125,7 @@ const Browse = () => {
     <>
       <Head>
         <title>
-          Browse | Material Kit Pro
+          Browse 
         </title>
       </Head>
       <Box

@@ -17,7 +17,7 @@ const BrowseColors = () => {
     <>
       <Head>
         <title>
-          Browse: Colors | Material Kit Pro
+          Browse: Colors 
         </title>
       </Head>
       <Box

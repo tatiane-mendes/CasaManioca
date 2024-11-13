@@ -200,7 +200,7 @@ const CustomerList = () => {
     <>
       <Head>
         <title>
-          Dashboard: Inventory List | Material Kit Pro
+          Dashboard: Inventory List
         </title>
       </Head>
       <Box

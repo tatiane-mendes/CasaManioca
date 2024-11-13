@@ -219,7 +219,7 @@ const Calendar = () => {
     <>
       <Head>
         <title>
-          Dashboard: Calendar | Material Kit Pro
+          Dashboard: Calendar 
         </title>
       </Head>
       <Box

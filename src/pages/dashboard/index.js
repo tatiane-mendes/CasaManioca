@@ -20,6 +20,8 @@ import { OverviewLatestTransactions } from '../../components/dashboard/overview/
 import { OverviewPrivateWallet } from '../../components/dashboard/overview/overview-private-wallet';
 import { OverviewTotalBalance } from '../../components/dashboard/overview/overview-total-balance';
 import { OverviewTotalTransactions } from '../../components/dashboard/overview/overview-total-transactions';
+import { OverviewStockAlerts } from '../../components/dashboard/overview/overview-stock-alerts';
+import { OverviewLatestProductions } from '../../components/dashboard/overview/overview-latest-production';
 import { withAuthGuard } from '../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../hocs/with-dashboard-layout';
 import { ArrowRight as ArrowRightIcon } from '../../icons/arrow-right';
@@ -57,7 +59,7 @@ const Overview = () => {
     <>
       <Head>
         <title>
-          Dashboard: Overview | Material Kit Pro
+          Dashboard: Overview
         </title>
       </Head>
       <Box
@@ -87,30 +89,7 @@ const Overview = () => {
                   m: -1
                 }}
               >
-                {/* <Button
-                  startIcon={<ReportsIcon fontSize="small" />}
-                  sx={{ m: 1 }}
-                  variant="outlined"
-                >
-                  Reports
-                </Button> */}
-                {/* <TextField
-                  defaultValue="week"
-                  label="Period"
-                  select
-                  size="small"
-                  sx={{ m: 1 }}
-                >
-                  <MenuItem value="week">
-                    Last week
-                  </MenuItem>
-                  <MenuItem value="month">
-                    Last month
-                  </MenuItem>
-                  <MenuItem value="year">
-                    Last year
-                  </MenuItem>
-                </TextField> */}
+                                
               </Grid>
             </Grid>
           </Box>
@@ -131,236 +110,49 @@ const Overview = () => {
               md={6}
               xs={12}
             >
-              <OverviewCryptoWallet />
+              
             </Grid>
             <Grid
               item
               md={6}
               xs={12}
             >
-              <OverviewPrivateWallet />
+              
             </Grid>
             <Grid
               item
               md={8}
-              xs={12}
-            >
-              <OverviewTotalTransactions />
-            </Grid>
-            <Grid
-              item
-              md={4}
               xs={12}
             >
               <OverviewTotalBalance />
             </Grid>
             <Grid
               item
+              md={4}
+              xs={12}
+            >
+              <OverviewStockAlerts />
+            </Grid>
+            <Grid
+              item
               md={8}
               xs={12}
             >
-              <OverviewLatestTransactions />
+              <OverviewLatestProductions />
             </Grid>
             <Grid
               item
               md={4}
               xs={12}
             >
-              {/* <OverviewInbox /> */}
+              
             </Grid>
             <Grid
               item
               md={6}
               xs={12}
             >
-              {/* <Card>
-                <CardContent>
-                  <Box
-                    sx={{
-                      alignItems: 'center',
-                      display: 'flex'
-                    }}
-                  >
-                    <BriefcaseIcon
-                      color="primary"
-                      fontSize="small"
-                    />
-                    <Typography
-                      color="primary.main"
-                      sx={{ pl: 1 }}
-                      variant="subtitle2"
-                    >
-                      Jobs
-                    </Typography>
-                  </Box>
-                  <Typography
-                    variant="h6"
-                    sx={{ mt: 2 }}
-                  >
-                    Find your dream job
-                  </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  </Typography>
-                </CardContent>
-                <Divider />
-                <CardActions>
-                  <Button
-                    endIcon={<ArrowRightIcon fontSize="small" />}
-                    size="small"
-                  >
-                    Search Jobs
-                  </Button>
-                </CardActions>
-              </Card> */}
-            {/* </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Card>
-                <CardContent>
-                  <Box
-                    sx={{
-                      alignItems: 'center',
-                      display: 'flex'
-                    }}
-                  >
-                    <InformationCircleOutlinedIcon color="primary" />
-                    <Typography
-                      color="primary.main"
-                      sx={{ pl: 1 }}
-                      variant="subtitle2"
-                    >
-                      Help Center
-                    </Typography>
-                  </Box>
-                  <Typography
-                    sx={{ mt: 2 }}
-                    variant="h6"
-                  >
-                    Need help figuring things out?
-                  </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  </Typography>
-                </CardContent>
-                <Divider />
-                <CardActions>
-                  <Button
-                    endIcon={<ExternalLinkIcon fontSize="small" />}
-                    size="small"
-                  >
-                    Help Center
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Card>
-                <CardContent>
-                  <Box
-                    sx={{
-                      alignItems: 'center',
-                      display: 'flex'
-                    }}
-                  >
-                    <DownloadIcon color="primary" />
-                    <Typography
-                      color="primary.main"
-                      sx={{ pl: 1 }}
-                      variant="subtitle2"
-                    >
-                      Download
-                    </Typography>
-                  </Box>
-                  <Typography
-                    sx={{ mt: 2 }}
-                    variant="h6"
-                  >
-                    Download our Free PDF and learn how to
-                    get more job leads
-                  </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  </Typography>
-                </CardContent>
-                <Divider />
-                <CardActions>
-                  <Button
-                    endIcon={<DownloadIcon fontSize="small" />}
-                    size="small"
-                    variant="outlined"
-                  >
-                    Download Free PDF
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Card>
-                <CardContent>
-                  <Box
-                    sx={{
-                      alignItems: 'center',
-                      display: 'flex'
-                    }}
-                  >
-                    <UsersIcon color="primary" />
-                    <Typography
-                      color="primary.main"
-                      sx={{ pl: 1 }}
-                      variant="subtitle2"
-                    >
-                      Contacts
-                    </Typography>
-                  </Box>
-                  <Typography
-                    sx={{ mt: 2 }}
-                    variant="h6"
-                  >
-                    Contacts allow you to manage your company contracts
-                  </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  </Typography>
-                </CardContent>
-                <Divider />
-                <CardActions>
-                  <Button
-                    endIcon={<ArrowRightIcon fontSize="small" />}
-                    size="small"
-                    variant="outlined"
-                  >
-                    My Contacts
-                  </Button>
-                </CardActions>
-              </Card> */}
+              
             </Grid>
           </Grid>
         </Container>

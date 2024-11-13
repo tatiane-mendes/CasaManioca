@@ -28,7 +28,7 @@ const getSections = (t) => [
     title: t('Management'),
     items: [
       {
-        title: t('Customers'),
+        title: t('Inventory'),
         path: '/dashboard/customers',
         icon: <UsersIcon fontSize="small" />,
         children: [
@@ -36,10 +36,7 @@ const getSections = (t) => [
             title: t('List'),
             path: '/dashboard/customers'
           },
-          {
-            title: t('Details'),
-            path: '/dashboard/customers/1'
-          },
+          
           {
             title: t('Edit'),
             path: '/dashboard/customers/1/edit'

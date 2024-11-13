@@ -20,7 +20,7 @@ const BrowseInputs = () => {
     <>
       <Head>
         <title>
-          Browse: Inputs | Material Kit Pro
+          Browse: Inputs 
         </title>
       </Head>
       <Box

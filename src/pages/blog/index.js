@@ -38,7 +38,7 @@ const BlogPostList = () => {
     <>
       <Head>
         <title>
-          Blog: Post List | Material Kit Pro
+          Blog: Post List 
         </title>
       </Head>
       <Box
