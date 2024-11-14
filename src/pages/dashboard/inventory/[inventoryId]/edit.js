@@ -3,28 +3,28 @@ import NextLink from 'next/link';
 import Head from 'next/head';
 import { Avatar, Box, Chip, Container, Link, Typography } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
-import { customerApi } from '../../../../__fake-api__/customer-api';
-import { CustomerEditForm } from '../../../../components/dashboard/customer/customer-edit-form';
+import { inventoryApi } from '../../../../__fake-api__/inventory-api';
+import { InventoryEditForm } from '../../../../components/dashboard/inventory/inventory-edit-form';
 import { withAuthGuard } from '../../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../../hooks/use-mounted';
 import { gtm } from '../../../../lib/gtm';
 import { getInitials } from '../../../../utils/get-initials';
 
-const CustomerEdit = () => {
+const InventoryEdit = () => {
   const isMounted = useMounted();
-  const [customer, setCustomer] = useState(null);
+  const [inventory, setInventory] = useState(null);
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getCustomer = useCallback(async () => {
+  const getInventory = useCallback(async () => {
     try {
-      const data = await customerApi.getCustomer();
+      const data = await inventoryApi.getInventory();
 
       if (isMounted()) {
-        setCustomer(data);
+        setInventory(data);
       }
     } catch (err) {
       console.error(err);
@@ -32,12 +32,12 @@ const CustomerEdit = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getCustomer();
+      getInventory();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
-  if (!customer) {
+  if (!inventory) {
     return null;
   }
 
@@ -45,7 +45,7 @@ const CustomerEdit = () => {
     <>
       <Head>
         <title>
-          Dashboard: Customer Edit
+          Dashboard: Inventory Edit
         </title>
       </Head>
       <Box
@@ -59,7 +59,7 @@ const CustomerEdit = () => {
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
             <NextLink
-              href="/dashboard/customers"
+              href="/dashboard/inventorys"
               passHref
             >
               <Link
@@ -75,7 +75,7 @@ const CustomerEdit = () => {
                   sx={{ mr: 1 }}
                 />
                 <Typography variant="subtitle2">
-                  Customers
+                  Inventorys
                 </Typography>
               </Link>
             </NextLink>
@@ -88,21 +88,21 @@ const CustomerEdit = () => {
             }}
           >
             <Avatar
-              src={customer.avatar}
+              src={inventory.avatar}
               sx={{
                 height: 64,
                 mr: 2,
                 width: 64
               }}
             >
-              {getInitials(customer.name)}
+              {getInitials(inventory.name)}
             </Avatar>
             <div>
               <Typography
                 noWrap
                 variant="h4"
               >
-                {customer.email}
+                {inventory.email}
               </Typography>
               <Box
                 sx={{
@@ -117,7 +117,7 @@ const CustomerEdit = () => {
                   user_id:
                 </Typography>
                 <Chip
-                  label={customer.id}
+                  label={inventory.id}
                   size="small"
                   sx={{ ml: 1 }}
                 />
@@ -125,7 +125,7 @@ const CustomerEdit = () => {
             </div>
           </Box>
           <Box mt={3}>
-            <CustomerEditForm customer={customer} />
+            <InventoryEditForm inventory={inventory} />
           </Box>
         </Container>
       </Box>
@@ -133,4 +133,4 @@ const CustomerEdit = () => {
   );
 };
 
-export default withAuthGuard(withDashboardLayout(CustomerEdit));
+export default withAuthGuard(withDashboardLayout(InventoryEdit));

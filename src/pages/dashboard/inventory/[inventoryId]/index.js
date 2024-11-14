@@ -15,13 +15,10 @@ import {
   Typography
 } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
-import { customerApi } from '../../../../__fake-api__/customer-api';
-import { CustomerBasicDetails } from '../../../../components/dashboard/customer/customer-basic-details';
-import { CustomerDataManagement } from '../../../../components/dashboard/customer/customer-data-management';
-import { CustomerEmailsSummary } from '../../../../components/dashboard/customer/customer-emails-summary';
-import { CustomerInvoices } from '../../../../components/dashboard/customer/customer-invoices';
-import { CustomerPayment } from '../../../../components/dashboard/customer/customer-payment';
-import { CustomerLogs } from '../../../../components/dashboard/customer/customer-logs';
+import { inventoryApi } from '../../../../__fake-api__/inventory-api';
+import { InventoryBasicDetails } from '../../../../components/dashboard/inventory/inventory-basic-details';
+import { InventoryDataManagement } from '../../../../components/dashboard/inventory/inventory-data-management';
+import { InventoryLogs } from '../../../../components/dashboard/inventory/inventory-logs';
 import { withAuthGuard } from '../../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../../hooks/use-mounted';
@@ -36,21 +33,21 @@ const tabs = [
   { label: 'Logs', value: 'logs' }
 ];
 
-const CustomerDetails = () => {
+const InventoryDetails = () => {
   const isMounted = useMounted();
-  const [customer, setCustomer] = useState(null);
+  const [inventory, setInventory] = useState(null);
   const [currentTab, setCurrentTab] = useState('details');
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getCustomer = useCallback(async () => {
+  const getInventory = useCallback(async () => {
     try {
-      const data = await customerApi.getCustomer();
-
+      const data = await inventoryApi.getInventory();
+      
       if (isMounted()) {
-        setCustomer(data);
+        setInventory(data);
       }
     } catch (err) {
       console.error(err);
@@ -58,7 +55,7 @@ const CustomerDetails = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getCustomer();
+      getInventory();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
@@ -67,7 +64,7 @@ const CustomerDetails = () => {
     setCurrentTab(value);
   };
 
-  if (!customer) {
+  if (!inventory) {
     return null;
   }
 
@@ -75,7 +72,7 @@ const CustomerDetails = () => {
     <>
       <Head>
         <title>
-          Dashboard: Customer Details
+          Dashboard: Inventory Details
         </title>
       </Head>
       <Box
@@ -89,7 +86,7 @@ const CustomerDetails = () => {
           <div>
             <Box sx={{ mb: 4 }}>
               <NextLink
-                href="/dashboard/customers"
+                href="/dashboard/inventorys"
                 passHref
               >
                 <Link
@@ -105,7 +102,7 @@ const CustomerDetails = () => {
                     sx={{ mr: 1 }}
                   />
                   <Typography variant="subtitle2">
-                    Customers
+                    Inventorys
                   </Typography>
                 </Link>
               </NextLink>
@@ -124,18 +121,18 @@ const CustomerDetails = () => {
                 }}
               >
                 <Avatar
-                  src={customer.avatar}
+                  src={inventory.avatar}
                   sx={{
                     height: 64,
                     mr: 2,
                     width: 64
                   }}
                 >
-                  {getInitials(customer.name)}
+                  {getInitials(inventory.name)}
                 </Avatar>
                 <div>
                   <Typography variant="h4">
-                    {customer.email}
+                    {inventory.email}
                   </Typography>
                   <Box
                     sx={{
@@ -147,7 +144,7 @@ const CustomerDetails = () => {
                       user_id:
                     </Typography>
                     <Chip
-                      label={customer.id}
+                      label={inventory.id}
                       size="small"
                       sx={{ ml: 1 }}
                     />
@@ -159,7 +156,7 @@ const CustomerDetails = () => {
                 sx={{ m: -1 }}
               >
                 <NextLink
-                  href="/dashboard/customers/1/edit"
+                  href="/dashboard/inventorys/1/edit"
                   passHref
                 >
                   <Button
@@ -213,38 +210,37 @@ const CustomerDetails = () => {
                   item
                   xs={12}
                 >
-                  <CustomerBasicDetails
-                    address1={customer.address1}
-                    address2={customer.address2}
-                    country={customer.country}
-                    email={customer.email}
-                    isVerified={customer.isVerified}
-                    phone={customer.phone}
-                    state={customer.state}
+                  <InventoryBasicDetails
+                    address1={inventory.address1}
+                    address2={inventory.address2}
+                    country={inventory.country}
+                    email={inventory.email}
+                    isVerified={inventory.isVerified}
+                    phone={inventory.phone}
+                    state={inventory.state}
                   />
                 </Grid>
                 <Grid
                   item
                   xs={12}
                 >
-                  <CustomerPayment />
+                  
                 </Grid>
                 <Grid
                   item
                   xs={12}
                 >
-                  <CustomerEmailsSummary />
+                  
                 </Grid>
                 <Grid
                   item
                   xs={12}
                 >
-                  <CustomerDataManagement />
+                  <InventoryDataManagement />
                 </Grid>
               </Grid>
             )}
-            {currentTab === 'invoices' && <CustomerInvoices />}
-            {currentTab === 'logs' && <CustomerLogs />}
+            {currentTab === 'logs' && <InventoryLogs />}
           </Box>
         </Container>
       </Box>
@@ -252,5 +248,5 @@ const CustomerDetails = () => {
   );
 };
 
-export default withAuthGuard(withDashboardLayout(CustomerDetails));
+export default withAuthGuard(withDashboardLayout(InventoryDetails));
 

@@ -19,18 +19,18 @@ import {
 import { wait } from '../../../utils/wait';
 
 export const InventoryEditForm = (props) => {
-  const { customer, ...other } = props;
+  const { inventory, ...other } = props;
   const formik = useFormik({
     initialValues: {
-      address1: customer.address1 || '',
-      address2: customer.address2 || '',
-      country: customer.country || '',
-      email: customer.email || '',
-      hasDiscount: customer.hasDiscount || false,
-      isVerified: customer.isVerified || false,
-      name: customer.name || '',
-      phone: customer.phone || '',
-      state: customer.state || '',
+      address1: inventory.address1 || '',
+      address2: inventory.address2 || '',
+      country: inventory.country || '',
+      email: inventory.email || '',
+      hasDiscount: inventory.hasDiscount || false,
+      isVerified: inventory.isVerified || false,
+      name: inventory.name || '',
+      phone: inventory.phone || '',
+      state: inventory.state || '',
       submit: null
     },
     validationSchema: Yup.object({
@@ -219,5 +219,5 @@ export const InventoryEditForm = (props) => {
 };
 
 InventoryEditForm.propTypes = {
-    customer: PropTypes.object.isRequired
+    inventory: PropTypes.object.isRequired
 };

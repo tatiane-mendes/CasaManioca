@@ -22,7 +22,7 @@ export const InventoryLogs = (props) => {
 
   const getLogs = useCallback(async () => {
     try {
-      const data = await InventoryApi.getCustomerLogs();
+      const data = await InventoryApi.getInventoryLogs();
 
       if (isMounted()) {
         setLogs(data);
