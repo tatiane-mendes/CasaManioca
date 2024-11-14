@@ -111,7 +111,7 @@ const ProductList = () => {
     <>
       <Head>
         <title>
-          Dashboard: Product List 
+          Dashboard: Ingredients List 
         </title>
       </Head>
       <Box
