@@ -130,7 +130,7 @@ const ProductList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Products List
+                  Ingredients List
                 </Typography>
               </Grid>
               <Grid item>
@@ -170,25 +170,7 @@ const ProductList = () => {
                   
               </Grid>
             </Grid>
-            {/* <Box
-              sx={{
-                m: -1,
-                mt: 3
-              }}
-            >
-              <Button
-                startIcon={<UploadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
-                Import
-              </Button>
-              <Button
-                startIcon={<DownloadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
-                Export
-              </Button>
-            </Box> */}
+            
           </Box>
           <Card>
             <ProductListFilters onChange={handleFiltersChange} />

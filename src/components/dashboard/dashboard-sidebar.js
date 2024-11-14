@@ -29,23 +29,22 @@ const getSections = (t) => [
     items: [
       {
         title: t('Inventory'),
-        path: '/dashboard/customers',
+        path: '/dashboard/inventory',
         icon: <UsersIcon fontSize="small" />,
         children: [
           {
             title: t('List'),
-            path: '/dashboard/customers'
+            path: '/dashboard/inventory/list'
           },
-          
-          {
+                    {
             title: t('Edit'),
-            path: '/dashboard/customers/1/edit'
+            path: '/dashboard/inventory/1/edit'
           }
         ]
       },
       {
-        title: t('Products List'),
-        path: '/dashboard/products',
+        title: t('Ingredients List'),
+        path: '/dashboard/productslist',
         icon: <ShoppingBagIcon fontSize="small" />,
         children: [
           {
@@ -70,6 +69,10 @@ const getSections = (t) => [
           {
             title: t('Create'),
             path: '/dashboard/production/new'
+          },
+          {
+            title: t('Edit'),
+            path: '/dashboard/production/1/edit'
           }
         ]
       },
@@ -88,36 +91,8 @@ const getSections = (t) => [
           }
         ]
       },
-      {
-        title: t('Orders'),
-        icon: <ShoppingCartIcon fontSize="small" />,
-        path: '/dashboard/orders',
-        children: [
-          {
-            title: t('List'),
-            path: '/dashboard/orders'
-          },
-          {
-            title: t('Details'),
-            path: '/dashboard/orders/1'
-          }
-        ]
-      },
-      {
-        title: t('Invoices'),
-        path: '/dashboard/invoices',
-        icon: <ReceiptTaxIcon fontSize="small" />,
-        children: [
-          {
-            title: t('List'),
-            path: '/dashboard/invoices'
-          },
-          {
-            title: t('Details'),
-            path: '/dashboard/invoices/1'
-          }
-        ]
-      }
+      
+      
     ]
   }, 
 ];

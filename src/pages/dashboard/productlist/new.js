@@ -6,8 +6,9 @@ import { ProductCreateForm } from '../../../components/dashboard/productlist/pro
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
 import { gtm } from '../../../lib/gtm';
+import { useTranslation } from 'react-i18next';
 
-const ProductCreate = () => {
+const ProductCreate = (t) => {
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
@@ -16,7 +17,7 @@ const ProductCreate = () => {
     <>
       <Head>
         <title>
-          Dashboard: Product Create 
+          Dashboard: Ingredient Create, 
         </title>
       </Head>
       <Box
@@ -29,7 +30,7 @@ const ProductCreate = () => {
         <Container maxWidth="md">
           <Box sx={{ mb: 3 }}>
             <Typography variant="h4">
-              Create a new product
+              Create a new ingredient
             </Typography>
             <Breadcrumbs
               separator="/"
@@ -58,7 +59,7 @@ const ProductCreate = () => {
                 color="textSecondary"
                 variant="subtitle2"
               >
-                Products List
+                Ingredients List
               </Typography>
             </Breadcrumbs>
           </Box>

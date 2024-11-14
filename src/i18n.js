@@ -55,7 +55,10 @@ const resources = {
       'Number of Products in Stock': 'Número de produtos em estoque',
       'Total Inventory': 'Inventário total',
       'Products List': 'Lista de produtos',
-      'Products Sold': 'Produtos vendidos'
+      'Products Sold': 'Produtos vendidos',
+      'Good Morning': 'Bom dia',
+      'Good Afternoon': 'Boa tarde',
+      'Good Night': 'Boa noite'
     }
   }
 };

@@ -10,8 +10,6 @@ import { ProductionListTable } from '../../../components/dashboard/production/pr
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../hooks/use-mounted';
-import { Download as DownloadIcon } from '../../../icons/download';
-import { Upload as UploadIcon } from '../../../icons/upload';
 import { Plus as PlusIcon } from '../../../icons/plus';
 import { MinusOutlined as MinusIcon } from '../../../icons/minus-outlined';
 import { Cog as CogIcon } from '../../../icons/cog';
