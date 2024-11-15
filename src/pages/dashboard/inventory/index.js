@@ -23,6 +23,7 @@ import { Plus as PlusIcon } from '../../../icons/plus';
 import { Search as SearchIcon } from '../../../icons/search';
 import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
+import { useTranslation } from 'react-i18next';
 
 const tabs = [
   {
@@ -31,26 +32,26 @@ const tabs = [
   },
 ];
 
-const sortOptions = [
+const sortOptions = (t) => [
   {
-    label: 'Last update (newest)',
+    label: t('Last update (newest)'),
     value: 'updatedAt|desc'
   },
   {
-    label: 'Last update (oldest)',
+    label: t('Last update (oldest)'),
     value: 'updatedAt|asc'
   },
   {
-    label: 'Available stock (highest)',
+    label: t('Available stock (highest)'),
     value: 'orders|desc'
   },
   {
-    label: 'Available stock (lowest)',
+    label: t('Available stock (lowest)'),
     value: 'orders|asc'
   }
 ];
 
-const applyFilters = (inventorys, filters) => inventorys.filter((inventory) => {
+const applyFilters = (inventories, filters) => inventories.filter((inventory) => {
   if (filters.query) {
     let queryMatched = false;
     const properties = ['email', 'name'];
@@ -97,10 +98,10 @@ const getComparator = (order, orderBy) => (order === 'desc'
   ? (a, b) => descendingComparator(a, b, orderBy)
   : (a, b) => -descendingComparator(a, b, orderBy));
 
-const applySort = (inventorys, sort) => {
+const applySort = (inventories, sort) => {
   const [orderBy, order] = sort.split('|');
   const comparator = getComparator(order, orderBy);
-  const stabilizedThis = inventorys.map((el, index) => [el, index]);
+  const stabilizedThis = inventories.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
         const newOrder = comparator(a[0], b[0]);
@@ -115,17 +116,18 @@ const applySort = (inventorys, sort) => {
     return stabilizedThis.map((el) => el[0]);
 };
 
-const applyPagination = (inventorys, page, rowsPerPage) => inventorys.slice(page * rowsPerPage,
+const applyPagination = (inventories, page, rowsPerPage) => inventories.slice(page * rowsPerPage,
   page * rowsPerPage + rowsPerPage);
 
 const InventoryList = () => {
+  const { t } = useTranslation();
   const isMounted = useMounted();
   const queryRef = useRef(null);
-  const [inventorys, setInventorys] = useState([]);
+  const [inventories, setInventories] = useState([]);
   const [currentTab, setCurrentTab] = useState('all');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [sort, setSort] = useState(sortOptions[0].value);
+  const [sort, setSort] = useState(sortOptions(t)[0].value);
   const [filters, setFilters] = useState({
     query: '',
     hasAcceptedMarketing: null,
@@ -137,12 +139,12 @@ const InventoryList = () => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getInventorys = useCallback(async () => {
+  const getInventories = useCallback(async () => {
     try {
-      const data = await inventoryApi.getInventorys();
+      const data = await inventoryApi.getInventories();
 
       if (isMounted()) {
-        setInventorys(data);
+        setInventories(data);
       }
     } catch (err) {
       console.error(err);
@@ -150,7 +152,7 @@ const InventoryList = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getInventorys();
+      getInventories();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
@@ -192,15 +194,15 @@ const InventoryList = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredInventorys = applyFilters(inventorys, filters);
-  const sortedInventorys = applySort(filteredInventorys, sort);
-  const paginatedInventorys = applyPagination(sortedInventorys, page, rowsPerPage);
+  const filteredInventories = applyFilters(inventories, filters);
+  const sortedInventories = applySort(filteredInventories, sort);
+  const paginatedInventories = applyPagination(sortedInventories, page, rowsPerPage);
 
   return (
     <>
       <Head>
         <title>
-          Dashboard: Inventory List
+          {t('Dashboard: Inventory List')}
         </title>
       </Head>
       <Box
@@ -279,11 +281,11 @@ const InventoryList = () => {
                       </InputAdornment>
                     )
                   }}
-                  placeholder="Search products"
+                  placeholder={t("Search inventories")}
                 />
               </Box>
               <TextField
-                label="Sort By"
+                label={t("Sort By")}
                 name="sort"
                 onChange={handleSortChange}
                 select
@@ -291,7 +293,7 @@ const InventoryList = () => {
                 sx={{ m: 1.5 }}
                 value={sort}
               >
-                {sortOptions.map((option) => (
+                {sortOptions(t).map((option) => (
                   <option
                     key={option.value}
                     value={option.value}
@@ -302,8 +304,8 @@ const InventoryList = () => {
               </TextField>
             </Box>
             <InventoryListTable
-              inventorys={paginatedInventorys}
-              inventorysCount={filteredInventorys.length}
+              inventories={paginatedInventories}
+              inventoriesCount={filteredInventories.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}

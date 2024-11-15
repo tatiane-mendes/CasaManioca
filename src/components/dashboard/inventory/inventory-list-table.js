@@ -21,8 +21,11 @@ import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
 import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
+import { useTranslation } from 'react-i18next';
 
 export const InventoryListTable = (props) => {
+  const { t } = useTranslation();
+
   const {
     inventories,
     inventoriesCount,
@@ -102,7 +105,7 @@ export const InventoryListTable = (props) => {
                 />
               </TableCell>
               <TableCell>
-                Name
+                {t('Name')}
               </TableCell>
               <TableCell>
                 Category

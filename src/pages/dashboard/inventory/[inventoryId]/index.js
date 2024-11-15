@@ -17,6 +17,7 @@ import {
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { inventoryApi } from '../../../../__fake-api__/inventory-api';
 import { InventoryBasicDetails } from '../../../../components/dashboard/inventory/inventory-basic-details';
+import { InventoryListTable } from '../../../../components/dashboard/inventory/inventory-list-table';
 import { InventoryDataManagement } from '../../../../components/dashboard/inventory/inventory-data-management';
 import { InventoryLogs } from '../../../../components/dashboard/inventory/inventory-logs';
 import { withAuthGuard } from '../../../../hocs/with-auth-guard';
@@ -29,6 +30,7 @@ import { getInitials } from '../../../../utils/get-initials';
 
 const tabs = [
   { label: 'Details', value: 'details' },
+  { Label: 'List', value: 'list' },
   { label: 'Invoices', value: 'invoices' },
   { label: 'Logs', value: 'logs' }
 ];
@@ -86,7 +88,7 @@ const InventoryDetails = () => {
           <div>
             <Box sx={{ mb: 4 }}>
               <NextLink
-                href="/dashboard/inventorys"
+                href="/dashboard/inventories"
                 passHref
               >
                 <Link
@@ -102,7 +104,7 @@ const InventoryDetails = () => {
                     sx={{ mr: 1 }}
                   />
                   <Typography variant="subtitle2">
-                    Inventorys
+                    Inventories
                   </Typography>
                 </Link>
               </NextLink>
@@ -156,7 +158,7 @@ const InventoryDetails = () => {
                 sx={{ m: -1 }}
               >
                 <NextLink
-                  href="/dashboard/inventorys/1/edit"
+                  href="/dashboard/inventories/1/edit"
                   passHref
                 >
                   <Button

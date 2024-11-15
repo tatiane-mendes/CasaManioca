@@ -58,7 +58,15 @@ const resources = {
       'Products Sold': 'Produtos vendidos',
       'Good Morning': 'Bom dia',
       'Good Afternoon': 'Boa tarde',
-      'Good Night': 'Boa noite'
+      'Good Night': 'Boa noite',
+      'Last update (newest)': 'Última atualização (mais recente)',
+      'Last update (oldest)': 'Última atualização (mais antiga)',
+      'Available stock (highest)': 'Estoque disponível (mais alto)',
+      'Available stock (lowest)': 'Estoque disponível (mais baixo)',
+      'Dashboard: Inventory List': 'Painel: Lista de inventário',
+      'Sort By': 'Ordenar por',
+      'Search inventories': 'Buscar inventários',
+      'Name': 'Nome',
     }
   }
 };
