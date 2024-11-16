@@ -221,7 +221,7 @@ const InventoryList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Inventory
+                  {t('Inventory')}
                 </Typography>
               </Grid>
               <Grid item>

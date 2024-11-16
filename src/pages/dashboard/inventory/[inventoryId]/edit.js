@@ -59,7 +59,7 @@ const InventoryEdit = () => {
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
             <NextLink
-              href="/dashboard/inventories"
+              href="/dashboard/inventory"
               passHref
             >
               <Link

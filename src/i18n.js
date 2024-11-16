@@ -67,6 +67,12 @@ const resources = {
       'Sort By': 'Ordenar por',
       'Search inventories': 'Buscar inventários',
       'Name': 'Nome',
+      'Product Name': 'Nome do produto',
+      'Category': 'Categoria',
+      'Quantity': 'Quantidade',
+      'Stock Level': 'Nível de estoque',
+      'Expiry Date': 'Data de validade',
+      'Actions': 'Ações',
     }
   }
 };

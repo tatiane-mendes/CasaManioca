@@ -105,19 +105,22 @@ export const InventoryListTable = (props) => {
                 />
               </TableCell>
               <TableCell>
-                {t('Name')}
+                {t('Product Name')}
               </TableCell>
               <TableCell>
-                Category
+                {t(`Category`)}
               </TableCell>
               <TableCell>
-                Stock
+                {t(`Quantity`)}
               </TableCell>
               <TableCell>
-                Restock Requirement
+                {t(`Stock Level`)}
+              </TableCell>
+              <TableCell>
+                {t(`Expiry Date`)}
               </TableCell>
               <TableCell align="right">
-                Expiry
+                {t('Actions')}
               </TableCell>
             </TableRow>
           </TableHead>
@@ -156,7 +159,7 @@ export const InventoryListTable = (props) => {
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href="/dashboard/inventories/1"
+                          href="/dashboard/inventory/1"
                           passHref
                         >
                           <Link
@@ -176,22 +179,25 @@ export const InventoryListTable = (props) => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {`${inventory.city}, ${inventory.state}, ${inventory.country}`}
+                    {`${inventory.category}`}
                   </TableCell>
                   <TableCell>
-                    {inventory.totalOrders}
+                    {inventory.quantity}
                   </TableCell>
                   <TableCell>
                     <Typography
                       color="success.main"
                       variant="subtitle2"
                     >
-                      {numeral(inventory.totalAmountSpent).format(`${inventory.currency}0,0.00`)}
+                      {numeral(inventory.totalStockLevel).format(`0,0`)}
                     </Typography>
+                  </TableCell>
+                  <TableCell> 
+                    {inventory.date}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink
-                      href="/dashboard/inventories/1/edit"
+                      href="/dashboard/inventory/edit"
                       passHref
                     >
                       <IconButton component="a">
@@ -199,7 +205,7 @@ export const InventoryListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href="/dashboard/inventories/1"
+                      href="/dashboard/inventory/1"
                       passHref
                     >
                       <IconButton component="a">

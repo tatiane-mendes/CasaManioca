@@ -88,7 +88,7 @@ const InventoryDetails = () => {
           <div>
             <Box sx={{ mb: 4 }}>
               <NextLink
-                href="/dashboard/inventories"
+                href="/dashboard/inventory"
                 passHref
               >
                 <Link
@@ -158,7 +158,7 @@ const InventoryDetails = () => {
                 sx={{ m: -1 }}
               >
                 <NextLink
-                  href="/dashboard/inventories/1/edit"
+                  href="/dashboard/inventory/1/edit"
                   passHref
                 >
                   <Button
