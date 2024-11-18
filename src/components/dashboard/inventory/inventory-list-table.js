@@ -114,9 +114,6 @@ export const InventoryListTable = (props) => {
                 {t(`Quantity`)}
               </TableCell>
               <TableCell>
-                {t(`Stock Level`)}
-              </TableCell>
-              <TableCell>
                 {t(`Expiry Date`)}
               </TableCell>
               <TableCell align="right">
@@ -182,14 +179,11 @@ export const InventoryListTable = (props) => {
                     {`${inventory.category}`}
                   </TableCell>
                   <TableCell>
-                    {inventory.quantity}
-                  </TableCell>
-                  <TableCell>
                     <Typography
                       color="success.main"
                       variant="subtitle2"
                     >
-                      {numeral(inventory.totalStockLevel).format(`0,0`)}
+                      {numeral(inventory.quantity).format(`0,0`)}
                     </Typography>
                   </TableCell>
                   <TableCell> 

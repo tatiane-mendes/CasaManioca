@@ -40,29 +40,7 @@ class InventoryApi {
     return Promise.resolve(inventories);
   }
 
-  getInventory() {
-    const inventory = {
-      id: '5e86805e2bafd54f66cc95c3',
-      address1: 'Street John Wick, no. 7',
-      address2: 'House #25',
-      avatar: '/static/mock-images/avatars/avatar-miron_vitold.png',
-      balance: 0,
-      city: 'San Diego',
-      country: 'USA',
-      currency: '$',
-      email: 'miron.vitold@devias.io',
-      hasDiscount: false,
-      isVerified: true,
-      name: 'Miron Vitold',
-      phone: '+55 748 327 439',
-      state: 'New York',
-      vatRate: 19,
-      zipCode: '240355'
-    };
-
-    return Promise.resolve(inventory);
-  }
-
+  
   getInventoryEmails() {
     const emails = [
       {
@@ -78,25 +56,6 @@ class InventoryApi {
     ];
 
     return Promise.resolve(emails);
-  }
-
-  getInventoryInvoices() {
-    const invoices = [
-      {
-        id: '528651571NT',
-        issueDate: now.getTime(),
-        status: 'paid',
-        amount: 1358.75
-      },
-      {
-        id: '311658671JR',
-        issueDate: now.getTime(),
-        status: 'unpaid',
-        amount: 1451.75
-      }
-    ];
-
-    return Promise.resolve(invoices);
   }
 
   getInventoryLogs() {

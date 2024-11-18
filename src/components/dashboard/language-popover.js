@@ -8,10 +8,10 @@ const languageOptions = {
     icon: '/static/icons/ca_flag.svg',
     label: 'English'
   },
-  pt: {
-    icon: '/static/icons/br_flag.svg',
-    label: 'Português'
-  }
+  // pt: {
+  //   icon: '/static/icons/br_flag.svg',
+  //   label: 'Português'
+  // }
 };
 
 export const LanguagePopover = (props) => {

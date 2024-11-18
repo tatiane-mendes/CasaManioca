@@ -19,9 +19,11 @@ import { OverviewLatestProductions } from '../../components/dashboard/overview/o
 import { withAuthGuard } from '../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../hocs/with-dashboard-layout';
 import { gtm } from '../../lib/gtm';
+import { useTranslation } from 'react-i18next';
 
 const Overview = () => {
   const [displayBanner, setDisplayBanner] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -35,6 +37,19 @@ const Overview = () => {
       // setDisplayBanner(false);
     }
   }, []);
+
+  const getGreeting = () => {
+    const now = new Date();
+    const hour = now.getHours();
+  
+    if (hour < 12) {
+      return "Good Morning";
+    } else if (hour < 18) {
+      return "Good Afternoon";
+    } else {
+      return "Good Evening";
+    }
+  }
 
   const handleDismissBanner = () => {
     // Update the persistent state
@@ -65,7 +80,7 @@ const Overview = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Good Morning
+                  {t(getGreeting())}
                 </Typography>
               </Grid>
               <Grid

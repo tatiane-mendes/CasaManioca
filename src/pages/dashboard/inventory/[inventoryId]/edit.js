@@ -10,8 +10,10 @@ import { withDashboardLayout } from '../../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../../hooks/use-mounted';
 import { gtm } from '../../../../lib/gtm';
 import { getInitials } from '../../../../utils/get-initials';
+import { useTranslation } from 'react-i18next';
 
 const InventoryEdit = () => {
+  const { t } = useTranslation();
   const isMounted = useMounted();
   const [inventory, setInventory] = useState(null);
 
@@ -21,8 +23,8 @@ const InventoryEdit = () => {
 
   const getInventory = useCallback(async () => {
     try {
-      const data = await inventoryApi.getInventory();
-
+      // const data = await inventoryApi.getInventory();
+        const data = {};
       if (isMounted()) {
         setInventory(data);
       }
@@ -45,7 +47,7 @@ const InventoryEdit = () => {
     <>
       <Head>
         <title>
-          Dashboard: Inventory Edit
+          {t('Dashboard: Inventory Edit')}
         </title>
       </Head>
       <Box
@@ -75,7 +77,7 @@ const InventoryEdit = () => {
                   sx={{ mr: 1 }}
                 />
                 <Typography variant="subtitle2">
-                  Inventories
+                  {t('Inventories')}
                 </Typography>
               </Link>
             </NextLink>

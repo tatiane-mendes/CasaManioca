@@ -24,6 +24,7 @@ import { Search as SearchIcon } from '../../../icons/search';
 import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
 import { useTranslation } from 'react-i18next';
+import NextLink from 'next/link';
 
 const tabs = [
   {
@@ -225,12 +226,17 @@ const InventoryList = () => {
                 </Typography>
               </Grid>
               <Grid item>
+              <NextLink
+                href="/dashboard/inventory/0/edit"
+                passHref
+              >
                 <Button
                   startIcon={<PlusIcon fontSize="small" />}
                   variant="contained"
                 >
                   Add
                 </Button>
+              </NextLink>
               </Grid>
             </Grid>
           </Box>
