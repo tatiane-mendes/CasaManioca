@@ -89,7 +89,7 @@ export const InventoryEditForm = (props) => {
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label="Name"
+                label="Product Name"
                 name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -102,8 +102,8 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                label="Description"
-                name="email"
+                label="Quantity"
+                name="quantity"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
               />
@@ -130,32 +130,17 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.state && formik.errors.state)}
+                error={Boolean(formik.touched.country && formik.errors.country)}
                 fullWidth
-                helperText={formik.touched.state && formik.errors.state}
-                label="Category"
-                name="state"
+                helperText={formik.touched.country && formik.errors.country}
+                label="Expiry Date"
+                name="date"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.state}
+                value={formik.values.country}
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.phone && formik.errors.phone)}
-                fullWidth
-                helperText={formik.touched.phone && formik.errors.phone}
-                label="Phone number"
-                name="phone"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.phone}
-              />
-            </Grid>
+
           </Grid>
           <Box
             sx={{
@@ -191,7 +176,7 @@ export const InventoryEditForm = (props) => {
             Update
           </Button>
           <NextLink
-            href="/dashboard/inventory/1"
+            href="/dashboard/inventory"
             passHref
           >
             <Button

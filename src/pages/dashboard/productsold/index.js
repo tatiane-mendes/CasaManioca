@@ -1,84 +1,151 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
-import NextLink from 'next/link';
-import { Box, Button, Card, Container, Grid, Typography, TextField } from '@mui/material';
-import { productApi } from '../../../__fake-api__/product-api';
-import { ProductSoldListFilters } from '../../../components/dashboard/productsold/productsold-list-filters';
+import {
+  Box,
+  Button,
+  Card,
+  Container,
+  Divider,
+  Grid,
+  InputAdornment,
+  Tab,
+  Tabs,
+  TextField,
+  Typography
+} from '@mui/material';
+import { productsoldApi } from '../../../__fake-api__/productsold-api';
 import { ProductSoldListTable } from '../../../components/dashboard/productsold/productsold-list-table';
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../hooks/use-mounted';
 import { Download as DownloadIcon } from '../../../icons/download';
-import { Upload as UploadIcon } from '../../../icons/upload';
 import { Plus as PlusIcon } from '../../../icons/plus';
-import { MinusOutlined as MinusIcon } from '../../../icons/minus-outlined';
-import { Cog as CogIcon } from '../../../icons/cog';
+import { Search as SearchIcon } from '../../../icons/search';
+import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
+import { useTranslation } from 'react-i18next';
+import NextLink from 'next/link';
 
-const applyFilters = (products, filters) => products.filter((product) => {
-  if (filters.name) {
-    const nameMatched = product.name.toLowerCase().includes(filters.name.toLowerCase());
+const tabs = [
+  {
+    label: '',
+    value: ''
+  },
+];
 
-    if (!nameMatched) {
+const sortOptions = (t) => [
+  {
+    label: t('Name (A-Z)'),
+    value: 'name|asc'
+  },
+  {
+    label: t('Name (Z-A)'),
+    value: 'name|desc'
+  },
+  {
+    label: t('Available stock (highest)'),
+    value: 'quantity|desc'
+  },
+  {
+    label: t('Available stock (lowest)'),
+    value: 'quantity|asc'
+  }
+];
+
+const applyFilters = (productsold, filters) => productsold.filter((productsold) => {
+  if (filters.query) {
+    let queryMatched = false;
+    const properties = ['email', 'name'];
+
+    properties.forEach((property) => {
+      if (productsold[property].toLowerCase().includes(filters.query.toLowerCase())) {
+        queryMatched = true;
+      }
+    });
+
+    if (!queryMatched) {
       return false;
     }
   }
 
-  // It is possible to select multiple category options
-  if (filters.category?.length > 0) {
-    const categoryMatched = filters.category.includes(product.category);
-
-    if (!categoryMatched) {
-      return false;
-    }
+  if (filters.hasAcceptedMarketing && !productsold.hasAcceptedMarketing) {
+    return false;
   }
 
-  // It is possible to select multiple status options
-  if (filters.status?.length > 0) {
-    const statusMatched = filters.status.includes(product.status);
-
-    if (!statusMatched) {
-      return false;
-    }
+  if (filters.isProspect && !productsold.isProspect) {
+    return false;
   }
 
-  // Present only if filter required
-  if (typeof filters.inStock !== 'undefined') {
-    const stockMatched = product.inStock === filters.inStock;
-
-    if (!stockMatched) {
-      return false;
-    }
+  if (filters.isReturning && !productsold.isReturning) {
+    return false;
   }
 
   return true;
 });
 
-const applyPagination = (products, page, rowsPerPage) => products.slice(page * rowsPerPage,
+const descendingComparator = (a, b, orderBy) => {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+
+  return 0;
+};
+
+const getComparator = (order, orderBy) => (order === 'desc'
+  ? (a, b) => descendingComparator(a, b, orderBy)
+  : (a, b) => -descendingComparator(a, b, orderBy));
+
+const applySort = (productsold, sort) => {
+  const [orderBy, order] = sort.split('|');
+  const comparator = getComparator(order, orderBy);
+  const stabilizedThis = productsold.map((el, index) => [el, index]);
+
+  stabilizedThis.sort((a, b) => {
+        const newOrder = comparator(a[0], b[0]);
+
+    if (newOrder !== 0) {
+      return newOrder;
+    }
+
+        return a[1] - b[1];
+  });
+
+    return stabilizedThis.map((el) => el[0]);
+};
+
+const applyPagination = (productsold, page, rowsPerPage) => productsold.slice(page * rowsPerPage,
   page * rowsPerPage + rowsPerPage);
 
-const IngredientList = () => {
+const ProductSoldList = () => {
+  const { t } = useTranslation();
   const isMounted = useMounted();
-  const [products, setProducts] = useState([]);
+  const queryRef = useRef(null);
+  const [productsold, setProductSold] = useState([]);
+  const [currentTab, setCurrentTab] = useState('all');
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [sort, setSort] = useState(sortOptions(t)[0].value);
   const [filters, setFilters] = useState({
-    name: undefined,
-    category: [],
-    status: [],
-    inStock: undefined
+    query: '',
+    hasAcceptedMarketing: null,
+    isProspect: null,
+    isReturning: null
   });
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getProducts = useCallback(async () => {
+  const getProductSold = useCallback(async () => {
     try {
-      const data = await productApi.getProducts();
+      const data = await productsoldApi.getProductSold();
 
       if (isMounted()) {
-        setProducts(data);
+        setProductSold(data);
       }
     } catch (err) {
       console.error(err);
@@ -86,13 +153,37 @@ const IngredientList = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getProducts();
+      getProductSold();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
-  const handleFiltersChange = (filters) => {
-    setFilters(filters);
+  const handleTabsChange = (event, value) => {
+    const updatedFilters = {
+      ...filters,
+      hasAcceptedMarketing: null,
+      isProspect: null,
+      isReturning: null
+    };
+
+    if (value !== 'all') {
+      updatedFilters[value] = true;
+    }
+
+    setFilters(updatedFilters);
+    setCurrentTab(value);
+  };
+
+  const handleQueryChange = (event) => {
+    event.preventDefault();
+    setFilters((prevState) => ({
+      ...prevState,
+      query: queryRef.current?.value
+    }));
+  };
+
+  const handleSortChange = (event) => {
+    setSort(event.target.value);
   };
 
   const handlePageChange = (event, newPage) => {
@@ -104,14 +195,15 @@ const IngredientList = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredProducts = applyFilters(products, filters);
-  const paginatedProducts = applyPagination(filteredProducts, page, rowsPerPage);
+  const filteredProductSold = applyFilters(productsold, filters);
+  const sortedProductSold = applySort(filteredProductSold, sort);
+  const paginatedProductSold = applyPagination(sortedProductSold, page, rowsPerPage);
 
   return (
     <>
       <Head>
         <title>
-          Dashboard: Product List 
+          {t('Dashboard: Product Sold List')}
         </title>
       </Head>
       <Box
@@ -130,75 +222,100 @@ const IngredientList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  Products Sold
+                  {t('Product Sold')}
                 </Typography>
               </Grid>
               <Grid item>
-                
-                <NextLink
-                  href="/dashboard/productsold/new"
-                  passHref
+              <NextLink
+                href="/dashboard/productsold/0/edit"
+                passHref
+              >
+                <Button
+                  startIcon={<PlusIcon fontSize="small" />}
+                  variant="contained"
                 >
-                  <Button
-                    component="a"
-                    startIcon={<PlusIcon fontSize="small" />}
-                    variant="contained"
-                  >
-                    Add
-                  </Button>
-                  
-                </NextLink>
-                &nbsp;&nbsp;&nbsp;
-                
-                  <Button
-                    component="a"
-                    startIcon={<CogIcon fontSize="small" />}
-                    variant="contained"
-                  >
-                    Edit
-                  </Button>
-                  &nbsp;&nbsp;&nbsp;
-                  <Button
-                    color="error"
-                    component="a"
-                    startIcon={<MinusIcon fontSize="small" />}
-                    variant="contained"
-                  >
-                    Delete
-                  </Button>
-                  
-                  
+                  Add
+                </Button>
+              </NextLink>
               </Grid>
             </Grid>
-            {/* <Box
-              sx={{
-                m: -1,
-                mt: 3
-              }}
-            >
-              <Button
-                startIcon={<UploadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
-                Import
-              </Button>
-              <Button
-                startIcon={<DownloadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
-                Export
-              </Button>
-            </Box> */}
           </Box>
           <Card>
-            <ProductSoldListFilters onChange={handleFiltersChange} />
+            <Tabs
+              indicatorColor="primary"
+              onChange={handleTabsChange}
+              scrollButtons="auto"
+              sx={{ px: 3 }}
+              textColor="primary"
+              value={currentTab}
+              variant="scrollable"
+            >
+              {tabs.map((tab) => (
+                <Tab
+                  key={tab.value}
+                  label={tab.label}
+                  value={tab.value}
+                />
+              ))}
+            </Tabs>
+            <Divider />
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                flexWrap: 'wrap',
+                m: -1.5,
+                p: 3
+              }}
+            >
+              <Box
+                component="form"
+                onSubmit={handleQueryChange}
+                sx={{
+                  flexGrow: 1,
+                  m: 1.5
+                }}
+              >
+                <TextField
+                  defaultValue=""
+                  fullWidth
+                  inputProps={{ ref: queryRef }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
+                      </InputAdornment>
+                    )
+                  }}
+                  placeholder={t("Search Product Sold")}
+                />
+              </Box>
+              <TextField
+                label={t("Sort By")}
+                name="sort"
+                onChange={handleSortChange}
+                select
+                SelectProps={{ native: true }}
+                sx={{ m: 1.5 }}
+                value={sort}
+              >
+                {sortOptions(t).map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </Box>
             <ProductSoldListTable
+              productsold={paginatedProductSold}
+              productsoldCount={filteredProductSold.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              page={page}
-              products={paginatedProducts}
-              productsCount={filteredProducts.length}
               rowsPerPage={rowsPerPage}
+              page={page}
             />
           </Card>
         </Container>
@@ -207,4 +324,4 @@ const IngredientList = () => {
   );
 };
 
-export default withAuthGuard(withDashboardLayout(IngredientList));
+export default withAuthGuard(withDashboardLayout(ProductSoldList));

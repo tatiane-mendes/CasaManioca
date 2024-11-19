@@ -203,7 +203,7 @@ export const InventoryListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href="/dashboard/inventory/1"
+                      href="/dashboard/"
                       passHref
                     >
                       <IconButton component="a">
