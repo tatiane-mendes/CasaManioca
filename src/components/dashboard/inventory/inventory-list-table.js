@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import numeral from 'numeral';
+import { format } from 'date-fns';
 import PropTypes from 'prop-types';
+import { SeverityPill } from '../../severity-pill';
 import {
   Avatar,
   Box,
@@ -183,11 +185,13 @@ export const InventoryListTable = (props) => {
                       color="success.main"
                       variant="subtitle2"
                     >
-                      {numeral(inventory.quantity).format(`0,0`)}
+                      <SeverityPill color={inventory.quantity >= inventory.stockLevel ? 'success' : 'error'}>
+                        {numeral(inventory.quantity).format(`0,0`)}
+                      </SeverityPill>
                     </Typography>
                   </TableCell>
                   <TableCell> 
-                    {inventory.date}
+                    {format(inventory.date, 'dd/MM/yyyy')}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink

@@ -76,7 +76,7 @@ const useUpdateEffect = (effect, dependencies = []) => {
     dependencies);
 };
 
-export const ProductListFilters = (props) => {
+export const IngredientListFilters = (props) => {
   const { onChange, ...other } = props;
   const [queryValue, setQueryValue] = useState('');
   const [filterItems, setFilterItems] = useState([]);
@@ -321,7 +321,7 @@ export const ProductListFilters = (props) => {
             fullWidth
             onChange={handleQueryChange}
             onKeyUp={handleQueryKeyup}
-            placeholder="Search by product name"
+            placeholder="Search by ingredient name"
             value={queryValue}
           />
         </Box>
@@ -390,12 +390,6 @@ export const ProductListFilters = (props) => {
           options={categoryOptions}
           value={categoryValues}
         />
-        {/* <MultiSelect
-          label="Status"
-          onChange={(value) => handleStatusChange(value)}
-          options={statusOptions}
-          value={statusValues}
-        /> */}
         <MultiSelect
           label="Stock"
           onChange={(value) => handleStockChange(value)}
@@ -407,6 +401,6 @@ export const ProductListFilters = (props) => {
   );
 };
 
-ProductListFilters.propTypes = {
+IngredientListFilters.propTypes = {
   onChange: PropTypes.func
 };

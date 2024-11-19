@@ -46,7 +46,7 @@ const categoryOptions = [
   }
 ];
 
-export const ProductCreateForm = (props) => {
+export const IngredientCreateForm = (props) => {
   const router = useRouter();
   const [files, setFiles] = useState([]);
   const formik = useFormik({
@@ -74,8 +74,8 @@ export const ProductCreateForm = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         // NOTE: Make API request
-        toast.success('Product created!');
-        router.push('/dashboard/productlist');
+        toast.success('Ingredient created!');
+        router.push('/dashboard/ingredientslist');
       } catch (err) {
         console.error(err);
         toast.error('Something went wrong!');
@@ -126,7 +126,7 @@ export const ProductCreateForm = (props) => {
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label="Product Name"
+                label="Ingredient Name"
                 name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}

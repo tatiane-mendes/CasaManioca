@@ -23,12 +23,8 @@ export const AccountPopover = (props) => {
   const router = useRouter();
   const { logout } = useAuth();
   // To get the user from the authContext, you can use
-  // `const { user } = useAuth();`
-  const user = {
-    avatar: '/static/mock-images/avatars/avatar-anika_visser.png',
-    name: 'Casa Manioca'
-  };
-
+  const { user } = useAuth();
+  
   const handleLogout = async () => {
     try {
       onClose?.();
@@ -75,61 +71,12 @@ export const AccountPopover = (props) => {
           }}
         >
           <Typography variant="body1">
-            {user.name}
-          </Typography>
-          <Typography
-            color="textSecondary"
-            variant="body2"
-          >
-            Acme Inc
+            {user.firstName + ' ' + user.lastName}
           </Typography>
         </Box>
       </Box>
       <Divider />
       <Box sx={{ my: 1 }}>
-        <NextLink
-          href="/dashboard/social/profile"
-          passHref
-        >
-          <MenuItem component="a">
-            <ListItemIcon>
-              <UserCircleIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText
-              primary={(
-                <Typography variant="body1">
-                  Profile
-                </Typography>
-              )}
-            />
-          </MenuItem>
-        </NextLink>
-        <NextLink
-          href="/dashboard/account"
-          passHref
-        >
-          <MenuItem component="a">
-            <ListItemIcon>
-              <CogIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText
-              primary={(
-                <Typography variant="body1">
-                  Settings
-                </Typography>
-              )}
-            />
-          </MenuItem>
-        </NextLink>
-        <NextLink
-          href="/dashboard"
-          passHref
-        >
-          <MenuItem component="a">
-            
-          </MenuItem>
-        </NextLink>
-        <Divider />
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <LogoutIcon fontSize="small" />

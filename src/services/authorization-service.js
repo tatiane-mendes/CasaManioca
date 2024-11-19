@@ -65,6 +65,7 @@ class AuthorizationService {
   
     setUser = (user) => { 
       if (user) {
+        user.avatar = '/static/apple-touch-icon.png';
         localStorage.setItem('user', JSON.stringify(user));
       } else {
         localStorage.removeItem('user');

@@ -60,7 +60,7 @@ const applyFilters = (products, filters) => products.filter((product) => {
 const applyPagination = (products, page, rowsPerPage) => products.slice(page * rowsPerPage,
   page * rowsPerPage + rowsPerPage);
 
-const ProductList = () => {
+const IngredientList = () => {
   const isMounted = useMounted();
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(0);
@@ -235,4 +235,4 @@ const ProductList = () => {
   );
 };
 
-export default withAuthGuard(withDashboardLayout(ProductList));
+export default withAuthGuard(withDashboardLayout(IngredientList));

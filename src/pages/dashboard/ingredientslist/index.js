@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { Box, Button, Card, Container, Grid, Typography, TextField } from '@mui/material';
-import { productApi } from '../../../__fake-api__/product-api';
-import { ProductListFilters } from '../../../components/dashboard/productlist/product-list-filters';
-import { ProductListTable } from '../../../components/dashboard/productlist/product-list-table';
+import { ingredientApi } from '../../../__fake-api__/ingredient-api';
+import { IngredientListFilters } from '../../../components/dashboard/ingredientslist/ingredients-list-filters';
+import { IngredientListTable } from '../../../components/dashboard/ingredientslist/ingredients-list-table';
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../hooks/use-mounted';
@@ -15,9 +15,9 @@ import { MinusOutlined as MinusIcon } from '../../../icons/minus-outlined';
 import { Cog as CogIcon } from '../../../icons/cog';
 import { gtm } from '../../../lib/gtm';
 
-const applyFilters = (products, filters) => products.filter((product) => {
+const applyFilters = (ingredients, filters) => ingredients.filter((ingredient) => {
   if (filters.name) {
-    const nameMatched = product.name.toLowerCase().includes(filters.name.toLowerCase());
+    const nameMatched = ingredient.name.toLowerCase().includes(filters.name.toLowerCase());
 
     if (!nameMatched) {
       return false;
@@ -26,7 +26,7 @@ const applyFilters = (products, filters) => products.filter((product) => {
 
   // It is possible to select multiple category options
   if (filters.category?.length > 0) {
-    const categoryMatched = filters.category.includes(product.category);
+    const categoryMatched = filters.category.includes(ingredient.category);
 
     if (!categoryMatched) {
       return false;
@@ -35,7 +35,7 @@ const applyFilters = (products, filters) => products.filter((product) => {
 
   // It is possible to select multiple status options
   if (filters.status?.length > 0) {
-    const statusMatched = filters.status.includes(product.status);
+    const statusMatched = filters.status.includes(ingredient.status);
 
     if (!statusMatched) {
       return false;
@@ -44,7 +44,7 @@ const applyFilters = (products, filters) => products.filter((product) => {
 
   // Present only if filter required
   if (typeof filters.inStock !== 'undefined') {
-    const stockMatched = product.inStock === filters.inStock;
+    const stockMatched = ingredient.inStock === filters.inStock;
 
     if (!stockMatched) {
       return false;
@@ -54,12 +54,12 @@ const applyFilters = (products, filters) => products.filter((product) => {
   return true;
 });
 
-const applyPagination = (products, page, rowsPerPage) => products.slice(page * rowsPerPage,
+const applyPagination = (ingredients, page, rowsPerPage) => ingredients.slice(page * rowsPerPage,
   page * rowsPerPage + rowsPerPage);
 
-const ProductList = () => {
+const ingredientslist = () => {
   const isMounted = useMounted();
-  const [products, setProducts] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filters, setFilters] = useState({
@@ -73,12 +73,12 @@ const ProductList = () => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getProducts = useCallback(async () => {
+  const getIngredients = useCallback(async () => {
     try {
-      const data = await productApi.getProducts();
+      const data = await ingredientApi.getIngredients();
 
       if (isMounted()) {
-        setProducts(data);
+        setIngredients(data);
       }
     } catch (err) {
       console.error(err);
@@ -86,7 +86,7 @@ const ProductList = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getProducts();
+      getIngredients();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
@@ -104,8 +104,8 @@ const ProductList = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredProducts = applyFilters(products, filters);
-  const paginatedProducts = applyPagination(filteredProducts, page, rowsPerPage);
+  const filteredIngredients = applyFilters(ingredients, filters);
+  const paginatedIngredients = applyPagination(filteredIngredients, page, rowsPerPage);
 
   return (
     <>
@@ -136,7 +136,7 @@ const ProductList = () => {
               <Grid item>
                 
                 <NextLink
-                  href="/dashboard/productlist/new"
+                  href="/dashboard/ingredientslist/new"
                   passHref
                 >
                   <Button
@@ -173,13 +173,13 @@ const ProductList = () => {
             
           </Box>
           <Card>
-            <ProductListFilters onChange={handleFiltersChange} />
-            <ProductListTable
+            <IngredientListFilters onChange={handleFiltersChange} />
+            <IngredientListTable
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
-              products={paginatedProducts}
-              productsCount={filteredProducts.length}
+              ingredients={paginatedIngredients}
+              ingredientsCount={filteredIngredients.length}
               rowsPerPage={rowsPerPage}
             />
           </Card>
@@ -189,4 +189,4 @@ const ProductList = () => {
   );
 };
 
-export default withAuthGuard(withDashboardLayout(ProductList));
+export default withAuthGuard(withDashboardLayout(ingredientslist));

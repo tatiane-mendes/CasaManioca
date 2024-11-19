@@ -31,65 +31,25 @@ const getSections = (t) => [
         title: t('Inventory'),
         path: '/dashboard/inventory',
         icon: <UsersIcon fontSize="small" />,
-        children: [
-          {
-            title: t('List'),
-            path: '/dashboard/inventory'
-          },
-                    {
-            title: t('Edit'),
-            path: '/dashboard/inventory/1/edit'
-          }
-        ]
+        
       },
       {
         title: t('Ingredients List'),
-        path: '/dashboard/productslist',
+        path: '/dashboard/ingredientslist',
         icon: <ShoppingBagIcon fontSize="small" />,
-        children: [
-          {
-            title: t('List'),
-            path: '/dashboard/productlist'
-          },
-          {
-            title: t('Create'),
-            path: '/dashboard/productlist/new'
-          }
-        ]
+        
       },
       {
         title: t('Production'),
         path: '/dashboard/production',
         icon: <ShoppingBagIcon fontSize="small" />,
-        children: [
-          {
-            title: t('List'),
-            path: '/dashboard/production'
-          },
-          {
-            title: t('Create'),
-            path: '/dashboard/production/new'
-          },
-          {
-            title: t('Edit'),
-            path: '/dashboard/production/1/edit'
-          }
-        ]
+        
       },
       {
         title: t('Products Sold'),
         path: '/dashboard/productsold',
         icon: <ShoppingBagIcon fontSize="small" />,
-        children: [
-          {
-            title: t('List'),
-            path: '/dashboard/productsold'
-          },
-          {
-            title: t('Create'),
-            path: '/dashboard/productsold/new'
-          }
-        ]
+        
       },
       
       

@@ -2,13 +2,12 @@ import { useEffect } from 'react';
 import NextLink from 'next/link';
 import Head from 'next/head';
 import { Box, Breadcrumbs, Container, Link, Typography } from '@mui/material';
-import { ProductCreateForm } from '../../../components/dashboard/productlist/product-create-form';
+import { IngredientCreateForm } from '../../../components/dashboard/ingredientslist/ingredients-create-form';
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
 import { gtm } from '../../../lib/gtm';
-import { useTranslation } from 'react-i18next';
 
-const ProductCreate = (t) => {
+const IngredientCreate = (t) => {
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
@@ -63,12 +62,12 @@ const ProductCreate = (t) => {
               </Typography>
             </Breadcrumbs>
           </Box>
-          <ProductCreateForm />
+          <IngredientCreateForm />
         </Container>
       </Box>
     </>
   );
 };
 
-export default withAuthGuard(withDashboardLayout(ProductCreate));
+export default withAuthGuard(withDashboardLayout(IngredientCreate));
 

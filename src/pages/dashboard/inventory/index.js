@@ -35,20 +35,20 @@ const tabs = [
 
 const sortOptions = (t) => [
   {
-    label: t('Last update (newest)'),
-    value: 'updatedAt|desc'
+    label: t('Name (A-Z)'),
+    value: 'name|asc'
   },
   {
-    label: t('Last update (oldest)'),
-    value: 'updatedAt|asc'
+    label: t('Name (Z-A)'),
+    value: 'name|desc'
   },
   {
     label: t('Available stock (highest)'),
-    value: 'orders|desc'
+    value: 'quantity|desc'
   },
   {
     label: t('Available stock (lowest)'),
-    value: 'orders|asc'
+    value: 'quantity|asc'
   }
 ];
 
