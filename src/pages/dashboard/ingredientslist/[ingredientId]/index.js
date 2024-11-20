@@ -15,11 +15,11 @@ import {
   Typography
 } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
-import { productsoldApi } from '../../../../__fake-api__/productsold-api';
-import { ProductSoldBasicDetails } from '../../../../components/dashboard/productsold/productsold-basic-details';
-import { ProductSoldListTable } from '../../../../components/dashboard/productsold/productsold-list-table';
-import { ProductSoldDataManagement } from '../../../../components/dashboard/productsold/productsold-data-management';
-import { ProductSoldLogs } from '../../../../components/dashboard/productsold/productsold-logs';
+import { ingredientApi } from '../../../../__fake-api__/ingredient-api';
+import { IngredientBasicDetails } from '../../../../components/dashboard/ingredient/ingredient-basic-details';
+import { IngredientListTable } from '../../../../components/dashboard/ingredient/ingredient-list-table';
+import { IngredientDataManagement } from '../../../../components/dashboard/ingredient/ingredient-data-management';
+import { IngredientLogs } from '../../../../components/dashboard/ingredient/ingredient-logs';
 import { withAuthGuard } from '../../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../../hooks/use-mounted';
@@ -35,21 +35,21 @@ const tabs = [
   { label: 'Logs', value: 'logs' }
 ];
 
-const ProductSoldDetails = () => {
+const IngredientDetails = () => {
   const isMounted = useMounted();
-  const [productsold, setProductSold] = useState(null);
+  const [ingredient, setIngredient] = useState(null);
   const [currentTab, setCurrentTab] = useState('details');
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getProductSold = useCallback(async () => {
+  const getIngredient = useCallback(async () => {
     try {
-      const data = await productsoldApi.getProductSold();
+      const data = await ingredientApi.getIngredient();
       
       if (isMounted()) {
-        setProductSold(data);
+        setIngredient(data);
       }
     } catch (err) {
       console.error(err);
@@ -57,7 +57,7 @@ const ProductSoldDetails = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getProductSold();
+      getIngredient();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
@@ -66,7 +66,7 @@ const ProductSoldDetails = () => {
     setCurrentTab(value);
   };
 
-  if (!productsold) {
+  if (!ingredient) {
     return null;
   }
 
@@ -74,7 +74,7 @@ const ProductSoldDetails = () => {
     <>
       <Head>
         <title>
-          Dashboard: Product Sold Details
+          Dashboard: Ingredient Details
         </title>
       </Head>
       <Box
@@ -88,7 +88,7 @@ const ProductSoldDetails = () => {
           <div>
             <Box sx={{ mb: 4 }}>
               <NextLink
-                href="/dashboard/productsold"
+                href="/dashboard/ingredient"
                 passHref
               >
                 <Link
@@ -104,7 +104,7 @@ const ProductSoldDetails = () => {
                     sx={{ mr: 1 }}
                   />
                   <Typography variant="subtitle2">
-                    Product Sold
+                    Ingredients
                   </Typography>
                 </Link>
               </NextLink>
@@ -123,18 +123,18 @@ const ProductSoldDetails = () => {
                 }}
               >
                 <Avatar
-                  src={productsold.avatar}
+                  src={ingredient.avatar}
                   sx={{
                     height: 64,
                     mr: 2,
                     width: 64
                   }}
                 >
-                  {getInitials(productsold.name)}
+                  {getInitials(ingredient.name)}
                 </Avatar>
                 <div>
                   <Typography variant="h4">
-                    {productsold.email}
+                    {ingredient.email}
                   </Typography>
                   <Box
                     sx={{
@@ -146,7 +146,7 @@ const ProductSoldDetails = () => {
                       user_id:
                     </Typography>
                     <Chip
-                      label={productsold.id}
+                      label={ingredient.id}
                       size="small"
                       sx={{ ml: 1 }}
                     />
@@ -158,7 +158,7 @@ const ProductSoldDetails = () => {
                 sx={{ m: -1 }}
               >
                 <NextLink
-                  href="/dashboard/productsold/1/edit"
+                  href="/dashboard/ingredient/1/edit"
                   passHref
                 >
                   <Button
@@ -212,14 +212,14 @@ const ProductSoldDetails = () => {
                   item
                   xs={12}
                 >
-                  <ProductSoldBasicDetails
-                    address1={productsold.address1}
-                    address2={productsold.address2}
-                    country={productsold.country}
-                    email={productsold.email}
-                    isVerified={productsold.isVerified}
-                    phone={productsold.phone}
-                    state={productsold.state}
+                  <IngredientBasicDetails
+                    address1={ingredient.address1}
+                    address2={ingredient.address2}
+                    country={ingredient.country}
+                    email={ingredient.email}
+                    isVerified={ingredient.isVerified}
+                    phone={ingredient.phone}
+                    state={ingredient.state}
                   />
                 </Grid>
                 <Grid
@@ -238,11 +238,11 @@ const ProductSoldDetails = () => {
                   item
                   xs={12}
                 >
-                  <ProductSoldDataManagement />
+                  <IngredientDataManagement />
                 </Grid>
               </Grid>
             )}
-            {currentTab === 'logs' && <ProductSoldLogs />}
+            {currentTab === 'logs' && <IngredientLogs />}
           </Box>
         </Container>
       </Box>
@@ -250,5 +250,5 @@ const ProductSoldDetails = () => {
   );
 };
 
-export default withAuthGuard(withDashboardLayout(ProductSoldDetails));
+export default withAuthGuard(withDashboardLayout(IngredientDetails));
 

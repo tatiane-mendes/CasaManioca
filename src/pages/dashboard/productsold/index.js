@@ -43,11 +43,11 @@ const sortOptions = (t) => [
     value: 'name|desc'
   },
   {
-    label: t('Available stock (highest)'),
+    label: t('Units Sold (highest)'),
     value: 'quantity|desc'
   },
   {
-    label: t('Available stock (lowest)'),
+    label: t('Units Sold (lowest)'),
     value: 'quantity|asc'
   }
 ];

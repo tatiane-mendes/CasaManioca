@@ -25,47 +25,47 @@ import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
 import { useTranslation } from 'react-i18next';
 
-export const ProductSoldListTable = (props) => {
+export const IngredientListTable = (props) => {
   const { t } = useTranslation();
 
   const {
-    productsold = [],
-    productsoldCount,
+    ingredients,
+    ingredientsCount,
     onPageChange,
     onRowsPerPageChange,
     page,
     rowsPerPage,
     ...other
   } = props;
-  const [selectedProductSold, setSelectedProductSold] = useState([]);
+  const [selectedIngredients, setSelectedIngredients] = useState([]);
 
-  // Reset selected productsold when productsold change
+  // Reset selected ingredients when ingredients change
   useEffect(() => {
-      if (selectedProductSold.length) {
-        setSelectedProductSold([]);
+      if (selectedIngredients.length) {
+        setSelectedIngredients([]);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [productsold]);
+    [ingredients]);
 
-  const handleSelectAllProductSold = (event) => {
-    setSelectedProductSold(event.target.checked
-      ? productsold.map((productsold) => productsold.id)
+  const handleSelectAllIngredients = (event) => {
+    setSelectedIngredients(event.target.checked
+      ? ingredients.map((ingredient) => ingredient.id)
       : []);
   };
 
-  const handleSelectOneProductSold = (event, productsoldId) => {
-    if (!selectedProductSold.includes(productsoldId)) {
-      setSelectedProductSold((prevSelected) => [...prevSelected, productsoldId]);
+  const handleSelectOneIngredient = (event, ingredientId) => {
+    if (!selectedIngredients.includes(ingredientId)) {
+      setSelectedIngredients((prevSelected) => [...prevSelected, ingredientId]);
     } else {
-      setSelectedProductSold((prevSelected) => prevSelected.filter((id) => id !== productsoldId));
+      setSelectedIngredients((prevSelected) => prevSelected.filter((id) => id !== ingredientId));
     }
   };
 
-  const enableBulkActions = selectedProductSold.length > 0;
-  const selectedSomeProductSold = selectedProductSold.length > 0
-    && selectedProductSold.length < productsold.length;
-  const selectedAllProductSold = selectedProductSold.length === productsold.length;
+  const enableBulkActions = selectedIngredients.length > 0;
+  const selectedSomeIngredients = selectedIngredients.length > 0
+    && selectedIngredients.length < ingredients.length;
+  const selectedAllIngredients = selectedIngredients.length === ingredients.length;
 
   return (
     <div {...other}>
@@ -78,9 +78,9 @@ export const ProductSoldListTable = (props) => {
         }}
       >
         <Checkbox
-          checked={selectedAllProductSold}
-          indeterminate={selectedSomeProductSold}
-          onChange={handleSelectAllProductSold}
+          checked={selectedAllIngredients}
+          indeterminate={selectedSomeIngredients}
+          onChange={handleSelectAllIngredients}
         />
         <Button
           size="small"
@@ -101,22 +101,22 @@ export const ProductSoldListTable = (props) => {
             <TableRow>
               <TableCell padding="checkbox">
                 <Checkbox
-                  checked={selectedAllProductSold}
-                  indeterminate={selectedSomeProductSold}
-                  onChange={handleSelectAllProductSold}
+                  checked={selectedAllIngredients}
+                  indeterminate={selectedSomeIngredients}
+                  onChange={handleSelectAllIngredients}
                 />
               </TableCell>
               <TableCell>
-                {t('Product Name')}
+                {t('Name')}
               </TableCell>
               <TableCell>
-                {t(`Category`)}
+                {t(`Measurement unit`)}
               </TableCell>
               <TableCell>
-                {t(`Quantity Sold`)}
+                {t(`Stock stockQuantity`)}
               </TableCell>
               <TableCell>
-                {t(`Inclusion Date`)}
+                {t(`Expiry Date`)}
               </TableCell>
               <TableCell align="right">
                 {t('Actions')}
@@ -124,20 +124,20 @@ export const ProductSoldListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {productsold.map((productsold) => {
-              const isProductSoldSelected = selectedProductSold.includes(productsold.id);
+            {ingredients.map((ingredient) => {
+              const isIngredientSelected = selectedIngredients.includes(ingredient.id);
 
               return (
                 <TableRow
                   hover
-                  key={productsold.id}
-                  selected={isProductSoldSelected}
+                  key={ingredient.id}
+                  selected={isIngredientSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={isProductSoldSelected}
-                      onChange={(event) => handleSelectOneProductSold(event, productsold.id)}
-                      value={isProductSoldSelected}
+                      checked={isIngredientSelected}
+                      onChange={(event) => handleSelectOneIngredient(event, ingredient.id)}
+                      value={isIngredientSelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -148,54 +148,48 @@ export const ProductSoldListTable = (props) => {
                       }}
                     >
                       <Avatar
-                        src={productsold.avatar}
+                        src={ingredient.avatar}
                         sx={{
                           height: 42,
                           width: 42
                         }}
                       >
-                        {getInitials(productsold.name)}
+                        {getInitials(ingredient.name)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href="/dashboard/productsold/1"
+                          href="/dashboard/ingredient/1"
                           passHref
                         >
                           <Link
                             color="inherit"
                             variant="subtitle2"
                           >
-                            {productsold.name}
+                            {ingredient.name}
                           </Link>
                         </NextLink>
-                        <Typography
-                          color="textSecondary"
-                          variant="body2"
-                        >
-                          {productsold.email}
-                        </Typography>
-                      </Box>
+                        </Box>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {`${productsold.category}`}
+                    {`${ingredient.unitOfMeasure}`}
                   </TableCell>
                   <TableCell>
                     <Typography
                       color="success.main"
                       variant="subtitle2"
                     >
-                      <SeverityPill color={productsold.quantity >= productsold.stockLevel ? 'success' : 'error'}>
-                        {numeral(productsold.quantity).format(`0,0`)}
+                      <SeverityPill color={ingredient.stockQuantity >= ingredient.restockLevel ? 'success' : 'error'}>
+                        {numeral(ingredient.stockQuantity).format(`0,0`)}
                       </SeverityPill>
                     </Typography>
                   </TableCell>
                   <TableCell> 
-                    {format(productsold.date, 'dd/MM/yyyy')}
+                    {format(ingredient.date, 'dd/MM/yyyy')}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink
-                      href="/dashboard/productsold/edit"
+                      href="/dashboard/ingredient/edit"
                       passHref
                     >
                       <IconButton component="a">
@@ -219,7 +213,7 @@ export const ProductSoldListTable = (props) => {
       </Scrollbar>
       <TablePagination
         component="div"
-        count={productsoldCount}
+        count={ingredientsCount}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
@@ -230,9 +224,9 @@ export const ProductSoldListTable = (props) => {
   );
 };
 
-ProductSoldListTable.propTypes = {
-  productsold: PropTypes.array.isRequired,
-  productsoldCount: PropTypes.number.isRequired,
+IngredientListTable.propTypes = {
+  ingredients: PropTypes.array.isRequired,
+  ingredientsCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
   page: PropTypes.number.isRequired,
