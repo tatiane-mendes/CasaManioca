@@ -113,10 +113,7 @@ export const IngredientListTable = (props) => {
                 {t(`Measurement unit`)}
               </TableCell>
               <TableCell>
-                {t(`Stock stockQuantity`)}
-              </TableCell>
-              <TableCell>
-                {t(`Expiry Date`)}
+                {t(`Stock quantity`)}
               </TableCell>
               <TableCell align="right">
                 {t('Actions')}
@@ -179,13 +176,10 @@ export const IngredientListTable = (props) => {
                       color="success.main"
                       variant="subtitle2"
                     >
-                      <SeverityPill color={ingredient.stockQuantity >= ingredient.restockLevel ? 'success' : 'error'}>
+                      <SeverityPill color={ingredient.stockQuantity >= ingredient.reorderLevel ? 'success' : 'error'}>
                         {numeral(ingredient.stockQuantity).format(`0,0`)}
                       </SeverityPill>
                     </Typography>
-                  </TableCell>
-                  <TableCell> 
-                    {format(ingredient.date, 'dd/MM/yyyy')}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink

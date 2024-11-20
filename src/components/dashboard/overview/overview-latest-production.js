@@ -52,8 +52,8 @@ export const OverviewLatestProductions = (props) => (
       <Table sx={{ minWidth: 600 }}>
         <TableHead>
           <TableRow>
-            <TableCell colSpan={2}>
-              Production
+          <TableCell colSpan={2}>
+              Production Date
             </TableCell>
             <TableCell />
             <TableCell>

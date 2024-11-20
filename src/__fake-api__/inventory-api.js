@@ -17,8 +17,8 @@ class InventoryApi {
         isProspect: false,
         isReturning: true,
         name: 'Cheese Bread',
-        stockLevel: 300,
-        quantity: 299,
+        totalStockLevel: 300,
+        quantity: 300,
         date: now.getTime(),
         updatedAt: subDays(subHours(now, 7), 1).getTime()
       },

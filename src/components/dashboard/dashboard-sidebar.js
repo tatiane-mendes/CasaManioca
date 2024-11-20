@@ -34,7 +34,7 @@ const getSections = (t) => [
         
       },
       {
-        title: t('Ingredients List'),
+        title: t('Ingredients'),
         path: '/dashboard/ingredientslist',
         icon: <ShoppingBagIcon fontSize="small" />,
         
@@ -51,7 +51,12 @@ const getSections = (t) => [
         icon: <ShoppingBagIcon fontSize="small" />,
         
       },
-      
+      {
+        title: t('Recipes'),
+        path: '/dashboard/recipe',
+        icon: <ShoppingBagIcon fontSize="small" />,
+        
+      },
       
     ]
   }, 

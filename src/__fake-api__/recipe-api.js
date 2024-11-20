@@ -6,42 +6,42 @@ const now = new Date();
 const formattedDate = format(now, 'yyyy-MM-dd HH:mm:ss');
 
 
-class IngredientApi {
-  getIngredients() {
-    const Ingredients = [
+class RecipeApi {
+  getRecipes() {
+    const recipes = [
       {
         id: '5e887ac47eed253091be10cb',
-        avatar: '',
-        unitOfMeasure: 'grams',
+        avatar: '/static/snacks/cheese-bread.png',
+        category: 'Gluten free',
         hasAcceptedMarketing: true,
         isProspect: false,
         isReturning: true,
-        name: 'Flour',
-        reorderLevel: 2000,
-        stockQuantity: 350,
+        name: 'Cheese Bread',
+        totalStockLevel: 300,
+        quantity: 300,
         date: now.getTime(),
         updatedAt: subDays(subHours(now, 7), 1).getTime()
       },
       {
         id: '5e887ac47eed253091be10cb',
-        avatar: '',
-        unitOfMeasure: 'units',
+        avatar: '/static/snacks/chicken-pie.png',
+        category: 'Pies',
         hasAcceptedMarketing: true,
         isProspect: false,
         isReturning: true,
-        name: 'Eggs',
-        reorderLevel: 20,
-        stockQuantity: 26,
+        name: 'Chicken Pie',
+        stockLevel: 20,
+        quantity: 20,
         date: now.getTime(),
         updatedAt: subDays(subHours(now, 7), 1).getTime()
       }
     ];
 
-    return Promise.resolve(Ingredients);
+    return Promise.resolve(recipes);
   }
 
   
-  getIngredientEmails() {
+  getRecipeEmails() {
     const emails = [
       {
         id: '5ece2ce3613486d95ffaea58',
@@ -58,7 +58,7 @@ class IngredientApi {
     return Promise.resolve(emails);
   }
 
-  getIngredientLogs() {
+  getRecipeLogs() {
     const logs = [
       {
         id: '5ece2cfeb6e2ac847bba11ce',
@@ -138,4 +138,4 @@ class IngredientApi {
   }
 }
 
-export const ingredientApi = new IngredientApi();
+export const recipeApi = new RecipeApi();

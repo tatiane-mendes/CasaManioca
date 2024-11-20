@@ -25,47 +25,47 @@ import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
 import { useTranslation } from 'react-i18next';
 
-export const ProductionListTable = (props) => {
+export const RecipeListTable = (props) => {
   const { t } = useTranslation();
 
   const {
-    productions,
-    productionsCount,
+    recipes,
+    recipesCount,
     onPageChange,
     onRowsPerPageChange,
     page,
     rowsPerPage,
     ...other
   } = props;
-  const [selectedProductions, setSelectedProductions] = useState([]);
+  const [selectedRecipes, setSelectedRecipes] = useState([]);
 
-  // Reset selected productions when productions change
+  // Reset selected recipes when recipes change
   useEffect(() => {
-      if (selectedProductions.length) {
-        setSelectedProductions([]);
+      if (selectedRecipes.length) {
+        setSelectedRecipes([]);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [productions]);
+    [recipes]);
 
-  const handleSelectAllProductions = (event) => {
-    setSelectedProductions(event.target.checked
-      ? productions.map((production) => production.id)
+  const handleSelectAllRecipes = (event) => {
+    setSelectedRecipes(event.target.checked
+      ? recipes.map((recipe) => recipe.id)
       : []);
   };
 
-  const handleSelectOneProduction = (event, productionId) => {
-    if (!selectedProductions.includes(productionId)) {
-      setSelectedProductions((prevSelected) => [...prevSelected, productionId]);
+  const handleSelectOneRecipe = (event, recipeId) => {
+    if (!selectedRecipes.includes(recipeId)) {
+      setSelectedRecipes((prevSelected) => [...prevSelected, recipeId]);
     } else {
-      setSelectedProductions((prevSelected) => prevSelected.filter((id) => id !== productionId));
+      setSelectedRecipes((prevSelected) => prevSelected.filter((id) => id !== recipeId));
     }
   };
 
-  const enableBulkActions = selectedProductions.length > 0;
-  const selectedSomeProductions = selectedProductions.length > 0
-    && selectedProductions.length < productions.length;
-  const selectedAllProductions = selectedProductions.length === productions.length;
+  const enableBulkActions = selectedRecipes.length > 0;
+  const selectedSomeRecipes = selectedRecipes.length > 0
+    && selectedRecipes.length < recipes.length;
+  const selectedAllRecipes = selectedRecipes.length === recipes.length;
 
   return (
     <div {...other}>
@@ -78,9 +78,9 @@ export const ProductionListTable = (props) => {
         }}
       >
         <Checkbox
-          checked={selectedAllProductions}
-          indeterminate={selectedSomeProductions}
-          onChange={handleSelectAllProductions}
+          checked={selectedAllRecipes}
+          indeterminate={selectedSomeRecipes}
+          onChange={handleSelectAllRecipes}
         />
         <Button
           size="small"
@@ -101,22 +101,22 @@ export const ProductionListTable = (props) => {
             <TableRow>
               <TableCell padding="checkbox">
                 <Checkbox
-                  checked={selectedAllProductions}
-                  indeterminate={selectedSomeProductions}
-                  onChange={handleSelectAllProductions}
+                  checked={selectedAllRecipes}
+                  indeterminate={selectedSomeRecipes}
+                  onChange={handleSelectAllRecipes}
                 />
               </TableCell>
               <TableCell>
-                {t('Item')}
+                {t('Name')}
               </TableCell>
               <TableCell>
                 {t(`Category`)}
               </TableCell>
               <TableCell>
-                {t(`Quantity produced`)}
+                {t(`Quantity`)}
               </TableCell>
               <TableCell>
-                {t(`Production Date`)}
+                {t(`Expiry Date`)}
               </TableCell>
               <TableCell align="right">
                 {t('Actions')}
@@ -124,20 +124,20 @@ export const ProductionListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {productions.map((production) => {
-              const isProductionSelected = selectedProductions.includes(production.id);
+            {recipes.map((recipe) => {
+              const isRecipeSelected = selectedRecipes.includes(recipe.id);
 
               return (
                 <TableRow
                   hover
-                  key={production.id}
-                  selected={isProductionSelected}
+                  key={recipe.id}
+                  selected={isRecipeSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={isProductionSelected}
-                      onChange={(event) => handleSelectOneProduction(event, production.id)}
-                      value={isProductionSelected}
+                      checked={isRecipeSelected}
+                      onChange={(event) => handleSelectOneRecipe(event, recipe.id)}
+                      value={isRecipeSelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -148,46 +148,54 @@ export const ProductionListTable = (props) => {
                       }}
                     >
                       <Avatar
-                        src={production.avatar}
+                        src={recipe.avatar}
                         sx={{
                           height: 42,
                           width: 42
                         }}
                       >
-                        {getInitials(production.name)}
+                        {getInitials(recipe.name)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href="/dashboard/production/1"
+                          href="/dashboard/recipe/1"
                           passHref
                         >
                           <Link
                             color="inherit"
                             variant="subtitle2"
                           >
-                            {production.name}
+                            {recipe.name}
                           </Link>
                         </NextLink>
-                       </Box>
+                        <Typography
+                          color="textSecondary"
+                          variant="body2"
+                        >
+                          {recipe.email}
+                        </Typography>
+                      </Box>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {`${production.category}`}
+                    {`${recipe.category}`}
                   </TableCell>
                   <TableCell>
                     <Typography
                       color="success.main"
                       variant="subtitle2"
                     >
-                      {numeral(production.quantity).format(`0,0`)}
+                      <SeverityPill color={recipe.quantity >= recipe.stockLevel ? 'success' : 'error'}>
+                        {numeral(recipe.quantity).format(`0,0`)}
+                      </SeverityPill>
                     </Typography>
                   </TableCell>
                   <TableCell> 
-                    {format(production.date, 'dd/MM/yyyy')}
+                    {format(recipe.date, 'dd/MM/yyyy')}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink
-                      href="/dashboard/production/edit"
+                      href="/dashboard/recipe/edit"
                       passHref
                     >
                       <IconButton component="a">
@@ -211,7 +219,7 @@ export const ProductionListTable = (props) => {
       </Scrollbar>
       <TablePagination
         component="div"
-        count={productionsCount}
+        count={recipesCount}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
@@ -222,9 +230,9 @@ export const ProductionListTable = (props) => {
   );
 };
 
-ProductionListTable.propTypes = {
-  productions: PropTypes.array.isRequired,
-  productionsCount: PropTypes.number.isRequired,
+RecipeListTable.propTypes = {
+  recipes: PropTypes.array.isRequired,
+  recipesCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
   page: PropTypes.number.isRequired,

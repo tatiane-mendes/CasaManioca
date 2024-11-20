@@ -203,7 +203,7 @@ const IngredientList = () => {
     <>
       <Head>
         <title>
-          {t('Dashboard: Ingredient List')}
+          {t('Dashboard: Ingredients')}
         </title>
       </Head>
       <Box
@@ -222,7 +222,7 @@ const IngredientList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  {t('Ingredient')}
+                  {t('Ingredients List')}
                 </Typography>
               </Grid>
               <Grid item>
