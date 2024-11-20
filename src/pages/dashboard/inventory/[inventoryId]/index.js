@@ -1,4 +1,5 @@
 import { useCallback, useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import Head from 'next/head';
 import {
@@ -15,7 +16,6 @@ import {
   Typography
 } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
-import { inventoryApi } from '../../../../__fake-api__/inventory-api';
 import { InventoryBasicDetails } from '../../../../components/dashboard/inventory/inventory-basic-details';
 import { InventoryListTable } from '../../../../components/dashboard/inventory/inventory-list-table';
 import { InventoryDataManagement } from '../../../../components/dashboard/inventory/inventory-data-management';
@@ -27,6 +27,7 @@ import { ChevronDown as ChevronDownIcon } from '../../../../icons/chevron-down';
 import { PencilAlt as PencilAltIcon } from '../../../../icons/pencil-alt';
 import { gtm } from '../../../../lib/gtm';
 import { getInitials } from '../../../../utils/get-initials';
+import inventoryService from '../../../../services/inventory-service';
 
 const tabs = [
   { label: 'Details', value: 'details' },
@@ -36,6 +37,8 @@ const tabs = [
 ];
 
 const InventoryDetails = () => {
+  const router = useRouter();
+  const { inventoryId } = router.query;
   const isMounted = useMounted();
   const [inventory, setInventory] = useState(null);
   const [currentTab, setCurrentTab] = useState('details');
@@ -46,7 +49,7 @@ const InventoryDetails = () => {
 
   const getInventory = useCallback(async () => {
     try {
-      const data = await inventoryApi.getInventory();
+      const data = await inventoryService.getById(inventoryId);
       
       if (isMounted()) {
         setInventory(data);

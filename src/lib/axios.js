@@ -5,20 +5,21 @@ const axiosInstance = axios.create({
   //baseURL: 'http://localhost:10000/api/v1',
   timeout: 60000,
   headers: {
-    'Accept': 'application/json'
+    'accept': 'application/json'
   }
 });
 
 axiosInstance.interceptors.response.use((response) => response,
   (error) => { 
-    return Promise.reject((error.response && error.response.data) || 'Something went wrong'); 
+    console.log('error', error);
+    return Promise.reject((error && error.response && error.response.data) || 'Something went wrong'); 
   });
 
 axiosInstance.interceptors.request.use(function (config) {
-  let user = JSON.parse(localStorage.getItem('user'));
+  let access_token = localStorage.getItem('accessToken');
     
-  if(user?.access_token != null && user?.access_token != undefined){
-      config.headers.Authorization = user.access_token;
+  if(access_token){
+      config.headers.Authorization = access_token;
   };
 
   return config;

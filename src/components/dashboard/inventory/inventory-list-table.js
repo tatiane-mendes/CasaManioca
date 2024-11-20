@@ -116,7 +116,7 @@ export const InventoryListTable = (props) => {
                 {t(`Quantity`)}
               </TableCell>
               <TableCell>
-                {t(`Expiry Date`)}
+                {t(`Price`)}
               </TableCell>
               <TableCell align="right">
                 {t('Actions')}
@@ -185,13 +185,13 @@ export const InventoryListTable = (props) => {
                       color="success.main"
                       variant="subtitle2"
                     >
-                      <SeverityPill color={inventory.quantity >= inventory.stockLevel ? 'success' : 'error'}>
+                      <SeverityPill color={inventory.quantity >= inventory.restockLevel ? 'success' : 'error'}>
                         {numeral(inventory.quantity).format(`0,0`)}
                       </SeverityPill>
                     </Typography>
                   </TableCell>
                   <TableCell> 
-                    {format(inventory.date, 'dd/MM/yyyy')}
+                    {inventory.price}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink

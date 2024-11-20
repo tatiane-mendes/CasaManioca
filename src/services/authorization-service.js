@@ -53,11 +53,20 @@ class AuthorizationService {
   
     setSession = (accessToken) => {
       if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
-        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        localStorage.setItem('accessToken', `Bearer ${accessToken}`);
+
+        axios.interceptors.request.use((config) => {
+          const access_token = localStorage.getItem('accessToken');
+      
+          if(access_token){
+              config.headers.Authorization = access_token;
+          };
+        
+          return config;
+        });
       } else {
         localStorage.removeItem('accessToken');
-        delete axios.defaults.headers.common.Authorization;
+        axios.interceptors.request.eject();
       }
     }
   

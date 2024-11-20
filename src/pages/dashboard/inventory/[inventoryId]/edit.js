@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import Head from 'next/head';
 import { Avatar, Box, Chip, Container, Link, Typography } from '@mui/material';
@@ -10,9 +11,12 @@ import { useMounted } from '../../../../hooks/use-mounted';
 import { gtm } from '../../../../lib/gtm';
 import { getInitials } from '../../../../utils/get-initials';
 import { useTranslation } from 'react-i18next';
+import inventoryService from '../../../../services/inventory-service';
 
 const InventoryEdit = () => {
   const { t } = useTranslation();
+  const router = useRouter();
+  const { inventoryId } = router.query;
   const isMounted = useMounted();
   const [inventory, setInventory] = useState(null);
 
@@ -22,8 +26,8 @@ const InventoryEdit = () => {
 
   const getInventory = useCallback(async () => {
     try {
-      // const data = await inventoryApi.getInventory();
-        const data = {};
+      const data = await inventoryService.getById(inventoryId);
+      
       if (isMounted()) {
         setInventory(data);
       }

@@ -13,7 +13,6 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import { inventoryApi } from '../../../__fake-api__/inventory-api';
 import { InventoryListTable } from '../../../components/dashboard/inventory/inventory-list-table';
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
@@ -25,6 +24,7 @@ import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
 import { useTranslation } from 'react-i18next';
 import NextLink from 'next/link';
+import inventoryService from '../../../services/inventory-service';
 
 const tabs = [
   {
@@ -142,7 +142,7 @@ const InventoryList = () => {
 
   const getInventories = useCallback(async () => {
     try {
-      const data = await inventoryApi.getInventories();
+      const data = await inventoryService.getAll();
 
       if (isMounted()) {
         setInventories(data);
