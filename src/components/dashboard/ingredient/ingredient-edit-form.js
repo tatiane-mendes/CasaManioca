@@ -14,46 +14,42 @@ import {
   Grid,
   TextField
 } from '@mui/material';
-import inventoryService from '../../../services/inventory-service';
+import ingredientService from '../../../services/ingredient-service';
 import { useRouter } from 'next/router';
 
-export const InventoryEditForm = (props) => {
+export const IngredientEditForm = (props) => {
   const router = useRouter();
-  const { inventory, ...other } = props;
+  const { ingredient, ...other } = props;
   const formik = useFormik({
     initialValues: {
-      id: inventory.id || '',
-      name: inventory.name || '',
-      quantity: inventory.quantity || '',
-      price: inventory.price || '',
-      category: inventory.category || '',
-      restockLevel: inventory.restockLevel || '',
-      restockQuantity: inventory.restockQuantity || ''
+      id: ingredient.id || '',
+      name: ingredient.name || '',
+      unitOfMeasure: ingredient.unitOfMeasure || '',
+      stockQuantity: ingredient.stockQuantity || '',
+      reorderLevel: ingredient.reorderLevel || '',
     },
     validationSchema: Yup.object({
       id: Yup.number().optional(),
       name: Yup.string().max(255).required('Name is required'),
-      quantity: Yup.number().required('Quantity is required'),
-      price: Yup.number().required('Price is required'),
-      category: Yup.string().max(100).optional(),
-      restockLevel: Yup.number().required('Restock level is required'),
-      restockQuantity: Yup.number().required('Restock quantity is required'),
+      unitOfMeasure: Yup.string().max(50).optional(),
+      stockQuantity: Yup.number().required('Stock quantity is required'),
+      reorderLevel: Yup.number().required('Reorder level is required'),
     }),
     onSubmit: async (values, helpers) => {
       try {
         if (values.id) {
-          await inventoryService.edit(values);  
+          await ingredientService.edit(values);  
           toast.success('Item updated!');
         }
         else {
           const {id, ...filteredValues} = values;
-          await inventoryService.insert(filteredValues);
+          await ingredientService.insert(filteredValues);
           toast.success('Item inserted!');
         }
 
         helpers.setStatus({ success: true });
         helpers.setSubmitting(false);
-        router.push('/dashboard/inventory');
+        router.push('/dashboard/ingredient');
       } catch (err) {
         console.error(err.message + '. ' + err.detail);
         toast.error(err.message + '. ' + err.detail);
@@ -67,9 +63,9 @@ export const InventoryEditForm = (props) => {
 
   const handleDelete = async (values) => {
     try {
-      await inventoryService.delete(values);
+      await ingredientService.delete(values);
       toast.success('Item deleted!');
-      router.push('/dashboard/inventory');
+      router.push('/dashboard/ingredient');
     } catch (err) {
       console.error(err.message + '. ' + err.detail);
       toast.error(err.message + '. ' + err.detail);
@@ -81,7 +77,7 @@ export const InventoryEditForm = (props) => {
       onSubmit={formik.handleSubmit}
       {...other}>
       <Card>
-        <CardHeader title={"Form inventory"} />
+        <CardHeader title={"Form ingredient"} />
         <Divider />
         <CardContent>
           <Grid
@@ -110,14 +106,14 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.category && formik.errors.category)}
+                error={Boolean(formik.touched.unitOfMeasure && formik.errors.unitOfMeasure)}
                 fullWidth
-                helperText={formik.touched.category && formik.errors.category}
-                label="Category"
-                name="category"
+                helperText={formik.touched.unitOfMeasure && formik.errors.unitOfMeasure}
+                label="Unit of measure"
+                name="unitOfMeasure"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.category}
+                value={formik.values.unitOfMeasure}
               />
             </Grid>
             <Grid
@@ -126,15 +122,15 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.quantity && formik.errors.quantity)}
+                error={Boolean(formik.touched.stockQuantity && formik.errors.stockQuantity)}
                 fullWidth
-                helperText={formik.touched.quantity && formik.errors.quantity}
-                label="Quantity"
-                name="quantity"
+                helperText={formik.touched.stockQuantity && formik.errors.stockQuantity}
+                label="Stock quantity"
+                name="stockQuantity"
                 type="number"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.quantity}
+                value={formik.values.stockQuantity}
               />
             </Grid>
             <Grid
@@ -143,49 +139,15 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.price && formik.errors.price)}
+                error={Boolean(formik.touched.reorderLevel && formik.errors.reorderLevel)}
                 fullWidth
-                helperText={formik.touched.price && formik.errors.price}
-                label="Price"
-                name="price"
+                helperText={formik.touched.reorderLevel && formik.errors.reorderLevel}
+                label="Reorder level"
+                name="reorderLevel"
                 type="number"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.price}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.restockLevel && formik.errors.restockLevel)}
-                fullWidth
-                helperText={formik.touched.restockLevel && formik.errors.restockLevel}
-                label="Restock level"
-                name="restockLevel"
-                type="number"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.restockLevel}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.restockQuantity && formik.errors.restockQuantity)}
-                fullWidth
-                helperText={formik.touched.restockQuantity && formik.errors.restockQuantity}
-                label="Restock quantity"
-                name="restockQuantity"
-                type="number"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.restockQuantity}
+                value={formik.values.reorderLevel}
               />
             </Grid>
           </Grid>
@@ -223,7 +185,7 @@ export const InventoryEditForm = (props) => {
             Save
           </Button>
           <NextLink
-            href="/dashboard/inventory"
+            href="/dashboard/ingredient"
             passHref
           >
             <Button
@@ -251,6 +213,6 @@ export const InventoryEditForm = (props) => {
   );
 };
 
-InventoryEditForm.propTypes = {
-    inventory: PropTypes.object.isRequired
+IngredientEditForm.propTypes = {
+    ingredient: PropTypes.object.isRequired
 };

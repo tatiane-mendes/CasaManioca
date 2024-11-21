@@ -1,8 +1,8 @@
 import axios from '../lib/axios';
 
-class InventoryService {
+class IngredientService {
   getAll = () => {
-    return axios.get(`/inventories`)
+    return axios.get(`/ingredients`)
     .then((response) => {
       return response.data || null;
     })
@@ -12,7 +12,7 @@ class InventoryService {
   };
 
   getById = (id) => {
-    return axios.get(`/inventories/${id}`)
+    return axios.get(`/ingredients/${id}`)
     .then((response) => {
       return response.data || null;
     })
@@ -22,18 +22,18 @@ class InventoryService {
   };
 
   insert = (request) => {
-    return axios.post('/inventories', request);
+    return axios.post('/ingredients', request);
   };
 
   edit = (request) => {
-    return axios.put('/inventories', request);
+    return axios.put('/ingredients', request);
   };
 
   delete = (request) => {
-    return axios.delete(`/inventories`, { data: request });
+    return axios.delete(`/ingredients`, { data: request });
   };
 }
 
-const inventoryService = new InventoryService();
+const ingredientService = new IngredientService();
 
-export default inventoryService;
+export default ingredientService;

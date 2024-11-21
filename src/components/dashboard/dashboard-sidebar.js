@@ -7,8 +7,10 @@ import { Box, Button, Chip, Divider, Drawer, Typography, useMediaQuery } from '@
 import { Home as HomeIcon } from '../../icons/home';
 import { ReceiptTax as ReceiptTaxIcon } from '../../icons/receipt-tax';
 import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
-import { ShoppingCart as ShoppingCartIcon } from '../../icons/shopping-cart';
 import { Users as UsersIcon } from '../../icons/users';
+import { Check as CheckIcon } from '../../icons/check';
+import { Collection as CollectionIcon } from '../../icons/collection';
+import { CurrencyDollar as CurrencyDollarIcon } from '../../icons/currency-dollar';
 import { Logo } from '../logo';
 import { Scrollbar } from '../scrollbar';
 import { DashboardSidebarSection } from './dashboard-sidebar-section';
@@ -22,6 +24,12 @@ const getSections = (t) => [
         path: '/dashboard',
         icon: <HomeIcon fontSize="small" />
       },
+      {
+        title: t('User'),
+        path: '/dashboard/user',
+        icon: <UsersIcon fontSize="small" />,
+        
+      },
     ]
   },
   {
@@ -30,31 +38,31 @@ const getSections = (t) => [
       {
         title: t('Inventory'),
         path: '/dashboard/inventory',
-        icon: <UsersIcon fontSize="small" />,
+        icon: <CollectionIcon fontSize="small" />,
         
       },
       {
-        title: t('Ingredients'),
-        path: '/dashboard/ingredientslist',
+        title: t('Ingredient'),
+        path: '/dashboard/ingredient',
         icon: <ShoppingBagIcon fontSize="small" />,
         
       },
       {
         title: t('Production'),
         path: '/dashboard/production',
-        icon: <ShoppingBagIcon fontSize="small" />,
+        icon: <CheckIcon fontSize="small" />,
         
       },
       {
-        title: t('Products Sold'),
+        title: t('Products sold'),
         path: '/dashboard/productsold',
-        icon: <ShoppingBagIcon fontSize="small" />,
+        icon: <CurrencyDollarIcon fontSize="small" />,
         
       },
       {
         title: t('Recipes'),
         path: '/dashboard/recipe',
-        icon: <ShoppingBagIcon fontSize="small" />,
+        icon: <ReceiptTaxIcon fontSize="small" />,
         
       },
       

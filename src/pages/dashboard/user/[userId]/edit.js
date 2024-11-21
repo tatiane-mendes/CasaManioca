@@ -4,42 +4,38 @@ import NextLink from 'next/link';
 import Head from 'next/head';
 import { Avatar, Box, Container, Link, Typography } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
-import { ProductionEditForm } from '../../../../components/dashboard/production/production-edit-form';
+import { UserEditForm } from '../../../../components/dashboard/user/user-edit-form';
 import { withAuthGuard } from '../../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../../hooks/use-mounted';
 import { gtm } from '../../../../lib/gtm';
 import { getInitials } from '../../../../utils/get-initials';
 import { useTranslation } from 'react-i18next';
-import productionService from '../../../../services/production-service';
+import userService from '../../../../services/user-service';
 
-const ProductionEdit = () => {
+const UserEdit = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { productionId } = router.query;
+  const { userId } = router.query;
   const isMounted = useMounted();
-  const [production, setProduction] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getProduction = useCallback(async () => {
+  const getUser = useCallback(async () => {
     try {
-      const data = productionId > 0 ? await productionService.getById(productionId) : {
+      const data = userId > 0 ? await userService.getById(userId) : {
         id: 0,
-        quantityProduced: 0,
-        product: {
-          id: 0,
-          name: '',
-          category: ''
-        },
-        productionDate: '',
-        postProductionStock: 0,
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: ''
       };
 
       if (isMounted()) {
-        setProduction(data);
+        setUser(data);
       }
     } catch (err) {
       console.error(err);
@@ -47,12 +43,12 @@ const ProductionEdit = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getProduction();
+      getUser();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
-  if (!production) {
+  if (!user) {
     return null;
   }
 
@@ -60,7 +56,7 @@ const ProductionEdit = () => {
     <>
       <Head>
         <title>
-          {t('Dashboard: Production Edit')}
+          {t('Dashboard: User Edit')}
         </title>
       </Head>
       <Box
@@ -74,7 +70,7 @@ const ProductionEdit = () => {
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
             <NextLink
-              href="/dashboard/production"
+              href="/dashboard/user"
               passHref
             >
               <Link
@@ -90,7 +86,7 @@ const ProductionEdit = () => {
                   sx={{ mr: 1 }}
                 />
                 <Typography variant="subtitle2">
-                  {t('Productions')}
+                  {t('Users')}
                 </Typography>
               </Link>
             </NextLink>
@@ -103,21 +99,21 @@ const ProductionEdit = () => {
             }}
           >
             <Avatar
-              src={production?.avatar}
+              src={user?.avatar}
               sx={{
                 height: 64,
                 mr: 2,
                 width: 64
               }}
             >
-              {getInitials(production.product.name)}
+              {getInitials(user.firstName, user.lastName)}
             </Avatar>
             <div>
               <Typography
                 noWrap
                 variant="h4"
               >
-                {production.product.category}
+                {user?.email}
               </Typography>
               <Box
                 sx={{
@@ -133,7 +129,7 @@ const ProductionEdit = () => {
             </div>
           </Box>
           <Box mt={3}>
-            <ProductionEditForm production={production} />
+            <UserEditForm user={user} />
           </Box>
         </Container>
       </Box>
@@ -141,4 +137,4 @@ const ProductionEdit = () => {
   );
 };
 
-export default withAuthGuard(withDashboardLayout(ProductionEdit));
+export default withAuthGuard(withDashboardLayout(UserEdit));

@@ -1,4 +1,3 @@
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
@@ -14,9 +13,7 @@ import {
 } from '@mui/material';
 import { Logout as LogoutIcon } from '@mui/icons-material';
 import { useAuth } from '../../hooks/use-auth';
-import { Cog as CogIcon } from '../../icons/cog';
 import { UserCircle as UserCircleIcon } from '../../icons/user-circle';
-import { SwitchHorizontalOutlined as SwitchHorizontalOutlinedIcon } from '../../icons/switch-horizontal-outlined';
 
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
@@ -29,7 +26,7 @@ export const AccountPopover = (props) => {
     try {
       onClose?.();
       await logout();
-      router.push('/');
+      router.push('/dashboard');
     } catch (err) {
       console.error(err);
       toast.error('Unable to logout.');
@@ -57,7 +54,7 @@ export const AccountPopover = (props) => {
         }}
       >
         <Avatar
-          src={user.avatar}
+          src={user?.avatar}
           sx={{
             height: 40,
             width: 40
@@ -71,7 +68,7 @@ export const AccountPopover = (props) => {
           }}
         >
           <Typography variant="body1">
-            {user.firstName + ' ' + user.lastName}
+            {user?.firstName + ' ' + user?.lastName}
           </Typography>
         </Box>
       </Box>

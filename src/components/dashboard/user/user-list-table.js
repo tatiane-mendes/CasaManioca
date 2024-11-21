@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import NextLink from 'next/link';
-import numeral from 'numeral';
 import PropTypes from 'prop-types';
-import { SeverityPill } from '../../severity-pill';
 import {
   Avatar,
   Box,
@@ -22,32 +20,33 @@ import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
-import ingredientService from '../../../services/ingredient-service';
+import userService from '../../../services/user-service';
 
-export const IngredientListTable = (props) => {
+export const UserListTable = (props) => {
   const { t } = useTranslation();
   
   const {
-    ingredients: initialIngredients,
-    ingredientsCount,
+    users: initialUsers,
+    usersCount,
     onPageChange,
     onRowsPerPageChange,
     page,
     rowsPerPage,
     ...other
   } = props;
-  const [ingredients, setIngredients] = useState(initialIngredients);
+  const [users, setUsers] = useState(initialUsers);
 
   useEffect(() => {
-    setIngredients(initialIngredients);
-  }, [initialIngredients]);
+    setUsers(initialUsers);
+  }, [initialUsers]);
 
   const handleDelete = async (values) => {
     try {
-      await ingredientService.delete(values);
+      values.password = '123456';
+      await userService.delete(values);
       toast.success('Item deleted!');
       
-      setIngredients(ingredients.filter(item => item.id !== values.id));
+      setUsers(users.filter(item => item.id !== values.id));
     } catch (err) {
       console.error(err.message + '. ' + err.detail);
       toast.error(err.message + '. ' + err.detail);
@@ -60,14 +59,11 @@ export const IngredientListTable = (props) => {
         <Table sx={{ minWidth: 700 }}>
           <TableHead>
             <TableRow>
-            <TableCell>
+              <TableCell>
                 {t('Name')}
               </TableCell>
               <TableCell>
-                {t(`Measurement unit`)}
-              </TableCell>
-              <TableCell>
-                {t(`Stock quantity`)}
+                {t(`Email`)}
               </TableCell>
               <TableCell align="right">
                 {t('Actions')}
@@ -75,11 +71,11 @@ export const IngredientListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {ingredients.map((ingredient) => {
+            {users.map((user) => {
               return (
                 <TableRow
                   hover
-                  key={ingredient.id}
+                  key={user.id}
                 >
                   <TableCell>
                     <Box
@@ -89,45 +85,41 @@ export const IngredientListTable = (props) => {
                       }}
                     >
                       <Avatar
-                        src={ingredient.avatar}
+                        src={user.avatar}
                         sx={{
                           height: 42,
                           width: 42
                         }}
                       >
-                        {getInitials(ingredient.name)}
+                        {getInitials(user.firstName + ' ' + user.lastName)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href={`/dashboard/ingredient/${ingredient.id}/edit`}
+                          href={`/dashboard/user/${user.id}/edit`}
                           passHref
                         >
                           <Link
                             color="inherit"
                             variant="subtitle2"
                           >
-                            {ingredient.name}
+                            {user.firstName + ' ' + user.lastName}
                           </Link>
                         </NextLink>
+                        <Typography
+                          color="textSecondary"
+                          variant="body2"
+                        >
+                          {user.email}
+                        </Typography>
                       </Box>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {`${ingredient.unitOfMeasure}`}
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      color="success.main"
-                      variant="subtitle2"
-                    >
-                      <SeverityPill color={Number(ingredient.stockQuantity) >= Number(ingredient.reorderLevel) ? 'success' : 'error'}>
-                        {numeral(ingredient.stockQuantity).format(`0.00`)}
-                      </SeverityPill>
-                    </Typography>
+                    {`${user.email}`}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink
-                      href={`/dashboard/ingredient/${ingredient.id}/edit`}
+                      href={`/dashboard/user/${user.id}/edit`}
                       passHref
                     >
                       <IconButton component="a">
@@ -135,11 +127,11 @@ export const IngredientListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href="/dashboard/ingredient"
+                      href="/dashboard/user"
                       passHref
                     >
                       <IconButton component="a">
-                        <TrashRightIcon fontSize="small" onClick={() => {handleDelete(ingredient)}} />
+                        <TrashRightIcon fontSize="small" onClick={() => {handleDelete(user)}} />
                       </IconButton>
                     </NextLink>
                   </TableCell>
@@ -151,7 +143,7 @@ export const IngredientListTable = (props) => {
       </Scrollbar>
       <TablePagination
         component="div"
-        count={ingredientsCount}
+        count={usersCount}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
@@ -162,9 +154,9 @@ export const IngredientListTable = (props) => {
   );
 };
 
-IngredientListTable.propTypes = {
-  ingredients: PropTypes.array.isRequired,
-  ingredientsCount: PropTypes.number.isRequired,
+UserListTable.propTypes = {
+  users: PropTypes.array.isRequired,
+  usersCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
   page: PropTypes.number.isRequired,

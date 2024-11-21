@@ -14,46 +14,42 @@ import {
   Grid,
   TextField
 } from '@mui/material';
-import inventoryService from '../../../services/inventory-service';
+import userService from '../../../services/user-service';
 import { useRouter } from 'next/router';
 
-export const InventoryEditForm = (props) => {
+export const UserEditForm = (props) => {
   const router = useRouter();
-  const { inventory, ...other } = props;
+  const { user, ...other } = props;
   const formik = useFormik({
     initialValues: {
-      id: inventory.id || '',
-      name: inventory.name || '',
-      quantity: inventory.quantity || '',
-      price: inventory.price || '',
-      category: inventory.category || '',
-      restockLevel: inventory.restockLevel || '',
-      restockQuantity: inventory.restockQuantity || ''
+      id: user.id || '',
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      email: user.email || '',
+      password: user.password || ''
     },
     validationSchema: Yup.object({
       id: Yup.number().optional(),
-      name: Yup.string().max(255).required('Name is required'),
-      quantity: Yup.number().required('Quantity is required'),
-      price: Yup.number().required('Price is required'),
-      category: Yup.string().max(100).optional(),
-      restockLevel: Yup.number().required('Restock level is required'),
-      restockQuantity: Yup.number().required('Restock quantity is required'),
+      firstName: Yup.string().max(50).optional(),
+      lastName: Yup.string().max(100).optional(),
+      email: Yup.string().max(100).required('Email is required'),
+      password: Yup.string().max(30).min(6).required('Password is required'),
     }),
     onSubmit: async (values, helpers) => {
       try {
         if (values.id) {
-          await inventoryService.edit(values);  
+          await userService.edit(values);  
           toast.success('Item updated!');
         }
         else {
           const {id, ...filteredValues} = values;
-          await inventoryService.insert(filteredValues);
+          await userService.insert(filteredValues);
           toast.success('Item inserted!');
         }
 
         helpers.setStatus({ success: true });
         helpers.setSubmitting(false);
-        router.push('/dashboard/inventory');
+        router.push('/dashboard/user');
       } catch (err) {
         console.error(err.message + '. ' + err.detail);
         toast.error(err.message + '. ' + err.detail);
@@ -67,9 +63,10 @@ export const InventoryEditForm = (props) => {
 
   const handleDelete = async (values) => {
     try {
-      await inventoryService.delete(values);
+      values.password = '123456';
+      await userService.delete(values);
       toast.success('Item deleted!');
-      router.push('/dashboard/inventory');
+      router.push('/dashboard/user');
     } catch (err) {
       console.error(err.message + '. ' + err.detail);
       toast.error(err.message + '. ' + err.detail);
@@ -81,7 +78,7 @@ export const InventoryEditForm = (props) => {
       onSubmit={formik.handleSubmit}
       {...other}>
       <Card>
-        <CardHeader title={"Form inventory"} />
+        <CardHeader title={"Form user"} />
         <Divider />
         <CardContent>
           <Grid
@@ -94,14 +91,14 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.name && formik.errors.name)}
+                error={Boolean(formik.touched.firstName && formik.errors.firstName)}
                 fullWidth
-                helperText={formik.touched.name && formik.errors.name}
-                label="Name"
-                name="name"
+                helperText={formik.touched.firstName && formik.errors.firstName}
+                label="First name"
+                name="firstName"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.name}
+                value={formik.values.firstName}
               />
             </Grid>
             <Grid
@@ -110,14 +107,14 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.category && formik.errors.category)}
+                error={Boolean(formik.touched.lastName && formik.errors.lastName)}
                 fullWidth
-                helperText={formik.touched.category && formik.errors.category}
-                label="Category"
-                name="category"
+                helperText={formik.touched.lastName && formik.errors.lastName}
+                label="Last name"
+                name="lastName"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.category}
+                value={formik.values.lastName}
               />
             </Grid>
             <Grid
@@ -126,15 +123,15 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.quantity && formik.errors.quantity)}
+                error={Boolean(formik.touched.email && formik.errors.email)}
                 fullWidth
-                helperText={formik.touched.quantity && formik.errors.quantity}
-                label="Quantity"
-                name="quantity"
-                type="number"
+                helperText={formik.touched.email && formik.errors.email}
+                label="Email"
+                name="email"
+                type="email"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.quantity}
+                value={formik.values.email}
               />
             </Grid>
             <Grid
@@ -143,49 +140,15 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.price && formik.errors.price)}
+                error={Boolean(formik.touched.password && formik.errors.password)}
                 fullWidth
-                helperText={formik.touched.price && formik.errors.price}
-                label="Price"
-                name="price"
-                type="number"
+                helperText={formik.touched.password && formik.errors.password}
+                label="Password"
+                name="password"
+                type="password"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.price}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.restockLevel && formik.errors.restockLevel)}
-                fullWidth
-                helperText={formik.touched.restockLevel && formik.errors.restockLevel}
-                label="Restock level"
-                name="restockLevel"
-                type="number"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.restockLevel}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.restockQuantity && formik.errors.restockQuantity)}
-                fullWidth
-                helperText={formik.touched.restockQuantity && formik.errors.restockQuantity}
-                label="Restock quantity"
-                name="restockQuantity"
-                type="number"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.restockQuantity}
+                value={formik.values.password}
               />
             </Grid>
           </Grid>
@@ -223,7 +186,7 @@ export const InventoryEditForm = (props) => {
             Save
           </Button>
           <NextLink
-            href="/dashboard/inventory"
+            href="/dashboard/user"
             passHref
           >
             <Button
@@ -251,6 +214,6 @@ export const InventoryEditForm = (props) => {
   );
 };
 
-InventoryEditForm.propTypes = {
-    inventory: PropTypes.object.isRequired
+UserEditForm.propTypes = {
+    user: PropTypes.object.isRequired
 };

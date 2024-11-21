@@ -14,46 +14,42 @@ import {
   Grid,
   TextField
 } from '@mui/material';
-import inventoryService from '../../../services/inventory-service';
+import productionService from '../../../services/production-service';
 import { useRouter } from 'next/router';
 
-export const InventoryEditForm = (props) => {
+export const ProductionEditForm = (props) => {
   const router = useRouter();
-  const { inventory, ...other } = props;
+  const { production, ...other } = props;
   const formik = useFormik({
     initialValues: {
-      id: inventory.id || '',
-      name: inventory.name || '',
-      quantity: inventory.quantity || '',
-      price: inventory.price || '',
-      category: inventory.category || '',
-      restockLevel: inventory.restockLevel || '',
-      restockQuantity: inventory.restockQuantity || ''
+      id: production.id || '',
+      quantityProduced: production.quantityProduced || '',
+      productionDate: production.productionDate || '',
+      postProductionStock: production.postProductionStock || '',
+      productId: production.productId || '',
     },
     validationSchema: Yup.object({
       id: Yup.number().optional(),
-      name: Yup.string().max(255).required('Name is required'),
-      quantity: Yup.number().required('Quantity is required'),
-      price: Yup.number().required('Price is required'),
-      category: Yup.string().max(100).optional(),
-      restockLevel: Yup.number().required('Restock level is required'),
-      restockQuantity: Yup.number().required('Restock quantity is required'),
+      quantityProduced: Yup.number().required('Quantity produced is required'),
+      productionDate: Yup.date().optional(),
+      postProductionStock: Yup.number().required('Post production stock is required'),
+      productId: Yup.number().required('Product is required'),
     }),
     onSubmit: async (values, helpers) => {
       try {
         if (values.id) {
-          await inventoryService.edit(values);  
+          await productionService.edit(values);  
           toast.success('Item updated!');
         }
         else {
           const {id, ...filteredValues} = values;
-          await inventoryService.insert(filteredValues);
+          await productionService.insert(filteredValues);
           toast.success('Item inserted!');
         }
 
         helpers.setStatus({ success: true });
         helpers.setSubmitting(false);
-        router.push('/dashboard/inventory');
+        router.push('/dashboard/production');
       } catch (err) {
         console.error(err.message + '. ' + err.detail);
         toast.error(err.message + '. ' + err.detail);
@@ -67,9 +63,9 @@ export const InventoryEditForm = (props) => {
 
   const handleDelete = async (values) => {
     try {
-      await inventoryService.delete(values);
+      await productionService.delete(values);
       toast.success('Item deleted!');
-      router.push('/dashboard/inventory');
+      router.push('/dashboard/production');
     } catch (err) {
       console.error(err.message + '. ' + err.detail);
       toast.error(err.message + '. ' + err.detail);
@@ -81,7 +77,7 @@ export const InventoryEditForm = (props) => {
       onSubmit={formik.handleSubmit}
       {...other}>
       <Card>
-        <CardHeader title={"Form inventory"} />
+        <CardHeader title={"Form production"} />
         <Divider />
         <CardContent>
           <Grid
@@ -94,14 +90,14 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.name && formik.errors.name)}
+                error={Boolean(formik.touched.productId && formik.errors.productId)}
                 fullWidth
-                helperText={formik.touched.name && formik.errors.name}
-                label="Name"
-                name="name"
+                helperText={formik.touched.productId && formik.errors.productId}
+                label="Product"
+                name="productId"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.name}
+                value={formik.values.productId}
               />
             </Grid>
             <Grid
@@ -110,31 +106,15 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.category && formik.errors.category)}
+                error={Boolean(formik.touched.quantityProduced && formik.errors.quantityProduced)}
                 fullWidth
-                helperText={formik.touched.category && formik.errors.category}
-                label="Category"
-                name="category"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.category}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.quantity && formik.errors.quantity)}
-                fullWidth
-                helperText={formik.touched.quantity && formik.errors.quantity}
-                label="Quantity"
-                name="quantity"
+                helperText={formik.touched.quantityProduced && formik.errors.quantityProduced}
+                label="Quantity produced"
+                name="quantityProduced"
                 type="number"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.quantity}
+                value={formik.values.quantityProduced}
               />
             </Grid>
             <Grid
@@ -143,15 +123,15 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.price && formik.errors.price)}
+                error={Boolean(formik.touched.productionDate && formik.errors.productionDate)}
                 fullWidth
-                helperText={formik.touched.price && formik.errors.price}
-                label="Price"
-                name="price"
-                type="number"
+                helperText={formik.touched.productionDate && formik.errors.productionDate}
+                label="Production date"
+                name="productionDate"
+                type="date"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.price}
+                value={formik.values.productionDate}
               />
             </Grid>
             <Grid
@@ -160,32 +140,15 @@ export const InventoryEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.restockLevel && formik.errors.restockLevel)}
+                error={Boolean(formik.touched.postProductionStock && formik.errors.postProductionStock)}
                 fullWidth
-                helperText={formik.touched.restockLevel && formik.errors.restockLevel}
-                label="Restock level"
-                name="restockLevel"
+                helperText={formik.touched.postProductionStock && formik.errors.postProductionStock}
+                label="Post production stock"
+                name="postProductionStock"
                 type="number"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.restockLevel}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.restockQuantity && formik.errors.restockQuantity)}
-                fullWidth
-                helperText={formik.touched.restockQuantity && formik.errors.restockQuantity}
-                label="Restock quantity"
-                name="restockQuantity"
-                type="number"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.restockQuantity}
+                value={formik.values.postProductionStock}
               />
             </Grid>
           </Grid>
@@ -223,7 +186,7 @@ export const InventoryEditForm = (props) => {
             Save
           </Button>
           <NextLink
-            href="/dashboard/inventory"
+            href="/dashboard/production"
             passHref
           >
             <Button
@@ -251,6 +214,6 @@ export const InventoryEditForm = (props) => {
   );
 };
 
-InventoryEditForm.propTypes = {
-    inventory: PropTypes.object.isRequired
+ProductionEditForm.propTypes = {
+    production: PropTypes.object.isRequired
 };

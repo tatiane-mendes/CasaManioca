@@ -17,10 +17,8 @@ import { InventoryListTable } from '../../../components/dashboard/inventory/inve
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../hooks/use-mounted';
-import { Download as DownloadIcon } from '../../../icons/download';
 import { Plus as PlusIcon } from '../../../icons/plus';
 import { Search as SearchIcon } from '../../../icons/search';
-import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
 import { useTranslation } from 'react-i18next';
 import NextLink from 'next/link';
@@ -43,19 +41,19 @@ const sortOptions = (t) => [
     value: 'name|desc'
   },
   {
-    label: t('Available stock (highest)'),
-    value: 'quantity|desc'
+    label: t('Category (A-Z)'),
+    value: 'category|asc'
   },
   {
-    label: t('Available stock (lowest)'),
-    value: 'quantity|asc'
+    label: t('Category (Z-A)'),
+    value: 'category|desc'
   }
 ];
 
 const applyFilters = (inventories, filters) => inventories.filter((inventory) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['email', 'name'];
+    const properties = ['category', 'name'];
 
     properties.forEach((property) => {
       if (inventory[property].toLowerCase().includes(filters.query.toLowerCase())) {
@@ -66,18 +64,6 @@ const applyFilters = (inventories, filters) => inventories.filter((inventory) =>
     if (!queryMatched) {
       return false;
     }
-  }
-
-  if (filters.hasAcceptedMarketing && !inventory.hasAcceptedMarketing) {
-    return false;
-  }
-
-  if (filters.isProspect && !inventory.isProspect) {
-    return false;
-  }
-
-  if (filters.isReturning && !inventory.isReturning) {
-    return false;
   }
 
   return true;
@@ -129,12 +115,7 @@ const InventoryList = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions(t)[0].value);
-  const [filters, setFilters] = useState({
-    query: '',
-    hasAcceptedMarketing: null,
-    isProspect: null,
-    isReturning: null
-  });
+  const [filters, setFilters] = useState({ query: '' });
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -160,10 +141,7 @@ const InventoryList = () => {
 
   const handleTabsChange = (event, value) => {
     const updatedFilters = {
-      ...filters,
-      hasAcceptedMarketing: null,
-      isProspect: null,
-      isReturning: null
+      ...filters
     };
 
     if (value !== 'all') {

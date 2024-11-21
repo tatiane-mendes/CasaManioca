@@ -1,14 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import NextLink from 'next/link';
 import numeral from 'numeral';
-import { format } from 'date-fns';
 import PropTypes from 'prop-types';
-import { SeverityPill } from '../../severity-pill';
+import { format } from 'date-fns';
 import {
   Avatar,
   Box,
-  Button,
-  Checkbox,
   IconButton,
   Link,
   Table,
@@ -16,20 +13,21 @@ import {
   TableCell,
   TableHead,
   TablePagination,
-  TableRow,
-  Typography
+  TableRow
 } from '@mui/material';
-import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
+import { Trash as TrashRightIcon } from '../../../icons/trash';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
 import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
+import productionService from '../../../services/production-service';
 
 export const ProductionListTable = (props) => {
   const { t } = useTranslation();
-
+  
   const {
-    productions,
+    productions: initialProductions,
     productionsCount,
     onPageChange,
     onRowsPerPageChange,
@@ -37,75 +35,30 @@ export const ProductionListTable = (props) => {
     rowsPerPage,
     ...other
   } = props;
-  const [selectedProductions, setSelectedProductions] = useState([]);
+  const [productions, setProductions] = useState(initialProductions);
 
-  // Reset selected productions when productions change
   useEffect(() => {
-      if (selectedProductions.length) {
-        setSelectedProductions([]);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [productions]);
+    setProductions(initialProductions);
+  }, [initialProductions]);
 
-  const handleSelectAllProductions = (event) => {
-    setSelectedProductions(event.target.checked
-      ? productions.map((production) => production.id)
-      : []);
-  };
-
-  const handleSelectOneProduction = (event, productionId) => {
-    if (!selectedProductions.includes(productionId)) {
-      setSelectedProductions((prevSelected) => [...prevSelected, productionId]);
-    } else {
-      setSelectedProductions((prevSelected) => prevSelected.filter((id) => id !== productionId));
+  const handleDelete = async (values) => {
+    try {
+      await productionService.delete(values);
+      toast.success('Item deleted!');
+      
+      setProductions(productions.filter(item => item.id !== values.id));
+    } catch (err) {
+      console.error(err.message + '. ' + err.detail);
+      toast.error(err.message + '. ' + err.detail);
     }
   };
 
-  const enableBulkActions = selectedProductions.length > 0;
-  const selectedSomeProductions = selectedProductions.length > 0
-    && selectedProductions.length < productions.length;
-  const selectedAllProductions = selectedProductions.length === productions.length;
-
   return (
     <div {...other}>
-      <Box
-        sx={{
-          backgroundColor: 'neutral.100',
-          display: !enableBulkActions && 'none',
-          px: 2,
-          py: 0.5
-        }}
-      >
-        <Checkbox
-          checked={selectedAllProductions}
-          indeterminate={selectedSomeProductions}
-          onChange={handleSelectAllProductions}
-        />
-        <Button
-          size="small"
-          sx={{ ml: 2 }}
-        >
-          Delete
-        </Button>
-        <Button
-          size="small"
-          sx={{ ml: 2 }}
-        >
-          Edit
-        </Button>
-      </Box>
       <Scrollbar>
         <Table sx={{ minWidth: 700 }}>
-          <TableHead sx={{ visibility: enableBulkActions ? 'collapse' : 'visible' }}>
+          <TableHead>
             <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={selectedAllProductions}
-                  indeterminate={selectedSomeProductions}
-                  onChange={handleSelectAllProductions}
-                />
-              </TableCell>
               <TableCell>
                 {t('Item')}
               </TableCell>
@@ -116,7 +69,7 @@ export const ProductionListTable = (props) => {
                 {t(`Quantity produced`)}
               </TableCell>
               <TableCell>
-                {t(`Production Date`)}
+                {t(`Production date`)}
               </TableCell>
               <TableCell align="right">
                 {t('Actions')}
@@ -125,21 +78,11 @@ export const ProductionListTable = (props) => {
           </TableHead>
           <TableBody>
             {productions.map((production) => {
-              const isProductionSelected = selectedProductions.includes(production.id);
-
               return (
                 <TableRow
                   hover
                   key={production.id}
-                  selected={isProductionSelected}
                 >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isProductionSelected}
-                      onChange={(event) => handleSelectOneProduction(event, production.id)}
-                      value={isProductionSelected}
-                    />
-                  </TableCell>
                   <TableCell>
                     <Box
                       sx={{
@@ -154,40 +97,35 @@ export const ProductionListTable = (props) => {
                           width: 42
                         }}
                       >
-                        {getInitials(production.name)}
+                        {getInitials(production.product.name)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href="/dashboard/production/1"
+                          href={`/dashboard/production/${production.id}/edit`}
                           passHref
                         >
                           <Link
                             color="inherit"
                             variant="subtitle2"
                           >
-                            {production.name}
+                            {production.product.name}
                           </Link>
                         </NextLink>
-                       </Box>
+                      </Box>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {`${production.category}`}
+                    {`${production.product.category}`}
                   </TableCell>
                   <TableCell>
-                    <Typography
-                      color="success.main"
-                      variant="subtitle2"
-                    >
-                      {numeral(production.quantity).format(`0,0`)}
-                    </Typography>
+                    {numeral(production.postProductionStock).format(`0.00`)}
                   </TableCell>
                   <TableCell> 
-                    {format(production.date, 'dd/MM/yyyy')}
+                    {format(production.productionDate, 'dd/MM/yyyy')}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink
-                      href="/dashboard/production/edit"
+                      href={`/dashboard/production/${production.id}/edit`}
                       passHref
                     >
                       <IconButton component="a">
@@ -195,11 +133,11 @@ export const ProductionListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href="/dashboard/"
+                      href="/dashboard/production"
                       passHref
                     >
                       <IconButton component="a">
-                        <ArrowRightIcon fontSize="small" />
+                        <TrashRightIcon fontSize="small" onClick={() => {handleDelete(production)}} />
                       </IconButton>
                     </NextLink>
                   </TableCell>

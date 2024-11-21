@@ -13,7 +13,7 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import { ProductionListTable } from '../../../components/dashboard/production/production-list-table';
+import { IngredientListTable } from '../../../components/dashboard/ingredient/ingredient-list-table';
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../hooks/use-mounted';
@@ -22,7 +22,7 @@ import { Search as SearchIcon } from '../../../icons/search';
 import { gtm } from '../../../lib/gtm';
 import { useTranslation } from 'react-i18next';
 import NextLink from 'next/link';
-import productionService from '../../../services/production-service';
+import ingredientService from '../../../services/ingredient-service';
 
 const tabs = [
   {
@@ -33,30 +33,30 @@ const tabs = [
 
 const sortOptions = (t) => [
   {
-    label: t('Production date (Hightest)'),
-    value: 'productionDate|desc'
-  },
-  {
-    label: t('Production date (Lowest)'),
-    value: 'productionDate|asc'
-  },
-  {
     label: t('Name (A-Z)'),
-    value: 'product.name|asc'
+    value: 'name|asc'
   },
   {
     label: t('Name (Z-A)'),
-    value: 'product.name|desc'
+    value: 'name|desc'
+  },
+  {
+    label: t('Measure of unit (A-Z)'),
+    value: 'unitOfMeasure|asc'
+  },
+  {
+    label: t('Measure of unit (Z-A)'),
+    value: 'unitOfMeasure|desc'
   }
 ];
 
-const applyFilters = (productions, filters) => productions.filter((production) => {
+const applyFilters = (ingredients, filters) => ingredients.filter((ingredient) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['productionDate', 'product.name'];
+    const properties = ['name', 'unitOfMeasure'];
 
     properties.forEach((property) => {
-      if (production[property].toLowerCase().includes(filters.query.toLowerCase())) {
+      if (ingredient[property].toLowerCase().includes(filters.query.toLowerCase())) {
         queryMatched = true;
       }
     });
@@ -85,10 +85,10 @@ const getComparator = (order, orderBy) => (order === 'desc'
   ? (a, b) => descendingComparator(a, b, orderBy)
   : (a, b) => -descendingComparator(a, b, orderBy));
 
-const applySort = (productions, sort) => {
+const applySort = (ingredients, sort) => {
   const [orderBy, order] = sort.split('|');
   const comparator = getComparator(order, orderBy);
-  const stabilizedThis = productions.map((el, index) => [el, index]);
+  const stabilizedThis = ingredients.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
         const newOrder = comparator(a[0], b[0]);
@@ -103,14 +103,14 @@ const applySort = (productions, sort) => {
     return stabilizedThis.map((el) => el[0]);
 };
 
-const applyPagination = (productions, page, rowsPerPage) => productions.slice(page * rowsPerPage,
+const applyPagination = (ingredients, page, rowsPerPage) => ingredients.slice(page * rowsPerPage,
   page * rowsPerPage + rowsPerPage);
 
-const ProductionList = () => {
+const IngredientList = () => {
   const { t } = useTranslation();
   const isMounted = useMounted();
   const queryRef = useRef(null);
-  const [productions, setProductions] = useState([]);
+  const [ingredients, setInventories] = useState([]);
   const [currentTab, setCurrentTab] = useState('all');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -121,12 +121,12 @@ const ProductionList = () => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getProductions = useCallback(async () => {
+  const getInventories = useCallback(async () => {
     try {
-      const data = await productionService.getAll();
+      const data = await ingredientService.getAll();
 
       if (isMounted()) {
-        setProductions(data);
+        setInventories(data);
       }
     } catch (err) {
       console.error(err);
@@ -134,7 +134,7 @@ const ProductionList = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getProductions();
+      getInventories();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
@@ -173,15 +173,15 @@ const ProductionList = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredProductions = applyFilters(productions, filters);
-  const sortedProductions = applySort(filteredProductions, sort);
-  const paginatedProductions = applyPagination(sortedProductions, page, rowsPerPage);
+  const filteredInventories = applyFilters(ingredients, filters);
+  const sortedInventories = applySort(filteredInventories, sort);
+  const paginatedInventories = applyPagination(sortedInventories, page, rowsPerPage);
 
   return (
     <>
       <Head>
         <title>
-          {t('Dashboard: Production List')}
+          {t('Dashboard: Ingredient List')}
         </title>
       </Head>
       <Box
@@ -200,12 +200,12 @@ const ProductionList = () => {
             >
               <Grid item>
                 <Typography variant="h4">
-                  {t('Production')}
+                  {t('Ingredient')}
                 </Typography>
               </Grid>
               <Grid item>
               <NextLink
-                href="/dashboard/production/0/edit"
+                href="/dashboard/ingredient/0/edit"
                 passHref
               >
                 <Button
@@ -265,7 +265,7 @@ const ProductionList = () => {
                       </InputAdornment>
                     )
                   }}
-                  placeholder={t("Search productions")}
+                  placeholder={t("Search ingredients")}
                 />
               </Box>
               <TextField
@@ -287,9 +287,9 @@ const ProductionList = () => {
                 ))}
               </TextField>
             </Box>
-            <ProductionListTable
-              productions={paginatedProductions}
-              productionsCount={filteredProductions.length}
+            <IngredientListTable
+              ingredients={paginatedInventories}
+              ingredientsCount={filteredInventories.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
@@ -302,4 +302,4 @@ const ProductionList = () => {
   );
 };
 
-export default withAuthGuard(withDashboardLayout(ProductionList));
+export default withAuthGuard(withDashboardLayout(IngredientList));

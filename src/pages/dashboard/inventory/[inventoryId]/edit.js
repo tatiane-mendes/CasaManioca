@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import Head from 'next/head';
-import { Avatar, Box, Chip, Container, Link, Typography } from '@mui/material';
+import { Avatar, Box, Container, Link, Typography } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { InventoryEditForm } from '../../../../components/dashboard/inventory/inventory-edit-form';
 import { withAuthGuard } from '../../../../hocs/with-auth-guard';
@@ -26,8 +26,16 @@ const InventoryEdit = () => {
 
   const getInventory = useCallback(async () => {
     try {
-      const data = await inventoryService.getById(inventoryId);
-      
+      const data = inventoryId > 0 ? await inventoryService.getById(inventoryId) : {
+        id: 0,
+        name: '',
+        quantity: 0,
+        price: 0,
+        category: '',
+        restockLevel: 0,
+        restockQuantity: 0
+      };
+
       if (isMounted()) {
         setInventory(data);
       }
@@ -93,7 +101,7 @@ const InventoryEdit = () => {
             }}
           >
             <Avatar
-              src={inventory.avatar}
+              src={inventory?.avatar}
               sx={{
                 height: 64,
                 mr: 2,
@@ -107,7 +115,7 @@ const InventoryEdit = () => {
                 noWrap
                 variant="h4"
               >
-                {inventory.email}
+                {inventory?.email}
               </Typography>
               <Box
                 sx={{
