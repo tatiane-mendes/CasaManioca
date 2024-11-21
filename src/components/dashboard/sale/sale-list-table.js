@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import NextLink from 'next/link';
 import numeral from 'numeral';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
+import { SeverityPill } from '../../severity-pill';
 import {
   Avatar,
   Box,
@@ -13,7 +13,8 @@ import {
   TableCell,
   TableHead,
   TablePagination,
-  TableRow
+  TableRow,
+  Typography
 } from '@mui/material';
 import { Trash as TrashRightIcon } from '../../../icons/trash';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
@@ -21,32 +22,33 @@ import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
-import recipeService from '../../../services/recipe-service';
+import saleService from '../../../services/sale-service';
+import { format } from 'date-fns';
 
-export const RecipeListTable = (props) => {
+export const SaleListTable = (props) => {
   const { t } = useTranslation();
   
   const {
-    recipes: initialRecipes,
-    recipesCount,
+    sales: initialSales,
+    salesCount,
     onPageChange,
     onRowsPerPageChange,
     page,
     rowsPerPage,
     ...other
   } = props;
-  const [recipes, setRecipes] = useState(initialRecipes);
+  const [sales, setSales] = useState(initialSales);
 
   useEffect(() => {
-    setRecipes(initialRecipes);
-  }, [initialRecipes]);
+    setSales(initialSales);
+  }, [initialSales]);
 
   const handleDelete = async (values) => {
     try {
-      await recipeService.delete(values);
+      await saleService.delete(values);
       toast.success('Item deleted!');
       
-      setRecipes(recipes.filter(item => item.id !== values.id));
+      setSales(sales.filter(item => item.id !== values.id));
     } catch (err) {
       console.error(err.message + '. ' + err.detail);
       toast.error(err.message + '. ' + err.detail);
@@ -66,10 +68,13 @@ export const RecipeListTable = (props) => {
                 {t(`Category`)}
               </TableCell>
               <TableCell>
-                {t(`Quantity produced`)}
+                {t(`Quantity sold`)}
               </TableCell>
               <TableCell>
-                {t(`Recipe date`)}
+                {t(`Actual stock`)}
+              </TableCell>
+              <TableCell>
+                {t(`Sold date`)}
               </TableCell>
               <TableCell align="right">
                 {t('Actions')}
@@ -77,11 +82,11 @@ export const RecipeListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {recipes.map((recipe) => {
+            {sales.map((sale) => {
               return (
                 <TableRow
                   hover
-                  key={recipe.id}
+                  key={sale.id}
                 >
                   <TableCell>
                     <Box
@@ -91,41 +96,51 @@ export const RecipeListTable = (props) => {
                       }}
                     >
                       <Avatar
-                        src={recipe.avatar}
+                        src={sale.avatar}
                         sx={{
                           height: 42,
                           width: 42
                         }}
                       >
-                        {getInitials(recipe.product.name)}
+                        {getInitials(sale.product.name)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href={`/dashboard/recipe/${recipe.id}/edit`}
+                          href={`/dashboard/sale/${sale.id}/edit`}
                           passHref
                         >
                           <Link
                             color="inherit"
                             variant="subtitle2"
                           >
-                            {recipe.product.name}
+                            {sale.product.name}
                           </Link>
                         </NextLink>
                       </Box>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {`${recipe.product.category}`}
+                    {`${sale.product.category}`}
                   </TableCell>
                   <TableCell>
-                    {numeral(recipe.postRecipeStock).format(`0.00`)}
+                    {numeral(sale.quantitySold).format(`0.00`)}
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      color="success.main"
+                      variant="subtitle2"
+                    >
+                      <SeverityPill color={(Number(sale.product.quantity) >= Number(sale.product.restockLevel)) ? 'success' : 'error'}>
+                        {numeral(sale.product.quantity).format(`0.00`)}
+                      </SeverityPill>
+                    </Typography>
                   </TableCell>
                   <TableCell> 
-                    {format(new Date(recipe.recipeDate), 'dd/MM/yyyy')}
+                    {format(new Date(sale.saleDate), 'dd/MM/yyyy')}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink
-                      href={`/dashboard/recipe/${recipe.id}/edit`}
+                      href={`/dashboard/sale/${sale.id}/edit`}
                       passHref
                     >
                       <IconButton component="a">
@@ -133,11 +148,11 @@ export const RecipeListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href="/dashboard/recipe"
+                      href="/dashboard/sale"
                       passHref
                     >
                       <IconButton component="a">
-                        <TrashRightIcon fontSize="small" onClick={() => {handleDelete(recipe)}} />
+                        <TrashRightIcon fontSize="small" onClick={() => {handleDelete(sale)}} />
                       </IconButton>
                     </NextLink>
                   </TableCell>
@@ -149,7 +164,7 @@ export const RecipeListTable = (props) => {
       </Scrollbar>
       <TablePagination
         component="div"
-        count={recipesCount}
+        count={salesCount}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
@@ -160,9 +175,9 @@ export const RecipeListTable = (props) => {
   );
 };
 
-RecipeListTable.propTypes = {
-  recipes: PropTypes.array.isRequired,
-  recipesCount: PropTypes.number.isRequired,
+SaleListTable.propTypes = {
+  sales: PropTypes.array.isRequired,
+  salesCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
   page: PropTypes.number.isRequired,

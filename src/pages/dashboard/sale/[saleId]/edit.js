@@ -1,31 +1,43 @@
 import { useState, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import Head from 'next/head';
-import { Avatar, Box, Chip, Container, Link, Typography } from '@mui/material';
+import { Avatar, Box, Container, Link, Typography } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
-import { InventoryEditForm } from '../../../../components/dashboard/inventory/inventory-edit-form';
+import { SaleEditForm } from '../../../../components/dashboard/sale/sale-edit-form';
 import { withAuthGuard } from '../../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../../hooks/use-mounted';
 import { gtm } from '../../../../lib/gtm';
 import { getInitials } from '../../../../utils/get-initials';
 import { useTranslation } from 'react-i18next';
+import saleService from '../../../../services/sale-service';
 
-const InventoryEdit = () => {
+const SaleEdit = () => {
   const { t } = useTranslation();
+  const router = useRouter();
+  const { saleId } = router.query;
   const isMounted = useMounted();
-  const [inventory, setInventory] = useState(null);
+  const [sale, setSale] = useState(null);
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getInventory = useCallback(async () => {
+  const getSale = useCallback(async () => {
     try {
-      // const data = await inventoryApi.getInventory();
-        const data = {};
+      const data = saleId > 0 ? await saleService.getById(saleId) : {
+        id: 0,
+        name: '',
+        quantity: 0,
+        price: 0,
+        category: '',
+        restockLevel: 0,
+        restockQuantity: 0
+      };
+
       if (isMounted()) {
-        setInventory(data);
+        setSale(data);
       }
     } catch (err) {
       console.error(err);
@@ -33,12 +45,12 @@ const InventoryEdit = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getInventory();
+      getSale();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
-  if (!inventory) {
+  if (!sale) {
     return null;
   }
 
@@ -46,7 +58,7 @@ const InventoryEdit = () => {
     <>
       <Head>
         <title>
-          {t('Dashboard: Inventory Edit')}
+          {t('Dashboard: Product Sold Edit')}
         </title>
       </Head>
       <Box
@@ -60,7 +72,7 @@ const InventoryEdit = () => {
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
             <NextLink
-              href="/dashboard/inventory"
+              href="/dashboard/sale"
               passHref
             >
               <Link
@@ -76,7 +88,7 @@ const InventoryEdit = () => {
                   sx={{ mr: 1 }}
                 />
                 <Typography variant="subtitle2">
-                  {t('Inventories')}
+                  {t('Product Sold')}
                 </Typography>
               </Link>
             </NextLink>
@@ -89,21 +101,21 @@ const InventoryEdit = () => {
             }}
           >
             <Avatar
-              src={inventory.avatar}
+              src={sale?.avatar}
               sx={{
                 height: 64,
                 mr: 2,
                 width: 64
               }}
             >
-              {getInitials(inventory.name)}
+              {getInitials(sale.name)}
             </Avatar>
             <div>
               <Typography
                 noWrap
                 variant="h4"
               >
-                {inventory.email}
+                {sale?.email}
               </Typography>
               <Box
                 sx={{
@@ -119,7 +131,7 @@ const InventoryEdit = () => {
             </div>
           </Box>
           <Box mt={3}>
-            <InventoryEditForm inventory={inventory} />
+            <SaleEditForm sale={sale} />
           </Box>
         </Container>
       </Box>
@@ -127,4 +139,4 @@ const InventoryEdit = () => {
   );
 };
 
-export default withAuthGuard(withDashboardLayout(InventoryEdit));
+export default withAuthGuard(withDashboardLayout(SaleEdit));

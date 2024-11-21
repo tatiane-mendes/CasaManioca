@@ -1,7 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import Head from 'next/head';
-import { Avatar, Box, Chip, Container, Link, Typography } from '@mui/material';
+import { Avatar, Box, Container, Link, Typography } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { RecipeEditForm } from '../../../../components/dashboard/recipe/recipe-edit-form';
 import { withAuthGuard } from '../../../../hocs/with-auth-guard';
@@ -10,9 +11,12 @@ import { useMounted } from '../../../../hooks/use-mounted';
 import { gtm } from '../../../../lib/gtm';
 import { getInitials } from '../../../../utils/get-initials';
 import { useTranslation } from 'react-i18next';
+import recipeService from '../../../../services/recipe-service';
 
 const RecipeEdit = () => {
   const { t } = useTranslation();
+  const router = useRouter();
+  const { recipeId } = router.query;
   const isMounted = useMounted();
   const [recipe, setRecipe] = useState(null);
 
@@ -22,8 +26,16 @@ const RecipeEdit = () => {
 
   const getRecipe = useCallback(async () => {
     try {
-      // const data = await recipeApi.getRecipe();
-        const data = {};
+      const data = recipeId > 0 ? await recipeService.getById(recipeId) : {
+        id: 0,
+        name: '',
+        quantity: 0,
+        price: 0,
+        category: '',
+        restockLevel: 0,
+        restockQuantity: 0
+      };
+
       if (isMounted()) {
         setRecipe(data);
       }
@@ -89,7 +101,7 @@ const RecipeEdit = () => {
             }}
           >
             <Avatar
-              src={recipe.avatar}
+              src={recipe?.avatar}
               sx={{
                 height: 64,
                 mr: 2,
@@ -103,7 +115,7 @@ const RecipeEdit = () => {
                 noWrap
                 variant="h4"
               >
-                {recipe.email}
+                {recipe?.email}
               </Typography>
               <Box
                 sx={{

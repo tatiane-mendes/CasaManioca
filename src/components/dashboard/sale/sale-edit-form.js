@@ -14,42 +14,46 @@ import {
   Grid,
   TextField
 } from '@mui/material';
-import recipeService from '../../../services/recipe-service';
+import saleService from '../../../services/sale-service';
 import { useRouter } from 'next/router';
 
-export const RecipeEditForm = (props) => {
+export const SaleEditForm = (props) => {
   const router = useRouter();
-  const { recipe, ...other } = props;
+  const { sale, ...other } = props;
   const formik = useFormik({
     initialValues: {
-      id: recipe.id || '',
-      quantityProduced: recipe.quantityProduced || '',
-      recipeDate: recipe.recipeDate || '',
-      postRecipeStock: recipe.postRecipeStock || '',
-      productId: recipe.productId || '',
+      id: sale.id || '',
+      name: sale.name || '',
+      quantity: sale.quantity || '',
+      price: sale.price || '',
+      category: sale.category || '',
+      restockLevel: sale.restockLevel || '',
+      restockQuantity: sale.restockQuantity || ''
     },
     validationSchema: Yup.object({
       id: Yup.number().optional(),
-      quantityProduced: Yup.number().required('Quantity produced is required'),
-      recipeDate: Yup.date().optional(),
-      postRecipeStock: Yup.number().required('Post recipe stock is required'),
-      productId: Yup.number().required('Product is required'),
+      name: Yup.string().max(255).required('Name is required'),
+      quantity: Yup.number().required('Quantity is required'),
+      price: Yup.number().required('Price is required'),
+      category: Yup.string().max(100).optional(),
+      restockLevel: Yup.number().required('Restock level is required'),
+      restockQuantity: Yup.number().required('Restock quantity is required'),
     }),
     onSubmit: async (values, helpers) => {
       try {
         if (values.id) {
-          await recipeService.edit(values);  
+          await saleService.edit(values);  
           toast.success('Item updated!');
         }
         else {
           const {id, ...filteredValues} = values;
-          await recipeService.insert(filteredValues);
+          await saleService.insert(filteredValues);
           toast.success('Item inserted!');
         }
 
         helpers.setStatus({ success: true });
         helpers.setSubmitting(false);
-        router.push('/dashboard/recipe');
+        router.push('/dashboard/sale');
       } catch (err) {
         console.error(err.message + '. ' + err.detail);
         toast.error(err.message + '. ' + err.detail);
@@ -63,9 +67,9 @@ export const RecipeEditForm = (props) => {
 
   const handleDelete = async (values) => {
     try {
-      await recipeService.delete(values);
+      await saleService.delete(values);
       toast.success('Item deleted!');
-      router.push('/dashboard/recipe');
+      router.push('/dashboard/sale');
     } catch (err) {
       console.error(err.message + '. ' + err.detail);
       toast.error(err.message + '. ' + err.detail);
@@ -77,7 +81,7 @@ export const RecipeEditForm = (props) => {
       onSubmit={formik.handleSubmit}
       {...other}>
       <Card>
-        <CardHeader title={"Form recipe"} />
+        <CardHeader title={"Product sold form"} />
         <Divider />
         <CardContent>
           <Grid
@@ -90,14 +94,14 @@ export const RecipeEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.productId && formik.errors.productId)}
+                error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
-                helperText={formik.touched.productId && formik.errors.productId}
-                label="Product"
-                name="productId"
+                helperText={formik.touched.name && formik.errors.name}
+                label="Name"
+                name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.productId}
+                value={formik.values.name}
               />
             </Grid>
             <Grid
@@ -106,15 +110,31 @@ export const RecipeEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.quantityProduced && formik.errors.quantityProduced)}
+                error={Boolean(formik.touched.category && formik.errors.category)}
                 fullWidth
-                helperText={formik.touched.quantityProduced && formik.errors.quantityProduced}
-                label="Quantity produced"
-                name="quantityProduced"
+                helperText={formik.touched.category && formik.errors.category}
+                label="Category"
+                name="category"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.category}
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                error={Boolean(formik.touched.quantity && formik.errors.quantity)}
+                fullWidth
+                helperText={formik.touched.quantity && formik.errors.quantity}
+                label="Quantity"
+                name="quantity"
                 type="number"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.quantityProduced}
+                value={formik.values.quantity}
               />
             </Grid>
             <Grid
@@ -123,32 +143,49 @@ export const RecipeEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.recipeDate && formik.errors.recipeDate)}
+                error={Boolean(formik.touched.price && formik.errors.price)}
                 fullWidth
-                helperText={formik.touched.recipeDate && formik.errors.recipeDate}
-                label="Recipe date"
-                name="recipeDate"
-                type="date"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.recipeDate}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.postRecipeStock && formik.errors.postRecipeStock)}
-                fullWidth
-                helperText={formik.touched.postRecipeStock && formik.errors.postRecipeStock}
-                label="Post recipe stock"
-                name="postRecipeStock"
+                helperText={formik.touched.price && formik.errors.price}
+                label="Price"
+                name="price"
                 type="number"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.postRecipeStock}
+                value={formik.values.price}
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                error={Boolean(formik.touched.restockLevel && formik.errors.restockLevel)}
+                fullWidth
+                helperText={formik.touched.restockLevel && formik.errors.restockLevel}
+                label="Restock level"
+                name="restockLevel"
+                type="number"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.restockLevel}
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                error={Boolean(formik.touched.restockQuantity && formik.errors.restockQuantity)}
+                fullWidth
+                helperText={formik.touched.restockQuantity && formik.errors.restockQuantity}
+                label="Restock quantity"
+                name="restockQuantity"
+                type="number"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.restockQuantity}
               />
             </Grid>
           </Grid>
@@ -186,7 +223,7 @@ export const RecipeEditForm = (props) => {
             Save
           </Button>
           <NextLink
-            href="/dashboard/recipe"
+            href="/dashboard/sale"
             passHref
           >
             <Button
@@ -214,6 +251,6 @@ export const RecipeEditForm = (props) => {
   );
 };
 
-RecipeEditForm.propTypes = {
-    recipe: PropTypes.object.isRequired
+SaleEditForm.propTypes = {
+    sale: PropTypes.object.isRequired
 };

@@ -13,18 +13,16 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import { recipeApi } from '../../../__fake-api__/recipe-api';
 import { RecipeListTable } from '../../../components/dashboard/recipe/recipe-list-table';
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../hooks/use-mounted';
-import { Download as DownloadIcon } from '../../../icons/download';
 import { Plus as PlusIcon } from '../../../icons/plus';
 import { Search as SearchIcon } from '../../../icons/search';
-import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
 import { useTranslation } from 'react-i18next';
 import NextLink from 'next/link';
+import recipeService from '../../../services/recipe-service';
 
 const tabs = [
   {
@@ -43,19 +41,19 @@ const sortOptions = (t) => [
     value: 'name|desc'
   },
   {
-    label: t('Available stock (highest)'),
-    value: 'quantity|desc'
+    label: t('Category (A-Z)'),
+    value: 'category|asc'
   },
   {
-    label: t('Available stock (lowest)'),
-    value: 'quantity|asc'
+    label: t('Category (Z-A)'),
+    value: 'category|desc'
   }
 ];
 
 const applyFilters = (recipes, filters) => recipes.filter((recipe) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['email', 'name'];
+    const properties = ['category', 'name'];
 
     properties.forEach((property) => {
       if (recipe[property].toLowerCase().includes(filters.query.toLowerCase())) {
@@ -66,18 +64,6 @@ const applyFilters = (recipes, filters) => recipes.filter((recipe) => {
     if (!queryMatched) {
       return false;
     }
-  }
-
-  if (filters.hasAcceptedMarketing && !recipe.hasAcceptedMarketing) {
-    return false;
-  }
-
-  if (filters.isProspect && !recipe.isProspect) {
-    return false;
-  }
-
-  if (filters.isReturning && !recipe.isReturning) {
-    return false;
   }
 
   return true;
@@ -129,12 +115,7 @@ const RecipeList = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions(t)[0].value);
-  const [filters, setFilters] = useState({
-    query: '',
-    hasAcceptedMarketing: null,
-    isProspect: null,
-    isReturning: null
-  });
+  const [filters, setFilters] = useState({ query: '' });
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -142,7 +123,7 @@ const RecipeList = () => {
 
   const getRecipes = useCallback(async () => {
     try {
-      const data = await recipeApi.getRecipes();
+      const data = await recipeService.getAll();
 
       if (isMounted()) {
         setRecipes(data);
@@ -160,10 +141,7 @@ const RecipeList = () => {
 
   const handleTabsChange = (event, value) => {
     const updatedFilters = {
-      ...filters,
-      hasAcceptedMarketing: null,
-      isProspect: null,
-      isReturning: null
+      ...filters
     };
 
     if (value !== 'all') {

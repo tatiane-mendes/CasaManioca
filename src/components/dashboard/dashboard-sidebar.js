@@ -55,7 +55,7 @@ const getSections = (t) => [
       },
       {
         title: t('Products sold'),
-        path: '/dashboard/productsold',
+        path: '/dashboard/sale',
         icon: <CurrencyDollarIcon fontSize="small" />,
         
       },

@@ -13,18 +13,16 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import { productsoldApi } from '../../../__fake-api__/productsold-api';
-import { ProductSoldListTable } from '../../../components/dashboard/productsold/productsold-list-table';
+import { SaleListTable } from '../../../components/dashboard/sale/sale-list-table';
 import { withAuthGuard } from '../../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
 import { useMounted } from '../../../hooks/use-mounted';
-import { Download as DownloadIcon } from '../../../icons/download';
 import { Plus as PlusIcon } from '../../../icons/plus';
 import { Search as SearchIcon } from '../../../icons/search';
-import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
 import { useTranslation } from 'react-i18next';
 import NextLink from 'next/link';
+import saleService from '../../../services/sale-service';
 
 const tabs = [
   {
@@ -43,22 +41,22 @@ const sortOptions = (t) => [
     value: 'name|desc'
   },
   {
-    label: t('Units Sold (highest)'),
-    value: 'quantity|desc'
+    label: t('Category (A-Z)'),
+    value: 'category|asc'
   },
   {
-    label: t('Units Sold (lowest)'),
-    value: 'quantity|asc'
+    label: t('Category (Z-A)'),
+    value: 'category|desc'
   }
 ];
 
-const applyFilters = (productsold, filters) => productsold.filter((productsold) => {
+const applyFilters = (sales, filters) => sales.filter((sale) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['email', 'name'];
+    const properties = ['category', 'name'];
 
     properties.forEach((property) => {
-      if (productsold[property].toLowerCase().includes(filters.query.toLowerCase())) {
+      if (sale[property].toLowerCase().includes(filters.query.toLowerCase())) {
         queryMatched = true;
       }
     });
@@ -66,18 +64,6 @@ const applyFilters = (productsold, filters) => productsold.filter((productsold) 
     if (!queryMatched) {
       return false;
     }
-  }
-
-  if (filters.hasAcceptedMarketing && !productsold.hasAcceptedMarketing) {
-    return false;
-  }
-
-  if (filters.isProspect && !productsold.isProspect) {
-    return false;
-  }
-
-  if (filters.isReturning && !productsold.isReturning) {
-    return false;
   }
 
   return true;
@@ -99,10 +85,10 @@ const getComparator = (order, orderBy) => (order === 'desc'
   ? (a, b) => descendingComparator(a, b, orderBy)
   : (a, b) => -descendingComparator(a, b, orderBy));
 
-const applySort = (productsold, sort) => {
+const applySort = (sales, sort) => {
   const [orderBy, order] = sort.split('|');
   const comparator = getComparator(order, orderBy);
-  const stabilizedThis = productsold.map((el, index) => [el, index]);
+  const stabilizedThis = sales.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
         const newOrder = comparator(a[0], b[0]);
@@ -117,35 +103,30 @@ const applySort = (productsold, sort) => {
     return stabilizedThis.map((el) => el[0]);
 };
 
-const applyPagination = (productsold, page, rowsPerPage) => productsold.slice(page * rowsPerPage,
+const applyPagination = (sales, page, rowsPerPage) => sales.slice(page * rowsPerPage,
   page * rowsPerPage + rowsPerPage);
 
-const ProductSoldList = () => {
+const SaleList = () => {
   const { t } = useTranslation();
   const isMounted = useMounted();
   const queryRef = useRef(null);
-  const [productsold, setProductSold] = useState([]);
+  const [sales, setSales] = useState([]);
   const [currentTab, setCurrentTab] = useState('all');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState(sortOptions(t)[0].value);
-  const [filters, setFilters] = useState({
-    query: '',
-    hasAcceptedMarketing: null,
-    isProspect: null,
-    isReturning: null
-  });
+  const [filters, setFilters] = useState({ query: '' });
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getProductSold = useCallback(async () => {
+  const getSales = useCallback(async () => {
     try {
-      const data = await productsoldApi.getProductSold();
+      const data = await saleService.getAll();
 
       if (isMounted()) {
-        setProductSold(data);
+        setSales(data);
       }
     } catch (err) {
       console.error(err);
@@ -153,17 +134,14 @@ const ProductSoldList = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getProductSold();
+      getSales();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
   const handleTabsChange = (event, value) => {
     const updatedFilters = {
-      ...filters,
-      hasAcceptedMarketing: null,
-      isProspect: null,
-      isReturning: null
+      ...filters
     };
 
     if (value !== 'all') {
@@ -195,9 +173,9 @@ const ProductSoldList = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredProductSold = applyFilters(productsold, filters);
-  const sortedProductSold = applySort(filteredProductSold, sort);
-  const paginatedProductSold = applyPagination(sortedProductSold, page, rowsPerPage);
+  const filteredSales = applyFilters(sales, filters);
+  const sortedSales = applySort(filteredSales, sort);
+  const paginatedSales = applyPagination(sortedSales, page, rowsPerPage);
 
   return (
     <>
@@ -227,7 +205,7 @@ const ProductSoldList = () => {
               </Grid>
               <Grid item>
               <NextLink
-                href="/dashboard/productsold/0/edit"
+                href="/dashboard/sale/0/edit"
                 passHref
               >
                 <Button
@@ -287,7 +265,7 @@ const ProductSoldList = () => {
                       </InputAdornment>
                     )
                   }}
-                  placeholder={t("Search Product Sold")}
+                  placeholder={t("Search sales")}
                 />
               </Box>
               <TextField
@@ -309,9 +287,9 @@ const ProductSoldList = () => {
                 ))}
               </TextField>
             </Box>
-            <ProductSoldListTable
-              productsold={paginatedProductSold}
-              productsoldCount={filteredProductSold.length}
+            <SaleListTable
+              sales={paginatedSales}
+              salesCount={filteredSales.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
@@ -324,4 +302,4 @@ const ProductSoldList = () => {
   );
 };
 
-export default withAuthGuard(withDashboardLayout(ProductSoldList));
+export default withAuthGuard(withDashboardLayout(SaleList));
