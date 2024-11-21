@@ -121,7 +121,7 @@ export const ProductionListTable = (props) => {
                     {numeral(production.postProductionStock).format(`0.00`)}
                   </TableCell>
                   <TableCell> 
-                    {format(production.productionDate, 'dd/MM/yyyy')}
+                    {format(new Date(production.productionDate), 'dd/MM/yyyy')}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink
