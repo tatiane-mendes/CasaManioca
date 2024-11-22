@@ -13,7 +13,8 @@ import {
   TableCell,
   TableHead,
   TablePagination,
-  TableRow
+  TableRow,
+  Typography
 } from '@mui/material';
 import { Trash as TrashRightIcon } from '../../../icons/trash';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
@@ -22,6 +23,7 @@ import { Scrollbar } from '../../scrollbar';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import productionService from '../../../services/production-service';
+import { SeverityPill } from '../../severity-pill';
 
 export const ProductionListTable = (props) => {
   const { t } = useTranslation();
@@ -43,7 +45,10 @@ export const ProductionListTable = (props) => {
 
   const handleDelete = async (values) => {
     try {
-      await productionService.delete(values);
+      values.productId = values.product.id;
+      const {product, ...filteredValues} = values;
+
+      await productionService.delete(filteredValues);
       toast.success('Item deleted!');
       
       setProductions(productions.filter(item => item.id !== values.id));
@@ -67,6 +72,9 @@ export const ProductionListTable = (props) => {
               </TableCell>
               <TableCell>
                 {t(`Quantity produced`)}
+              </TableCell>
+              <TableCell>
+                {t(`Actual stock`)}
               </TableCell>
               <TableCell>
                 {t(`Production date`)}
@@ -118,7 +126,17 @@ export const ProductionListTable = (props) => {
                     {`${production.product.category}`}
                   </TableCell>
                   <TableCell>
-                    {numeral(production.postProductionStock).format(`0.00`)}
+                    {numeral(production.quantityProduced).format(`0.00`)}
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      color="success.main"
+                      variant="subtitle2"
+                    >
+                      <SeverityPill color={(Number(production.product.quantity) >= Number(production.product.restockLevel)) ? 'success' : 'error'}>
+                        {numeral(production.product.quantity).format(`0.00`)}
+                      </SeverityPill>
+                    </Typography>
                   </TableCell>
                   <TableCell> 
                     {format(new Date(production.productionDate), 'dd/MM/yyyy')}

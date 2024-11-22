@@ -34,7 +34,7 @@ const ProductionEdit = () => {
           name: '',
           category: ''
         },
-        productionDate: '',
+        productionDate: new Date(),
         postProductionStock: 0,
       };
 

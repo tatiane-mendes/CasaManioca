@@ -50,13 +50,18 @@ const sortOptions = (t) => [
   }
 ];
 
+const getNestedProperty = (obj, propertyPath) => {
+  return propertyPath.split('.').reduce((acc, part) => acc && acc[part], obj);
+};
+
 const applyFilters = (productions, filters) => productions.filter((production) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['productionDate', 'product.name'];
+    const properties = ['product.category', 'product.name'];
 
     properties.forEach((property) => {
-      if (production[property].toLowerCase().includes(filters.query.toLowerCase())) {
+      const value = getNestedProperty(production, property);
+      if (value && value.toLowerCase().includes(filters.query.toLowerCase())) {
         queryMatched = true;
       }
     });

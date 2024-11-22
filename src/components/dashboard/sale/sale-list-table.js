@@ -45,7 +45,10 @@ export const SaleListTable = (props) => {
 
   const handleDelete = async (values) => {
     try {
-      await saleService.delete(values);
+      values.productId = values.product.id;
+      const {product, ...filteredValues} = values;
+
+      await saleService.delete(filteredValues);
       toast.success('Item deleted!');
       
       setSales(sales.filter(item => item.id !== values.id));

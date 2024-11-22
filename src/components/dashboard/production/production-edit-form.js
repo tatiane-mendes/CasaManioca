@@ -12,28 +12,62 @@ import {
   CardHeader,
   Divider,
   Grid,
+  MenuItem,
   TextField
 } from '@mui/material';
 import productionService from '../../../services/production-service';
+import inventoryService from '../../../services/inventory-service';
 import { useRouter } from 'next/router';
+import { useCallback, useEffect, useState } from 'react';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import 'dayjs/locale/pt-br';
+import { useMounted } from '../../../hooks/use-mounted';
+
+dayjs.extend(localizedFormat);
+dayjs.locale('pt-br');
 
 export const ProductionEditForm = (props) => {
   const router = useRouter();
+  const isMounted = useMounted();
   const { production, ...other } = props;
+  const [products, setProducts] = useState([]);
+
+  const getInventories = useCallback(async () => {
+    try {
+      const data = await inventoryService.getAll();
+
+      if (isMounted()) {
+        setProducts(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isMounted]);
+
+  useEffect(() => {
+      getInventories();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []);
+  
   const formik = useFormik({
     initialValues: {
       id: production.id || '',
       quantityProduced: production.quantityProduced || '',
-      productionDate: production.productionDate || '',
+      productionDate: production.productionDate || new Date(),
       postProductionStock: production.postProductionStock || '',
-      productId: production.productId || '',
+      productId: production.product.id || '',
     },
     validationSchema: Yup.object({
       id: Yup.number().optional(),
       quantityProduced: Yup.number().required('Quantity produced is required'),
-      productionDate: Yup.date().optional(),
       postProductionStock: Yup.number().required('Post production stock is required'),
       productId: Yup.number().required('Product is required'),
+      productionDate: Yup.date().required('Production date is required'),
     }),
     onSubmit: async (values, helpers) => {
       try {
@@ -77,7 +111,7 @@ export const ProductionEditForm = (props) => {
       onSubmit={formik.handleSubmit}
       {...other}>
       <Card>
-        <CardHeader title={"Form production"} />
+        <CardHeader title={"Production form"} />
         <Divider />
         <CardContent>
           <Grid
@@ -93,12 +127,27 @@ export const ProductionEditForm = (props) => {
                 error={Boolean(formik.touched.productId && formik.errors.productId)}
                 fullWidth
                 helperText={formik.touched.productId && formik.errors.productId}
-                label="Product"
+                select
                 name="productId"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
+                label="Product"
                 value={formik.values.productId}
-              />
+                onBlur={formik.handleBlur}
+                onChange={(event) => {
+                  const productId = event.target.value;
+                  formik.setFieldValue('productId', productId);
+                  const selectedProduct = products.find(product => product.id === productId);
+                  formik.setFieldValue('postProductionStock', selectedProduct ? selectedProduct.quantity : 0);
+                }}
+                variant="outlined"
+                style={{ display: 'block' }}
+                disabled={formik.values.id > 0}
+              >
+                {products.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name + ' - ' + option.category}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid
               item
@@ -122,17 +171,22 @@ export const ProductionEditForm = (props) => {
               md={6}
               xs={12}
             >
-              <TextField
-                error={Boolean(formik.touched.productionDate && formik.errors.productionDate)}
-                fullWidth
-                helperText={formik.touched.productionDate && formik.errors.productionDate}
-                label="Production date"
-                name="productionDate"
-                type="date"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.productionDate}
-              />
+              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
+                <DatePicker
+                  name="productionDate"
+                  fullWidth
+                  value={dayjs(formik.values.productionDate)}
+                  label="Production date"
+                  showTodayButton={true}
+                  onChange={(newValue) => {
+                    formik.values.productionDate = newValue;
+                  }}
+                  renderInput={
+                    (params) => 
+                      <TextField fullWidth {...params} />
+                  }
+                />
+              </LocalizationProvider>
             </Grid>
             <Grid
               item
@@ -149,6 +203,7 @@ export const ProductionEditForm = (props) => {
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.postProductionStock}
+                disabled={true}
               />
             </Grid>
           </Grid>

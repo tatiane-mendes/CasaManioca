@@ -12,32 +12,60 @@ import {
   CardHeader,
   Divider,
   Grid,
+  MenuItem,
   TextField
 } from '@mui/material';
 import saleService from '../../../services/sale-service';
+import inventoryService from '../../../services/inventory-service';
 import { useRouter } from 'next/router';
+import { useCallback, useEffect, useState } from 'react';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import 'dayjs/locale/pt-br';
+import { useMounted } from '../../../hooks/use-mounted';
+
+dayjs.extend(localizedFormat);
+dayjs.locale('pt-br');
 
 export const SaleEditForm = (props) => {
   const router = useRouter();
+  const isMounted = useMounted();
   const { sale, ...other } = props;
+  const [products, setProducts] = useState([]);
+
+  const getInventories = useCallback(async () => {
+    try {
+      const data = await inventoryService.getAll();
+
+      if (isMounted()) {
+        setProducts(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isMounted]);
+
+  useEffect(() => {
+      getInventories();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []);
+
   const formik = useFormik({
     initialValues: {
       id: sale.id || '',
-      name: sale.name || '',
-      quantity: sale.quantity || '',
-      price: sale.price || '',
-      category: sale.category || '',
-      restockLevel: sale.restockLevel || '',
-      restockQuantity: sale.restockQuantity || ''
+      quantitySold: sale.quantitySold || '',
+      saleDate: sale.saleDate || new Date(),
+      productId: sale.product.id || '',
     },
     validationSchema: Yup.object({
       id: Yup.number().optional(),
-      name: Yup.string().max(255).required('Name is required'),
-      quantity: Yup.number().required('Quantity is required'),
-      price: Yup.number().required('Price is required'),
-      category: Yup.string().max(100).optional(),
-      restockLevel: Yup.number().required('Restock level is required'),
-      restockQuantity: Yup.number().required('Restock quantity is required'),
+      quantitySold: Yup.number().required('Quantity sold is required'),
+      productId: Yup.number().required('Product is required'),
+      saleDate: Yup.date().required('Sale date is required')
     }),
     onSubmit: async (values, helpers) => {
       try {
@@ -94,15 +122,25 @@ export const SaleEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.name && formik.errors.name)}
+                error={Boolean(formik.touched.productId && formik.errors.productId)}
                 fullWidth
-                helperText={formik.touched.name && formik.errors.name}
-                label="Name"
-                name="name"
+                helperText={formik.touched.productId && formik.errors.productId}
+                select
+                name="productId"
+                label="Product"
+                value={formik.values.productId}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.name}
-              />
+                variant="outlined"
+                style={{ display: 'block' }}
+                disabled={formik.values.id > 0}
+              >
+                {products.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name + ' - ' + option.category}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid
               item
@@ -110,31 +148,15 @@ export const SaleEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.category && formik.errors.category)}
+                error={Boolean(formik.touched.quantitySold && formik.errors.quantitySold)}
                 fullWidth
-                helperText={formik.touched.category && formik.errors.category}
-                label="Category"
-                name="category"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.category}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.quantity && formik.errors.quantity)}
-                fullWidth
-                helperText={formik.touched.quantity && formik.errors.quantity}
-                label="Quantity"
-                name="quantity"
+                helperText={formik.touched.quantitySold && formik.errors.quantitySold}
+                label="Quantity sold"
+                name="quantitySold"
                 type="number"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.quantity}
+                value={formik.values.quantitySold}
               />
             </Grid>
             <Grid
@@ -142,51 +164,22 @@ export const SaleEditForm = (props) => {
               md={6}
               xs={12}
             >
-              <TextField
-                error={Boolean(formik.touched.price && formik.errors.price)}
-                fullWidth
-                helperText={formik.touched.price && formik.errors.price}
-                label="Price"
-                name="price"
-                type="number"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.price}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.restockLevel && formik.errors.restockLevel)}
-                fullWidth
-                helperText={formik.touched.restockLevel && formik.errors.restockLevel}
-                label="Restock level"
-                name="restockLevel"
-                type="number"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.restockLevel}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.restockQuantity && formik.errors.restockQuantity)}
-                fullWidth
-                helperText={formik.touched.restockQuantity && formik.errors.restockQuantity}
-                label="Restock quantity"
-                name="restockQuantity"
-                type="number"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.restockQuantity}
-              />
+              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
+                <DatePicker
+                  name="saleDate"
+                  fullWidth
+                  value={dayjs(formik.values.saleDate)}
+                  label="Production date"
+                  showTodayButton={true}
+                  onChange={(newValue) => {
+                    formik.values.saleDate = newValue;
+                  }}
+                  renderInput={
+                    (params) => 
+                      <TextField fullWidth {...params} />
+                  }
+                />
+              </LocalizationProvider>
             </Grid>
           </Grid>
           <Box

@@ -28,12 +28,13 @@ const SaleEdit = () => {
     try {
       const data = saleId > 0 ? await saleService.getById(saleId) : {
         id: 0,
-        name: '',
-        quantity: 0,
-        price: 0,
-        category: '',
-        restockLevel: 0,
-        restockQuantity: 0
+        product: {
+          id: 0,
+          name: '',
+          category: ''
+        },
+        quantitySold: 0,
+        saleDate: new Date(),
       };
 
       if (isMounted()) {
@@ -108,14 +109,14 @@ const SaleEdit = () => {
                 width: 64
               }}
             >
-              {getInitials(sale.name)}
+              {getInitials(sale.product.name)}
             </Avatar>
             <div>
               <Typography
                 noWrap
                 variant="h4"
               >
-                {sale?.email}
+                {sale.product.category}
               </Typography>
               <Box
                 sx={{

@@ -33,30 +33,35 @@ const tabs = [
 
 const sortOptions = (t) => [
   {
+    label: t('Sale date (Hightest)'),
+    value: 'saleDate|desc'
+  },
+  {
+    label: t('Sale date (Lowest)'),
+    value: 'saleDate|asc'
+  },
+  {
     label: t('Name (A-Z)'),
-    value: 'name|asc'
+    value: 'product.name|asc'
   },
   {
     label: t('Name (Z-A)'),
-    value: 'name|desc'
+    value: 'product.name|desc'
   },
-  {
-    label: t('Category (A-Z)'),
-    value: 'category|asc'
-  },
-  {
-    label: t('Category (Z-A)'),
-    value: 'category|desc'
-  }
 ];
+
+const getNestedProperty = (obj, propertyPath) => {
+  return propertyPath.split('.').reduce((acc, part) => acc && acc[part], obj);
+};
 
 const applyFilters = (sales, filters) => sales.filter((sale) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['category', 'name'];
+    const properties = ['product.category', 'product.name'];
 
     properties.forEach((property) => {
-      if (sale[property].toLowerCase().includes(filters.query.toLowerCase())) {
+      const value = getNestedProperty(sale, property);
+      if (value && value.toLowerCase().includes(filters.query.toLowerCase())) {
         queryMatched = true;
       }
     });

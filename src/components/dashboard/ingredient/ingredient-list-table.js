@@ -69,6 +69,9 @@ export const IngredientListTable = (props) => {
               <TableCell>
                 {t(`Stock quantity`)}
               </TableCell>
+              <TableCell>
+                {t(`Reorder level`)}
+              </TableCell>
               <TableCell align="right">
                 {t('Actions')}
               </TableCell>
@@ -124,6 +127,9 @@ export const IngredientListTable = (props) => {
                         {numeral(ingredient.stockQuantity).format(`0.00`)}
                       </SeverityPill>
                     </Typography>
+                  </TableCell>
+                  <TableCell>
+                    {numeral(ingredient.reorderLevel).format(`0.00`)}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink

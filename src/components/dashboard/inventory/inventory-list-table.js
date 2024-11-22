@@ -70,6 +70,9 @@ export const InventoryListTable = (props) => {
                 {t(`Quantity`)}
               </TableCell>
               <TableCell>
+                {t(`Restock level`)}
+              </TableCell>
+              <TableCell>
                 {t(`Price`)}
               </TableCell>
               <TableCell align="right">
@@ -127,6 +130,9 @@ export const InventoryListTable = (props) => {
                         {numeral(inventory.quantity).format(`0.00`)}
                       </SeverityPill>
                     </Typography>
+                  </TableCell>
+                  <TableCell> 
+                    {numeral(inventory.restockLevel).format(`0.00`)}
                   </TableCell>
                   <TableCell> 
                     {numeral(inventory.price).format(`0.00`)}
