@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  //baseURL: 'https://casamaniocabe-okmn.onrender.com/api/v1',
-  baseURL: 'http://localhost:10000/api/v1',
+  baseURL: 'https://casamaniocabe-okmn.onrender.com/api/v1',
+  //baseURL: 'http://localhost:10000/api/v1',
   timeout: 60000,
   headers: {
     'accept': 'application/json'
