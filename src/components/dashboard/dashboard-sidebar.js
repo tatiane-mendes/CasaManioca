@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Box, Button, Chip, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
+import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
 import { Home as HomeIcon } from '../../icons/home';
-import { ReceiptTax as ReceiptTaxIcon } from '../../icons/receipt-tax';
 import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
 import { Users as UsersIcon } from '../../icons/users';
 import { Check as CheckIcon } from '../../icons/check';
@@ -58,14 +57,7 @@ const getSections = (t) => [
         path: '/dashboard/sale',
         icon: <CurrencyDollarIcon fontSize="small" />,
         
-      },
-      {
-        title: t('Recipes'),
-        path: '/dashboard/recipe',
-        icon: <ReceiptTaxIcon fontSize="small" />,
-        
-      },
-      
+      },      
     ]
   }, 
 ];

@@ -4,19 +4,20 @@ import NextLink from 'next/link';
 import Head from 'next/head';
 import { Avatar, Box, Container, Link, Typography } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
-import { RecipeEditForm } from '../../../../components/dashboard/recipe/recipe-edit-form';
-import { withAuthGuard } from '../../../../hocs/with-auth-guard';
-import { withDashboardLayout } from '../../../../hocs/with-dashboard-layout';
-import { useMounted } from '../../../../hooks/use-mounted';
-import { gtm } from '../../../../lib/gtm';
-import { getInitials } from '../../../../utils/get-initials';
+import { RecipeEditForm } from '../../../../../components/dashboard/recipe/recipe-edit-form';
+import { withAuthGuard } from '../../../../../hocs/with-auth-guard';
+import { withDashboardLayout } from '../../../../../hocs/with-dashboard-layout';
+import { useMounted } from '../../../../../hooks/use-mounted';
+import { gtm } from '../../../../../lib/gtm';
+import { getInitials } from '../../../../../utils/get-initials';
 import { useTranslation } from 'react-i18next';
-import recipeService from '../../../../services/recipe-service';
+import recipeService from '../../../../../services/recipe-service';
+import inventoryService from '../../../../../services/inventory-service';
 
 const RecipeEdit = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { recipeId } = router.query;
+  const { inventoryId, recipeId } = router.query;
   const isMounted = useMounted();
   const [recipe, setRecipe] = useState(null);
 
@@ -26,14 +27,18 @@ const RecipeEdit = () => {
 
   const getRecipe = useCallback(async () => {
     try {
+      const product = await inventoryService.getById(inventoryId);
+
       const data = recipeId > 0 ? await recipeService.getById(recipeId) : {
         id: 0,
-        name: '',
-        quantity: 0,
-        price: 0,
-        category: '',
-        restockLevel: 0,
-        restockQuantity: 0
+        ingredient: {
+          id: 0,
+          name: '',
+          unitOfMeasure: ''
+        },
+        product: product,
+        quantityPerUnit: 0,
+        unitOfMeasure: '',
       };
 
       if (isMounted()) {
@@ -72,7 +77,7 @@ const RecipeEdit = () => {
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
             <NextLink
-              href="/dashboard/recipe"
+              href={`/dashboard/recipe/${recipe.product.id}`}
               passHref
             >
               <Link
@@ -88,7 +93,7 @@ const RecipeEdit = () => {
                   sx={{ mr: 1 }}
                 />
                 <Typography variant="subtitle2">
-                  {t('Recipes')}
+                {t('Recipe') + ' - ' + recipe.product.name + ' - ' + recipe.product.category}
                 </Typography>
               </Link>
             </NextLink>
@@ -108,14 +113,14 @@ const RecipeEdit = () => {
                 width: 64
               }}
             >
-              {getInitials(recipe.name)}
+              {getInitials(recipe.product.name)}
             </Avatar>
             <div>
               <Typography
                 noWrap
                 variant="h4"
               >
-                {recipe?.email}
+                {recipe.product.name + ' - ' + recipe.product.category}
               </Typography>
               <Box
                 sx={{

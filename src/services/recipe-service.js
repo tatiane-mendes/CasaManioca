@@ -21,6 +21,16 @@ class RecipeService {
     });
   };
 
+  getByProduct = (productId) => {
+    return axios.get(`/recipes/by-inventory/${productId}`)
+    .then((response) => {
+      return response.data || null;
+    })
+    .catch((err) => {
+      return Promise.reject(err);
+    });
+  }
+
   insert = (request) => {
     return axios.post('/recipes', request);
   };
