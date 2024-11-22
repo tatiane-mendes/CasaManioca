@@ -135,7 +135,7 @@ export const SaleEditForm = (props) => {
                 style={{ display: 'block' }}
                 disabled={formik.values.id > 0}
               >
-                {products.map((option) => (
+                {products.sort((a, b) => a.name.localeCompare(b.name)).map((option) => (
                   <MenuItem key={option.id} value={option.id}>
                     {option.name + ' - ' + option.category}
                   </MenuItem>
