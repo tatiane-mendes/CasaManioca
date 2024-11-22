@@ -24,7 +24,7 @@ const Article = (props) => {
     <div>
       <Head>
         <title>
-          {`Docs: ${article.title} | Material Kit Pro`}
+          {`Docs: ${article.title} `}
         </title>
       </Head>
       <Container

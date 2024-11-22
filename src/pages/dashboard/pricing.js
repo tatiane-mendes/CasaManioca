@@ -17,7 +17,7 @@ const Pricing = () => {
     <>
       <Head>
         <title>
-          Pricing | Material Kit Pro
+          Pricing 
         </title>
       </Head>
       <Box

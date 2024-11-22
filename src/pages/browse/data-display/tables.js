@@ -26,7 +26,7 @@ const BrowseTables = () => {
     <>
       <Head>
         <title>
-          Browse: Tables | Material Kit Pro
+          Browse: Tables 
         </title>
       </Head>
       <Box

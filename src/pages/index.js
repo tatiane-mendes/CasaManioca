@@ -19,7 +19,7 @@ const Home = () => {
     <>
       <Head>
         <title>
-          Material Kit Pro
+          Casa Manioca
         </title>
       </Head>
       <main>

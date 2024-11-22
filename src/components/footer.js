@@ -99,7 +99,7 @@ export const Footer = (props) => (
             sx={{ mt: 1 }}
             variant="caption"
           >
-            © 2021 Devias.
+            © {new Date().getFullYear()} Casa Manioca.
           </Typography>
         </Grid>
         {sections.map((section, index) => (

@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { authApi } from '../__fake-api__/auth-api';
+import authorizationService from '../services/authorization-service';
 
 const initialState = {
   isAuthenticated: false,
@@ -32,16 +32,7 @@ const handlers = {
     ...state,
     isAuthenticated: false,
     user: null
-  }),
-  REGISTER: (state, action) => {
-    const { user } = action.payload;
-
-    return {
-      ...state,
-      isAuthenticated: true,
-      user
-    };
-  }
+  })
 };
 
 const reducer = (state, action) => (handlers[action.type]
@@ -52,8 +43,7 @@ export const AuthContext = createContext({
   ...initialState,
   platform: 'JWT',
   login: () => Promise.resolve(),
-  logout: () => Promise.resolve(),
-  register: () => Promise.resolve()
+  logout: () => Promise.resolve()
 });
 
 export const AuthProvider = (props) => {
@@ -66,7 +56,7 @@ export const AuthProvider = (props) => {
         const accessToken = window.localStorage.getItem('accessToken');
 
         if (accessToken) {
-          const user = await authApi.me(accessToken);
+          const user = await authorizationService.getUser();
 
           dispatch({
             type: 'INITIALIZE',
@@ -100,10 +90,8 @@ export const AuthProvider = (props) => {
   }, []);
 
   const login = async (email, password) => {
-    const accessToken = await authApi.login({ email, password });
-    const user = await authApi.me(accessToken);
-
-    localStorage.setItem('accessToken', accessToken);
+    const response = await authorizationService.loginWithPassword(email, password);
+    const user = await authorizationService.getUser();
 
     dispatch({
       type: 'LOGIN',
@@ -114,22 +102,8 @@ export const AuthProvider = (props) => {
   };
 
   const logout = async () => {
-    localStorage.removeItem('accessToken');
+    authorizationService.logout();
     dispatch({ type: 'LOGOUT' });
-  };
-
-  const register = async (email, name, password) => {
-    const accessToken = await authApi.register({ email, name, password });
-    const user = await authApi.me(accessToken);
-
-    localStorage.setItem('accessToken', accessToken);
-
-    dispatch({
-      type: 'REGISTER',
-      payload: {
-        user
-      }
-    });
   };
 
   return (
@@ -138,8 +112,7 @@ export const AuthProvider = (props) => {
         ...state,
         platform: 'JWT',
         login,
-        logout,
-        register
+        logout
       }}
     >
       {children}
