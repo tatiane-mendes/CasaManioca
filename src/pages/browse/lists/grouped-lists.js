@@ -26,7 +26,7 @@ const BrowseGroupedLists = () => {
     <>
       <Head>
         <title>
-          Browse: Grouped Lists | Material Kit Pro
+          Browse: Grouped Lists 
         </title>
       </Head>
       <Box

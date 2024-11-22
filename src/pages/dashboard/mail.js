@@ -100,7 +100,7 @@ const Mail = () => {
     <>
       <Head>
         <title>
-          Dashboard: Mail | Material Kit Pro
+          Dashboard: Mail 
         </title>
       </Head>
       <Box

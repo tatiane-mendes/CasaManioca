@@ -21,7 +21,7 @@ const BrowseGridLists = () => {
     <>
       <Head>
         <title>
-          Browse: Grid Lists | Material Kit Pro
+          Browse: Grid Lists 
         </title>
       </Head>
       <Box

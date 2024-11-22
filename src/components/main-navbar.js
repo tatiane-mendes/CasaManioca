@@ -24,7 +24,7 @@ export const MainNavbar = (props) => {
           sx={{ minHeight: 64 }}
         >
           <NextLink
-            href="/"
+            href="/dashboard"
             passHref
           >
             <a>

@@ -12,23 +12,25 @@ import {
 } from '@mui/material';
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 
-const currencies = [
+
+const quantities = [
   {
-    amount: 21500,
+    amount: 120,
     color: '#2F3EB1',
-    name: 'US Dollars'
+    name: 'Chicken Crockett'
   },
   {
-    amount: 15300,
+    amount: 80,
     color: '#0C7CD5',
-    name: 'Bitcoin'
+    name: 'Chesse bread'
   },
   {
-    amount: 1076.81,
+    amount: 82,
     color: '#7BC67E',
-    name: 'XRP Ripple'
+    name: 'Chese Whaffle'
   }
 ];
+
 
 export const OverviewTotalBalance = (props) => (
   <Card {...props}>
@@ -37,10 +39,10 @@ export const OverviewTotalBalance = (props) => (
         color="textSecondary"
         variant="overline"
       >
-        Total balance
+        Total Inventory
       </Typography>
       <Typography variant="h4">
-        {numeral(3787681).format('$0,0.00')}
+        {numeral(282).format('0,0') + ' ' + 'units'}
       </Typography>
 
       <Divider sx={{ my: 2 }} />
@@ -48,16 +50,16 @@ export const OverviewTotalBalance = (props) => (
         color="textSecondary"
         variant="overline"
       >
-        Available currency
+        Available quantity
       </Typography>
       <List
         disablePadding
         sx={{ pt: 2 }}
       >
-        {currencies.map((currency) => (
+        {quantities.map((quantity) => (
           <ListItem
             disableGutters
-            key={currency.name}
+            key={quantity.name}
             sx={{
               pb: 2,
               pt: 0
@@ -82,7 +84,7 @@ export const OverviewTotalBalance = (props) => (
                     <Box
                       sx={{
                         border: 3,
-                        borderColor: currency.color,
+                        borderColor: quantity.color,
                         borderRadius: '50%',
                         height: 16,
                         mr: 1,
@@ -90,14 +92,14 @@ export const OverviewTotalBalance = (props) => (
                       }}
                     />
                     <Typography variant="subtitle2">
-                      {currency.name}
+                      {quantity.name}
                     </Typography>
                   </Box>
                   <Typography
                     color="textSecondary"
                     variant="subtitle2"
                   >
-                    {numeral(currency.amount).format('$0,0.00')}
+                    {numeral(quantity.amount).format('0,0')}
                   </Typography>
                 </Box>
               )}
@@ -107,22 +109,9 @@ export const OverviewTotalBalance = (props) => (
       </List>
       <Divider />
       <Box
-        sx={{
-          alignItems: 'flex-start',
-          display: 'flex',
-          flexDirection: 'column',
-          pt: 2
-        }}
+        
       >
-        <Button endIcon={<ArrowRightIcon fontSize="small" />}>
-          Add money
-        </Button>
-        <Button
-          endIcon={<ArrowRightIcon fontSize="small" />}
-          sx={{ mt: 2 }}
-        >
-          Withdraw funds
-        </Button>
+        
       </Box>
     </CardContent>
   </Card>

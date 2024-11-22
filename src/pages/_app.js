@@ -40,7 +40,7 @@ const App = (props) => {
     <CacheProvider value={emotionCache}>
       <Head>
         <title>
-          Material Kit Pro
+          Casa Manioca
         </title>
         <meta
           name="viewport"

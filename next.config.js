@@ -1,4 +1,3 @@
-// Remove this if you're not using Fullcalendar features
 const withTM = require('next-transpile-modules')([
   '@fullcalendar/common',
   '@fullcalendar/react',
@@ -28,8 +27,8 @@ module.exports = withTM({
   async redirects() {
     return [
       {
-        source: '/docs',
-        destination: '/docs/welcome',
+        source: '/',
+        destination: '/dashboard',
         permanent: true
       }
     ];

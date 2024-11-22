@@ -7,8 +7,10 @@ import { Box, Button, Chip, Divider, Drawer, Typography, useMediaQuery } from '@
 import { Home as HomeIcon } from '../../icons/home';
 import { ReceiptTax as ReceiptTaxIcon } from '../../icons/receipt-tax';
 import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
-import { ShoppingCart as ShoppingCartIcon } from '../../icons/shopping-cart';
 import { Users as UsersIcon } from '../../icons/users';
+import { Check as CheckIcon } from '../../icons/check';
+import { Collection as CollectionIcon } from '../../icons/collection';
+import { CurrencyDollar as CurrencyDollarIcon } from '../../icons/currency-dollar';
 import { Logo } from '../logo';
 import { Scrollbar } from '../scrollbar';
 import { DashboardSidebarSection } from './dashboard-sidebar-section';
@@ -22,75 +24,48 @@ const getSections = (t) => [
         path: '/dashboard',
         icon: <HomeIcon fontSize="small" />
       },
+      {
+        title: t('User'),
+        path: '/dashboard/user',
+        icon: <UsersIcon fontSize="small" />,
+        
+      },
     ]
   },
   {
     title: t('Management'),
     items: [
       {
-        title: t('Customers'),
-        path: '/dashboard/customers',
-        icon: <UsersIcon fontSize="small" />,
-        children: [
-          {
-            title: t('List'),
-            path: '/dashboard/customers'
-          },
-          {
-            title: t('Details'),
-            path: '/dashboard/customers/1'
-          },
-          {
-            title: t('Edit'),
-            path: '/dashboard/customers/1/edit'
-          }
-        ]
+        title: t('Inventory'),
+        path: '/dashboard/inventory',
+        icon: <CollectionIcon fontSize="small" />,
+        
       },
       {
-        title: t('Products Sold'),
-        path: '/dashboard/products',
+        title: t('Ingredient'),
+        path: '/dashboard/ingredient',
         icon: <ShoppingBagIcon fontSize="small" />,
-        children: [
-          {
-            title: t('List'),
-            path: '/dashboard/products'
-          },
-          {
-            title: t('Create'),
-            path: '/dashboard/products/new'
-          }
-        ]
+        
       },
       {
-        title: t('Orders'),
-        icon: <ShoppingCartIcon fontSize="small" />,
-        path: '/dashboard/orders',
-        children: [
-          {
-            title: t('List'),
-            path: '/dashboard/orders'
-          },
-          {
-            title: t('Details'),
-            path: '/dashboard/orders/1'
-          }
-        ]
+        title: t('Production'),
+        path: '/dashboard/production',
+        icon: <CheckIcon fontSize="small" />,
+        
       },
       {
-        title: t('Invoices'),
-        path: '/dashboard/invoices',
+        title: t('Products sold'),
+        path: '/dashboard/sale',
+        icon: <CurrencyDollarIcon fontSize="small" />,
+        
+      },
+      {
+        title: t('Recipes'),
+        path: '/dashboard/recipe',
         icon: <ReceiptTaxIcon fontSize="small" />,
-        children: [
-          {
-            title: t('List'),
-            path: '/dashboard/invoices'
-          },
-          {
-            title: t('Details'),
-            path: '/dashboard/invoices/1'
-          }
-        ]
-      }
+        
+      },
+      
     ]
   }, 
 ];
