@@ -13,8 +13,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 import { Box, useMediaQuery } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
-import { CalendarEventDialog } from '../../components/dashboard/calendar/calendar-event-dialog';
-import { CalendarToolbar } from '../../components/dashboard/calendar/calendar-toolbar';
 import { withAuthGuard } from '../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../hocs/with-dashboard-layout';
 import { gtm } from '../../lib/gtm';
@@ -230,16 +228,6 @@ const Calendar = () => {
           py: 8
         }}
       >
-        <CalendarToolbar
-          date={date}
-          onAddClick={handleAddClick}
-          onDateNext={handleDateNext}
-          onDatePrev={handleDatePrev}
-          onDateToday={handleDateToday}
-          onViewChange={handleViewChange}
-          view={view}
-          mobile={smDown}
-        />
         <FullCalendarWrapper>
           <FullCalendar
             allDayMaintainDuration
@@ -271,15 +259,6 @@ const Calendar = () => {
           />
         </FullCalendarWrapper>
       </Box>
-      <CalendarEventDialog
-        event={selectedEvent}
-        onAddComplete={handleCloseDialog}
-        onClose={handleCloseDialog}
-        onDeleteComplete={handleCloseDialog}
-        onEditComplete={handleCloseDialog}
-        open={dialog.isOpen}
-        range={dialog.range}
-      />
     </>
   );
 };
