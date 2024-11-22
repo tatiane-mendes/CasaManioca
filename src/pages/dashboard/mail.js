@@ -3,10 +3,6 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { useMediaQuery } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { MailComposer } from '../../components/dashboard/mail/mail-composer';
-import { MailDetails } from '../../components/dashboard/mail/mail-details';
-import { MailList } from '../../components/dashboard/mail/mail-list';
-import { MailSidebar } from '../../components/dashboard/mail/mail-sidebar';
 import { withAuthGuard } from '../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../hocs/with-dashboard-layout';
 import { gtm } from '../../lib/gtm';
@@ -123,35 +119,9 @@ const Mail = () => {
             left: 0
           }}
         >
-          <MailSidebar
-            containerRef={rootRef}
-            label={label}
-            labels={labels}
-            onClose={handleCloseSidebar}
-            onCompose={handleComposeClick}
-            open={isSidebarOpen}
-          />
-          <MailInner open={isSidebarOpen}>
-            {emailId
-              ? (
-                <MailDetails
-                  label={label}
-                  emailId={emailId}
-                />
-              )
-              : (
-                <MailList
-                  onToggleSidebar={handleToggleSidebar}
-                  label={label}
-                />
-              )}
-          </MailInner>
+          
         </Box>
       </Box>
-      <MailComposer
-        open={isComposeOpen}
-        onClose={handleComposerClose}
-      />
     </>
   );
 };
