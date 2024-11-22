@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import { Trash as TrashRightIcon } from '../../../icons/trash';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
+import { ReceiptTax as ReceiptTaxIcon } from '../../../icons/receipt-tax';
 import { getInitials } from '../../../utils/get-initials';
 import { Scrollbar } from '../../scrollbar';
 import { useTranslation } from 'react-i18next';
@@ -152,6 +153,14 @@ export const InventoryListTable = (props) => {
                     >
                       <IconButton component="a">
                         <TrashRightIcon fontSize="small" onClick={() => {handleDelete(inventory)}} />
+                      </IconButton>
+                    </NextLink>
+                    <NextLink
+                      href={`/dashboard/recipe/${inventory.id}`}
+                      passHref
+                    >
+                      <IconButton component="a">
+                        <ReceiptTaxIcon fontSize="small" />
                       </IconButton>
                     </NextLink>
                   </TableCell>

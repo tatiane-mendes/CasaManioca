@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
 import {
+  Avatar,
   Box,
   Button,
   Card,
@@ -8,21 +9,26 @@ import {
   Divider,
   Grid,
   InputAdornment,
+  Link,
   Tab,
   Tabs,
   TextField,
   Typography
 } from '@mui/material';
-import { RecipeListTable } from '../../../components/dashboard/recipe/recipe-list-table';
-import { withAuthGuard } from '../../../hocs/with-auth-guard';
-import { withDashboardLayout } from '../../../hocs/with-dashboard-layout';
-import { useMounted } from '../../../hooks/use-mounted';
-import { Plus as PlusIcon } from '../../../icons/plus';
-import { Search as SearchIcon } from '../../../icons/search';
-import { gtm } from '../../../lib/gtm';
+import { RecipeListTable } from '../../../../components/dashboard/recipe/recipe-list-table';
+import { withAuthGuard } from '../../../../hocs/with-auth-guard';
+import { withDashboardLayout } from '../../../../hocs/with-dashboard-layout';
+import { useMounted } from '../../../../hooks/use-mounted';
+import { Plus as PlusIcon } from '../../../../icons/plus';
+import { Search as SearchIcon } from '../../../../icons/search';
+import { gtm } from '../../../../lib/gtm';
 import { useTranslation } from 'react-i18next';
 import NextLink from 'next/link';
-import recipeService from '../../../services/recipe-service';
+import recipeService from '../../../../services/recipe-service';
+import inventoryService from '../../../../services/inventory-service';
+import { useRouter } from 'next/router';
+import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+import { getInitials } from '../../../../utils/get-initials';
 
 const tabs = [
   {
@@ -33,30 +39,27 @@ const tabs = [
 
 const sortOptions = (t) => [
   {
-    label: t('Name (A-Z)'),
-    value: 'name|asc'
+    label: t('Ingredient (A-Z)'),
+    value: 'ingredient.name|asc'
   },
   {
-    label: t('Name (Z-A)'),
-    value: 'name|desc'
+    label: t('Ingredient (Z-A)'),
+    value: 'ingredient.name|desc'
   },
-  {
-    label: t('Category (A-Z)'),
-    value: 'category|asc'
-  },
-  {
-    label: t('Category (Z-A)'),
-    value: 'category|desc'
-  }
 ];
+
+const getNestedProperty = (obj, propertyPath) => {
+  return propertyPath.split('.').reduce((acc, part) => acc && acc[part], obj);
+};
 
 const applyFilters = (recipes, filters) => recipes.filter((recipe) => {
   if (filters.query) {
     let queryMatched = false;
-    const properties = ['category', 'name'];
+    const properties = ['ingredient.name'];
 
     properties.forEach((property) => {
-      if (recipe[property].toLowerCase().includes(filters.query.toLowerCase())) {
+      const value = getNestedProperty(recipe, property);
+      if (value && value.toLowerCase().includes(filters.query.toLowerCase())) {
         queryMatched = true;
       }
     });
@@ -110,7 +113,10 @@ const RecipeList = () => {
   const { t } = useTranslation();
   const isMounted = useMounted();
   const queryRef = useRef(null);
+  const router = useRouter();
+  const { inventoryId } = router.query;
   const [recipes, setRecipes] = useState([]);
+  const [product, setProduct] = useState({});
   const [currentTab, setCurrentTab] = useState('all');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -123,9 +129,11 @@ const RecipeList = () => {
 
   const getRecipes = useCallback(async () => {
     try {
-      const data = await recipeService.getAll();
+      const inventory = await inventoryService.getById(inventoryId);      
+      const data = await recipeService.getByProduct(inventory.id);
 
       if (isMounted()) {
+        setProduct(inventory);
         setRecipes(data);
       }
     } catch (err) {
@@ -193,29 +201,83 @@ const RecipeList = () => {
       >
         <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
+            <NextLink
+              href={`/dashboard/inventory`}
+              passHref
+            >
+              <Link
+                color="textPrimary"
+                component="a"
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex'
+                }}
+              >
+                <ArrowBackIcon
+                  fontSize="small"
+                  sx={{ mr: 1 }}
+                />
+                <Typography variant="subtitle2">
+                  {t('Inventory') + ' - ' + product.name + ' - ' + product.category}
+                </Typography>
+              </Link>
+            </NextLink>
+          </Box>
+          <Box sx={{ mb: 4 }}>
             <Grid
               container
               justifyContent="space-between"
               spacing={3}
-            >
-              <Grid item>
-                <Typography variant="h4">
-                  {t('Recipe')}
-                </Typography>
-              </Grid>
-              <Grid item>
-              <NextLink
-                href="/dashboard/recipe/0/edit"
-                passHref
+            > 
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  overflow: 'hidden'
+                }}
               >
-                <Button
-                  startIcon={<PlusIcon fontSize="small" />}
-                  variant="contained"
+                <Avatar
+                  src={product?.avatar}
+                  sx={{
+                    height: 64,
+                    mr: 2,
+                    width: 64
+                  }}
                 >
-                  Add
-                </Button>
-              </NextLink>
-              </Grid>
+                  {getInitials(product.name)}
+                </Avatar>
+                <div>
+                  <Typography
+                    noWrap
+                    variant="h4"
+                  >
+                    {product.name + ' - ' + product.category}
+                  </Typography>
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                  </Box>
+                </div>
+              </Box>
+              <Grid item>
+                <NextLink
+                  href={`/dashboard/recipe/${product.id}/0/edit`}
+                  passHref
+                >
+                  <Button
+                    startIcon={<PlusIcon fontSize="small" />}
+                    variant="contained"
+                  >
+                    Add
+                  </Button>
+                </NextLink>
+                </Grid>
             </Grid>
           </Box>
           <Card>
