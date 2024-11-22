@@ -1,12 +1,6 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
 import { Box, Button, Container, Grid, Typography } from '@mui/material';
-import { FinanceCostBreakdown } from '../../components/dashboard/finance/finance-cost-breakdown';
-import { FinanceOverview } from '../../components/dashboard/finance/finance-overview';
-import { FinanceIncrementalSales } from '../../components/dashboard/finance/finance-incremental-sales';
-import { FinanceProfitableProducts } from '../../components/dashboard/finance/finance-profitable-products';
-import { FinanceSalesByContinent } from '../../components/dashboard/finance/finance-sales-by-continent';
-import { FinanceSalesRevenue } from '../../components/dashboard/finance/finance-sales-revenue';
 import { withAuthGuard } from '../../hocs/with-auth-guard';
 import { withDashboardLayout } from '../../hocs/with-dashboard-layout';
 import { Download as DownloadIcon } from '../../icons/download';
@@ -77,51 +71,6 @@ const Finance = () => {
               </Grid>
             </Grid>
           </Box>
-          <Grid
-            container
-            spacing={4}
-          >
-            <Grid
-              item
-              xs={12}
-            >
-              <FinanceOverview />
-            </Grid>
-            <Grid
-              item
-              md={8}
-              xs={12}
-            >
-              <FinanceSalesRevenue />
-            </Grid>
-            <Grid
-              item
-              md={4}
-              xs={12}
-            >
-              <FinanceCostBreakdown />
-            </Grid>
-            <Grid
-              item
-              md={8}
-              xs={12}
-            >
-              <FinanceSalesByContinent />
-            </Grid>
-            <Grid
-              item
-              md={4}
-              xs={12}
-            >
-              <FinanceIncrementalSales />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-            >
-              <FinanceProfitableProducts />
-            </Grid>
-          </Grid>
         </Container>
       </Box>
     </>
