@@ -12,28 +12,53 @@ import {
   CardHeader,
   Divider,
   Grid,
+  MenuItem,
   TextField
 } from '@mui/material';
 import recipeService from '../../../services/recipe-service';
+import ingredientService from '../../../services/ingredient-service';
 import { useRouter } from 'next/router';
+import { useCallback, useEffect, useState } from 'react';
+import { useMounted } from '../../../hooks/use-mounted';
 
 export const RecipeEditForm = (props) => {
   const router = useRouter();
+  const isMounted = useMounted();
   const { recipe, ...other } = props;
+  const [ingredients, setIngredients] = useState([]);
+
+  const getIngredients = useCallback(async () => {
+    try {
+      const data = await ingredientService.getAll();
+
+      if (isMounted()) {
+        setIngredients(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isMounted]);
+
+  useEffect(() => {
+    getIngredients();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []);
+
   const formik = useFormik({
     initialValues: {
       id: recipe.id || '',
-      quantityProduced: recipe.quantityProduced || '',
-      recipeDate: recipe.recipeDate || '',
-      postRecipeStock: recipe.postRecipeStock || '',
-      productId: recipe.productId || '',
+      quantityPerUnit: recipe.quantityPerUnit || '',
+      unitOfMeasure: recipe.unitOfMeasure || '',
+      productId: recipe.product.id || '',
+      ingredientId: recipe.ingredient.id || '',
     },
     validationSchema: Yup.object({
       id: Yup.number().optional(),
-      quantityProduced: Yup.number().required('Quantity produced is required'),
-      recipeDate: Yup.date().optional(),
-      postRecipeStock: Yup.number().required('Post recipe stock is required'),
+      quantityPerUnit: Yup.number().required('Quantity per unit is required'),
+      unitOfMeasure: Yup.string().max(50).required('Unit of measure is required'),
       productId: Yup.number().required('Product is required'),
+      ingredientId: Yup.number().required('Ingredient is required'),
     }),
     onSubmit: async (values, helpers) => {
       try {
@@ -49,7 +74,7 @@ export const RecipeEditForm = (props) => {
 
         helpers.setStatus({ success: true });
         helpers.setSubmitting(false);
-        router.push('/dashboard/recipe');
+        router.push(`/dashboard/recipe/${values.productId}`);
       } catch (err) {
         console.error(err.message + '. ' + err.detail);
         toast.error(err.message + '. ' + err.detail);
@@ -65,7 +90,7 @@ export const RecipeEditForm = (props) => {
     try {
       await recipeService.delete(values);
       toast.success('Item deleted!');
-      router.push('/dashboard/recipe');
+      router.push(`/dashboard/recipe/${values.productId}`);
     } catch (err) {
       console.error(err.message + '. ' + err.detail);
       toast.error(err.message + '. ' + err.detail);
@@ -90,15 +115,31 @@ export const RecipeEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.productId && formik.errors.productId)}
+                error={Boolean(formik.touched.ingredientId && formik.errors.ingredientId)}
                 fullWidth
-                helperText={formik.touched.productId && formik.errors.productId}
-                label="Product"
-                name="productId"
+                helperText={formik.touched.ingredientId && formik.errors.ingredientId}
+                select
+                name="ingredientId"
+                label="Ingredient"
+                value={formik.values.ingredientId}
                 onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.productId}
-              />
+                onChange={(event) => {
+                  const ingredientId = event.target.value;
+                  formik.setFieldValue('ingredientId', ingredientId);
+
+                  const selectedIngredient = ingredients.find(ingredient => ingredient.id === ingredientId);
+                  formik.setFieldValue('unitOfMeasure', selectedIngredient ? selectedIngredient.unitOfMeasure : '');
+                }}
+                variant="outlined"
+                style={{ display: 'block' }}
+                disabled={formik.values.id > 0}
+              >
+                {ingredients.sort((a, b) => a.name.localeCompare(b.name)).map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name + ' - ' + option.unitOfMeasure}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid
               item
@@ -106,15 +147,15 @@ export const RecipeEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.quantityProduced && formik.errors.quantityProduced)}
+                error={Boolean(formik.touched.quantityPerUnit && formik.errors.quantityPerUnit)}
                 fullWidth
-                helperText={formik.touched.quantityProduced && formik.errors.quantityProduced}
-                label="Quantity produced"
-                name="quantityProduced"
+                helperText={formik.touched.quantityPerUnit && formik.errors.quantityPerUnit}
+                label="Quantity per unit"
+                name="quantityPerUnit"
                 type="number"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.quantityProduced}
+                value={formik.values.quantityPerUnit}
               />
             </Grid>
             <Grid
@@ -123,32 +164,15 @@ export const RecipeEditForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.recipeDate && formik.errors.recipeDate)}
+                error={Boolean(formik.touched.unitOfMeasure && formik.errors.unitOfMeasure)}
                 fullWidth
-                helperText={formik.touched.recipeDate && formik.errors.recipeDate}
-                label="Recipe date"
-                name="recipeDate"
-                type="date"
+                helperText={formik.touched.unitOfMeasure && formik.errors.unitOfMeasure}
+                label="Unit of measure"
+                name="unitOfMeasure"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.recipeDate}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                error={Boolean(formik.touched.postRecipeStock && formik.errors.postRecipeStock)}
-                fullWidth
-                helperText={formik.touched.postRecipeStock && formik.errors.postRecipeStock}
-                label="Post recipe stock"
-                name="postRecipeStock"
-                type="number"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.postRecipeStock}
+                value={formik.values.unitOfMeasure}
+                disabled={true}
               />
             </Grid>
           </Grid>
@@ -186,7 +210,7 @@ export const RecipeEditForm = (props) => {
             Save
           </Button>
           <NextLink
-            href="/dashboard/recipe"
+            href={`/dashboard/recipe/${formik.values.productId}`}
             passHref
           >
             <Button

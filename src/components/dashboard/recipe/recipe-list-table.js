@@ -43,7 +43,11 @@ export const RecipeListTable = (props) => {
 
   const handleDelete = async (values) => {
     try {
-      await recipeService.delete(values);
+      values.productId = values.product.id;
+      values.ingredientId = values.ingredient.id;
+      const {product, ingredient, ...filteredValues} = values;
+
+      await recipeService.delete(filteredValues);
       toast.success('Item deleted!');
       
       setRecipes(recipes.filter(item => item.id !== values.id));
@@ -60,16 +64,13 @@ export const RecipeListTable = (props) => {
           <TableHead>
             <TableRow>
               <TableCell>
-                {t('Item')}
+                {t('Ingredient')}
               </TableCell>
               <TableCell>
-                {t(`Category`)}
+                {t(`Unit of measure`)}
               </TableCell>
               <TableCell>
-                {t(`Quantity produced`)}
-              </TableCell>
-              <TableCell>
-                {t(`Recipe date`)}
+                {t(`Quantity per unit`)}
               </TableCell>
               <TableCell align="right">
                 {t('Actions')}
@@ -97,35 +98,32 @@ export const RecipeListTable = (props) => {
                           width: 42
                         }}
                       >
-                        {getInitials(recipe.product.name)}
+                        {getInitials(recipe.ingredient.name)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
                         <NextLink
-                          href={`/dashboard/recipe/${recipe.id}/edit`}
+                          href={`/dashboard/recipe/${recipe.product.id}/${recipe.id}/edit`}
                           passHref
                         >
                           <Link
                             color="inherit"
                             variant="subtitle2"
                           >
-                            {recipe.product.name}
+                            {recipe.ingredient.name}
                           </Link>
                         </NextLink>
                       </Box>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {`${recipe.product.category}`}
+                    {`${recipe.unitOfMeasure}`}
                   </TableCell>
                   <TableCell>
-                    {numeral(recipe.postRecipeStock).format(`0.00`)}
-                  </TableCell>
-                  <TableCell> 
-                    {format(new Date(recipe.recipeDate), 'dd/MM/yyyy')}
+                    {numeral(recipe.quantityPerUnit).format(`0.00`)}
                   </TableCell>
                   <TableCell align="right">
                     <NextLink
-                      href={`/dashboard/recipe/${recipe.id}/edit`}
+                      href={`/dashboard/recipe/${recipe.product.id}/${recipe.id}/edit`}
                       passHref
                     >
                       <IconButton component="a">
@@ -133,7 +131,7 @@ export const RecipeListTable = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href="/dashboard/recipe"
+                      href={`/dashboard/recipe/${recipe.product.id}`}
                       passHref
                     >
                       <IconButton component="a">
